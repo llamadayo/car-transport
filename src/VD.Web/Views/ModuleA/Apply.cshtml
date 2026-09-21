@@ -1,0 +1,245 @@
+@model VD.Web.Models.PageModel
+<section id="apply-list">
+<div class="section-h">收貨申請（使用者）</div>
+<div class="section-sub">先查詢歷史申請紀錄，點擊任一筆可檢視明細；或按「新增」建立新的收貨申請單。</div>
+<div class="card">
+<div class="card-title split">
+<span>查詢條件</span>
+<span>
+<button type="button" class="btn btn-primary btn-sm" id="aq-search">🔍 查詢</button>
+<button type="button" class="btn btn-accent btn-sm" id="aq-new">＋ 新增</button>
+</span>
+</div>
+<div class="fgrid">
+<div class="grid-sizer">
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">申請人（模糊）</span> <span class="fcard-value">@Html.TextBox("aq-applicant", "", new { @class="k-textbox", maxlength=200 })</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">分公司據點</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("aq-branch").BindTo(Model.Sites).OptionLabel("全部分公司"))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">目的地站點</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("aq-station").BindTo(Model.Stations).OptionLabel("全部站點"))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">狀態</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("aq-status").BindTo(Model.Statuses).OptionLabel("全部狀態"))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">收貨模式</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("aq-mode").BindTo(Model.Modes).OptionLabel("全部模式"))</span>
+</div>
+</div>
+</div>
+</div>
+<div class="card">
+<div class="card-title split">
+<span>歷史申請紀錄</span>
+<span>
+<span class="muted" id="aq-count">
+</span>
+<button type="button" class="btn btn-ghost btn-sm" id="aq-demo">載入範例資料</button>
+</span>
+</div>@(Html.Kendo().Grid<ApplicationRow>().Name("aq-grid").AutoBind(false).NoRecords(n=>n.Template("查無符合條件的紀錄")).Columns(columns=>{columns.Bound(x=>x.AppNo).ClientTemplate("<button type='button' class='btn btn-ghost btn-sm' data-command='detail'>細節</button>").Title(" ").Width(125);
+columns.Bound(x=>x.AppNo).Title("單號");
+columns.Bound(x=>x.Applicant).Title("申請人");
+columns.Bound(x=>x.Destination).Title("目的地");
+columns.Bound(x=>x.ServiceDate).Title("日期");
+columns.Bound(x=>x.ModeLabel).Title("模式");
+columns.Bound(x=>x.ShiftLabel).Title("班次");
+columns.Bound(x=>x.StatusLabel).Title("狀態");
+columns.Bound(x=>x.CreatedAt).Title("建立時間");}).Scrollable(s=>s.Height("auto")).DataSource(ds=>ds.Ajax().ServerOperation(false)))</div>
+</section>
+<section id="apply-new" hidden>
+<div class="section-h">新增收貨申請單</div>
+<div class="card">
+<div class="card-title split">
+<span>填寫收貨申請單 <span class="g-tag">G13/G19</span>
+</span>
+<span>
+</span>
+</div>
+<div class="fgrid">
+<div class="grid-sizer">
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">申請人</span> <span class="fcard-value">@Html.TextBox("aa-applicant", "業務部-周雅婷", new { @class="k-textbox", maxlength=200 })</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">分公司據點</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("aa-branch").BindTo(Model.Sites))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">收貨地點站點（起）</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("aa-pickuploc"))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">收貨建物</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("aa-pickbldg"))<input id="aa-pickother" class="k-textbox" maxlength="200" placeholder="請輸入建物/位置" hidden/>
+</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">送貨地點站點（迄）</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("aa-station"))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">送貨建物</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("aa-building"))<input id="aa-destother" class="k-textbox" maxlength="200" placeholder="請輸入建物/位置" hidden/>
+</span>
+</div>
+</div>
+<div class="grid-item full">
+<div class="fcard fcard-input">
+<span class="fcard-label">收貨時間模式 <span class="hint">兩種皆不享班次內插隊優先權 G19</span>
+</span> <span class="fcard-value">
+<div class="radio-group">
+<label class="radio-pill sel">
+<input class="k-radio" type="radio" name="aa-recv" value="asap" checked/>越快越好（離現在最近）</label>
+<label class="radio-pill">
+<input class="k-radio" type="radio" name="aa-recv" value="exact"/>指定期望時間</label>
+</div>
+</span>
+</div>
+</div>
+</div>
+<div id="aa-deliver-wrap" hidden>
+<div class="row">
+<div class="field">
+<label>期望日期</label>@(Html.Kendo().DatePicker().Name("aa-date").Format("yyyy-MM-dd").Min(Model.Today).Value(Model.Today))</div>
+<div class="field">
+<label>期望收貨時間（僅用於挑選最接近的班次）</label>@(Html.Kendo().TimePicker().Name("aa-deliver").Format("HH:mm").Value(Model.Today.AddHours(14)))</div>
+</div>
+<div class="callout info">選擇今天時，已經出發的班次不會被媒合；若今日班次都已過，請改選未來日期。</div>
+</div>
+<div class="fgrid">
+<div class="grid-sizer">
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">上貨時間（分，自填 G15）</span> <span class="fcard-value">@(Html.Kendo().NumericTextBox<int>().Name("aa-load").Min(0).Max(100000).Decimals(0).Format("n0").Value(10))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">下貨時間（分，自填 G15）</span> <span class="fcard-value">@(Html.Kendo().NumericTextBox<int>().Name("aa-unload").Min(0).Max(100000).Decimals(0).Format("n0").Value(5))</span>
+</div>
+</div>
+</div>
+<div class="divider">
+</div>
+<div class="card-title">接收人資訊</div>
+<div class="fgrid">
+<div class="grid-sizer">
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">單位</span> <span class="fcard-value">@Html.TextBox("aa-runit", "", new { @class="k-textbox", maxlength=200 })</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">姓名</span> <span class="fcard-value">@Html.TextBox("aa-rname", "", new { @class="k-textbox", maxlength=200 })</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">電話</span> <span class="fcard-value">@Html.TextBox("aa-rphone", "", new { @class="k-textbox", maxlength=200 })</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">代理人姓名（選填）</span> <span class="fcard-value">@Html.TextBox("aa-aname", "", new { @class="k-textbox", maxlength=200 })</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">代理人電話（選填）</span> <span class="fcard-value">@Html.TextBox("aa-aphone", "", new { @class="k-textbox", maxlength=200 })</span>
+</div>
+</div>
+</div>
+<div class="divider">
+</div>
+<div class="card-title split">貨物項目 <button type="button" class="btn btn-accent btn-sm" id="aa-add">＋ 新增</button>
+</div>@(Html.Kendo().Grid<CargoItem>().Name("aa-items").AutoBind(false).NoRecords(n=>n.Template("查無符合條件的紀錄")).Columns(columns=>{columns.Bound(x=>x.Name).ClientTemplate("<button type='button' class='btn btn-ghost btn-sm' data-command='cargo-edit'>編輯</button> <button type='button' class='btn btn-ghost btn-sm' data-command='cargo-remove'>刪除</button>").Title(" ").Width(125);
+columns.Bound(x=>x.Name).Title("品名");
+columns.Bound(x=>x.LengthCm).Title("長 cm");
+columns.Bound(x=>x.WidthCm).Title("寬 cm");
+columns.Bound(x=>x.HeightCm).Title("高 cm");
+columns.Bound(x=>x.Category).Title("分類");
+columns.Bound(x=>x.Qty).Title("件數");
+columns.Bound(x=>x.Weight).Title("每件 kg");}).Scrollable(s=>s.Height("auto")).DataSource(ds=>ds.Ajax().ServerOperation(false)))<div class="divider">
+</div>
+<div class="callout info">送出後系統立即自動媒合（無需主管核准、無需業務按鈕），並直接告知媒合到的班次時間與車號。</div>
+<button type="button" class="btn btn-primary btn-sm" id="aa-submit">▶ 送出並自動媒合</button>
+<button type="button" class="btn btn-ghost btn-sm" id="aa-cancel">取消</button>
+</div>
+</section>
+<section id="apply-detail" hidden>
+<div class="section-h" id="detail-title">
+</div>
+<div class="card">
+<div class="card-title split">
+<span>基本資料</span>
+<span>
+<span id="detail-status">
+</span>
+</span>
+</div>
+<div id="detail-basic">
+</div>
+</div>
+<div class="card">
+<div class="card-title split">
+<span>接收人資訊</span>
+<span>
+</span>
+</div>
+<div id="detail-recipient" class="recipient">
+</div>
+</div>
+<div class="card">
+<div class="card-title split">
+<span>
+<span id="detail-cargo-title">貨物項目</span>
+</span>
+<span>
+<button type="button" class="btn btn-accent btn-sm" id="ad-add">＋ 新增</button>
+</span>
+</div>@(Html.Kendo().Grid<CargoItem>().Name("ad-items").AutoBind(false).NoRecords(n=>n.Template("查無符合條件的紀錄")).Columns(columns=>{columns.Bound(x=>x.Name).ClientTemplate("<button type='button' class='btn btn-ghost btn-sm' data-command='cargo-edit'>編輯</button> <button type='button' class='btn btn-ghost btn-sm' data-command='cargo-remove'>刪除</button>").Title(" ").Width(125);
+columns.Bound(x=>x.Name).Title("品名");
+columns.Bound(x=>x.LengthCm).Title("長 cm");
+columns.Bound(x=>x.WidthCm).Title("寬 cm");
+columns.Bound(x=>x.HeightCm).Title("高 cm");
+columns.Bound(x=>x.Category).Title("分類");
+columns.Bound(x=>x.Qty).Title("件數");
+columns.Bound(x=>x.Weight).Title("每件 kg");}).Scrollable(s=>s.Height("auto")).DataSource(ds=>ds.Ajax().ServerOperation(false)))<p id="detail-edit-hint" class="muted">此單尚未媒合，可編輯貨物；編輯後請按「重新媒合」保存並重試。</p>
+</div>
+<div class="card">
+<div class="card-title split">
+<span>自動媒合結果</span>
+<span>
+</span>
+</div>
+<div id="detail-result">
+</div>
+<button type="button" class="btn btn-primary btn-sm" id="ad-rematch">↻ 重新媒合</button>
+</div>
+<button type="button" class="btn btn-ghost btn-sm" id="ad-back">← 返回查詢</button>
+</section>
+@Html.Partial("_CargoEditor",Model)
+@section scripts {<script src="@Url.Content("~/Scripts/module-a/applications.js")">
+</script>}

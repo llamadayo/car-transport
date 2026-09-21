@@ -1,0 +1,95 @@
+@model VD.Web.Models.PageModel
+<div class="card">
+<div class="card-title split">
+<span>收貨申請 · <span id="m-number">LA001</span>
+</span>
+<span>
+<button type="button" class="btn btn-ghost btn-sm" id="m-relayout">↻ 重新排版</button>
+</span>
+</div>
+<div class="fgrid" id="m-grid">
+<div class="grid-sizer">
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">單號</span> <span class="fcard-value">
+<span id="m-id">LA001</span>
+</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">申請人</span> <span class="fcard-value">
+<span id="m-applicant">業務部-周雅婷</span>
+</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">收貨模式</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("m-mode").BindTo(Model.Modes))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">目的地站點</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("m-station").BindTo(Model.Stations))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">送貨建物</span> <span class="fcard-value">
+<span id="m-building">一號月台</span>
+</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">收貨地點（起）</span> <span class="fcard-value">
+<span id="m-pickup">五股廠 / 原料倉</span>
+</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">排班日期</span> <span class="fcard-value">@(Html.Kendo().DatePicker().Name("m-date").Format("yyyy-MM-dd").Value(Model.Today))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">期望收貨時間</span> <span class="fcard-value">@(Html.Kendo().TimePicker().Name("m-time").Format("HH:mm").Value(Model.Today.AddHours(14)))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">上貨 / 下貨時間</span> <span class="fcard-value">
+<span id="m-handle">10 分 / 5 分</span>
+</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">排定班次</span> <span class="fcard-value">
+<span id="m-shift">尚未排班</span>
+</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">接收人</span> <span class="fcard-value">
+<span class="recipient" id="m-recipient">生產部 林建志
+03-1234567#210</span>
+</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">貨物摘要</span> <span class="fcard-value">
+<span class="recipient" id="m-cargo">零件箱 × 6
+棧板 × 1</span>
+</span>
+</div>
+</div>
+</div>
+</div>
+<div class="callout info">資訊卡排版試做；此頁調整僅供預覽，不會變更申請資料。</div>
+@section scripts {<script src="@Url.Content("~/Scripts/module-a/cards.js")">
+</script>}

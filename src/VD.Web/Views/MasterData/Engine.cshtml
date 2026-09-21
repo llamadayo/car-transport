@@ -1,0 +1,31 @@
+@model VD.Web.Models.PageModel
+<div class="section-h">裝載可行性引擎</div>
+<div class="card">
+<div class="card-title split">
+<span>測試裝載</span>
+<span>
+</span>
+</div>
+<div class="fgrid">
+<div class="grid-sizer">
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">車輛</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("engine-vehicle").BindTo(Model.Vehicles))</span>
+</div>
+</div>
+</div>@(Html.Kendo().Grid<CargoItem>().Name("engine-items").AutoBind(false).NoRecords(n=>n.Template("查無符合條件的紀錄")).Columns(columns=>{columns.Bound(x=>x.Name).ClientTemplate("<button type='button' class='btn btn-ghost btn-sm' data-command='cargo-edit'>編輯</button> <button type='button' class='btn btn-ghost btn-sm' data-command='cargo-remove'>刪除</button>").Title(" ").Width(125);
+columns.Bound(x=>x.Name).Title("品名");
+columns.Bound(x=>x.LengthCm).Title("長 cm");
+columns.Bound(x=>x.WidthCm).Title("寬 cm");
+columns.Bound(x=>x.HeightCm).Title("高 cm");
+columns.Bound(x=>x.Category).Title("分類");
+columns.Bound(x=>x.Qty).Title("件數");
+columns.Bound(x=>x.Weight).Title("每件 kg");}).Scrollable(s=>s.Height("auto")).DataSource(ds=>ds.Ajax().ServerOperation(false)))<button type="button" class="btn btn-accent btn-sm" id="engine-add">＋ 新增貨物</button>
+<button type="button" class="btn btn-primary btn-sm" id="engine-check">▶ 檢查裝載</button>
+<div id="engine-result">
+</div>
+</div>
+@Html.Partial("_CargoEditor",Model)
+@section scripts {<script src="@Url.Content("~/Scripts/module-a/engine.js")">
+</script>}

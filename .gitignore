@@ -6,3 +6,21 @@ node_modules/
 # 導入方式見 docs/SPEC-DATA.md 第 6 節
 js/config.local.js
 docs/*.local.md
+
+# MVC build / local databases / licensed company assets
+**/bin/
+**/obj/
+.vs/
+packages/
+TestResults/
+artifacts/
+*.sqlite
+*.sqlite-*
+src/VD.Web/App_Data/*.config
+vendor/kendo/*
+!vendor/kendo/README.md
+src/VD.Web/Scripts/kendo/
+src/VD.Web/Content/kendo/
+src/VD.Web/Prototype/
+*.csproj.user
+**/__pycache__/

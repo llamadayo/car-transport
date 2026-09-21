@@ -1,5 +1,7 @@
 # 車輛派遣系統整合開發計畫書（Claude Code 執行版）
 
+> 2026-09-21：模組 A MVC／Service-Dapper 移轉原始碼已加入；驗證範圍與待 Windows 執行項目見 [實作記錄](MVC-IMPLEMENTATION.md) 及 [建置文件](WINDOWS-BUILD.md)。以下舊規格／待辦不表示本期已全部完成。
+
 > 本文件為 Claude Code（claude cli）的執行藍圖。三份需求討論報告的定案決策已全數整併於此，
 > 開發時**以本文件的「不可違反決策」為最高準則**，不得自行推翻或「優化」已定案的業務邏輯。
 >
@@ -30,11 +32,12 @@
 | 項目 | 約束 |
 |---|---|
 | 框架 | C# / .NET Framework 4.8 / ASP.NET MVC（**非** .NET Core、非 Web API 獨立層） |
-| 相依注入 | **不使用 DI 容器**。共用 Provider 一律 static 單例，內部自行讀取設定檔取得連線字串 |
+| 相依注入 | **不使用 DI 容器**。共用 Provider 為 static 單例；Service 讀取連線設定與查詢資料，Provider 透過 Service 刷新快取 |
 | 前端 | MVC Razor + JavaScript（沿用既有系統慣例，不引入 SPA 框架） |
-| 資料庫 | 既有 MIS 資料庫（SQL Server 假設），新增資料表以 `VD_` 前綴命名 |
+| 資料庫 | Oracle 19c；前期可用 SQLite 驗證持久化，兩套 SQL 分別維護，新增資料表以 `VD_` 前綴命名（2026-09-21 使用者確認） |
+| 資料存取 | **不設 Repository 層**。資料庫連線、SQL、參數映射與交易管理全部放在 Service，統一透過 **Dapper Query／Execute** 讀寫（2026-09-21 使用者確認） |
 | 外部整合 | 僅一項：司機休請假系統 API（內網）。**不串外部地圖 API** |
-| 併發 | 載運量不高，**不做併發扣容量的鎖定／交易隔離機制**，Repository 單純讀取／判斷／寫入 |
+| 併發 | 載運量不高，**不另做跨請求容量鎖定／特殊交易隔離機制**；Service 讀取／判斷／寫入，保存申請與明細使用基本交易維持完整性 |
 | 通知 | SMTP 內網寄信（物流異常回報、共乘逾期作廢兩處使用） |
 | 演算法選型 | 一律貪婪規則引擎，**不用 VRP 求解器、不做 3D 碰撞模擬**，邏輯必須可解釋、可人工覆核 |
 
@@ -249,7 +252,8 @@ Claude Code 在任何任務中都不得違反以下定案。若發現實作上�
 
 ## 技術約束（不可違反）
 - C# / .NET Framework 4.8 / ASP.NET MVC，不用 .NET Core、不建獨立 API 層
-- 不使用 DI 容器；共用 Provider 為 static 單例，自行讀設定檔取連線字串
+- 不使用 DI 容器；共用 Provider 為 static 單例，透過 Service 取得資料／刷新快取
+- 不設 Repository 層；Service 自行讀連線設定、管理連線／交易，使用 Dapper Query／Execute 讀寫 Oracle 19c（開發版可用 SQLite）
 - 不串外部地圖 API；隔離內網，程式碼不得依賴任何外部線上服務
 - 演算法一律貪婪規則引擎，不用 VRP 求解器、不做 3D 碰撞模擬
 - 不做併發扣容量鎖定機制

@@ -1,0 +1,3210 @@
+{
+  "Master": {
+    "Sites": [
+      {
+        "Id": "D1",
+        "Name": "屏東據點",
+        "SortOrder": 0
+      },
+      {
+        "Id": "D2",
+        "Name": "高雄左營",
+        "SortOrder": 1
+      },
+      {
+        "Id": "D3",
+        "Name": "台南據點",
+        "SortOrder": 2
+      },
+      {
+        "Id": "D4",
+        "Name": "嘉義據點",
+        "SortOrder": 3
+      },
+      {
+        "Id": "D5",
+        "Name": "雲林據點",
+        "SortOrder": 4
+      },
+      {
+        "Id": "D6",
+        "Name": "台中據點",
+        "SortOrder": 5
+      },
+      {
+        "Id": "D7",
+        "Name": "苗栗據點",
+        "SortOrder": 6
+      },
+      {
+        "Id": "D8",
+        "Name": "新竹據點",
+        "SortOrder": 7
+      },
+      {
+        "Id": "D9",
+        "Name": "桃園龍潭",
+        "SortOrder": 8
+      },
+      {
+        "Id": "D10",
+        "Name": "台北據點",
+        "SortOrder": 9
+      }
+    ],
+    "Stations": [
+      {
+        "Id": "D1-100",
+        "Name": "100",
+        "BranchId": "D1",
+        "SortOrder": 1
+      },
+      {
+        "Id": "D1-200",
+        "Name": "200",
+        "BranchId": "D1",
+        "SortOrder": 2
+      },
+      {
+        "Id": "D1-300",
+        "Name": "300",
+        "BranchId": "D1",
+        "SortOrder": 3
+      },
+      {
+        "Id": "D1-400",
+        "Name": "400",
+        "BranchId": "D1",
+        "SortOrder": 4
+      },
+      {
+        "Id": "D1-500",
+        "Name": "500",
+        "BranchId": "D1",
+        "SortOrder": 5
+      },
+      {
+        "Id": "D1-600",
+        "Name": "600",
+        "BranchId": "D1",
+        "SortOrder": 6
+      },
+      {
+        "Id": "D1-700",
+        "Name": "700",
+        "BranchId": "D1",
+        "SortOrder": 7
+      },
+      {
+        "Id": "D1-800",
+        "Name": "800",
+        "BranchId": "D1",
+        "SortOrder": 8
+      },
+      {
+        "Id": "D1-900",
+        "Name": "900",
+        "BranchId": "D1",
+        "SortOrder": 9
+      },
+      {
+        "Id": "D2-100",
+        "Name": "100",
+        "BranchId": "D2",
+        "SortOrder": 1
+      },
+      {
+        "Id": "D2-200",
+        "Name": "200",
+        "BranchId": "D2",
+        "SortOrder": 2
+      },
+      {
+        "Id": "D2-300",
+        "Name": "300",
+        "BranchId": "D2",
+        "SortOrder": 3
+      },
+      {
+        "Id": "D2-400",
+        "Name": "400",
+        "BranchId": "D2",
+        "SortOrder": 4
+      },
+      {
+        "Id": "D2-500",
+        "Name": "500",
+        "BranchId": "D2",
+        "SortOrder": 5
+      },
+      {
+        "Id": "D2-600",
+        "Name": "600",
+        "BranchId": "D2",
+        "SortOrder": 6
+      },
+      {
+        "Id": "D2-700",
+        "Name": "700",
+        "BranchId": "D2",
+        "SortOrder": 7
+      },
+      {
+        "Id": "D2-800",
+        "Name": "800",
+        "BranchId": "D2",
+        "SortOrder": 8
+      },
+      {
+        "Id": "D2-900",
+        "Name": "900",
+        "BranchId": "D2",
+        "SortOrder": 9
+      },
+      {
+        "Id": "D3-100",
+        "Name": "100",
+        "BranchId": "D3",
+        "SortOrder": 1
+      },
+      {
+        "Id": "D3-200",
+        "Name": "200",
+        "BranchId": "D3",
+        "SortOrder": 2
+      },
+      {
+        "Id": "D3-300",
+        "Name": "300",
+        "BranchId": "D3",
+        "SortOrder": 3
+      },
+      {
+        "Id": "D3-400",
+        "Name": "400",
+        "BranchId": "D3",
+        "SortOrder": 4
+      },
+      {
+        "Id": "D3-500",
+        "Name": "500",
+        "BranchId": "D3",
+        "SortOrder": 5
+      },
+      {
+        "Id": "D3-600",
+        "Name": "600",
+        "BranchId": "D3",
+        "SortOrder": 6
+      },
+      {
+        "Id": "D3-700",
+        "Name": "700",
+        "BranchId": "D3",
+        "SortOrder": 7
+      },
+      {
+        "Id": "D3-800",
+        "Name": "800",
+        "BranchId": "D3",
+        "SortOrder": 8
+      },
+      {
+        "Id": "D3-900",
+        "Name": "900",
+        "BranchId": "D3",
+        "SortOrder": 9
+      },
+      {
+        "Id": "D4-100",
+        "Name": "100",
+        "BranchId": "D4",
+        "SortOrder": 1
+      },
+      {
+        "Id": "D4-200",
+        "Name": "200",
+        "BranchId": "D4",
+        "SortOrder": 2
+      },
+      {
+        "Id": "D4-300",
+        "Name": "300",
+        "BranchId": "D4",
+        "SortOrder": 3
+      },
+      {
+        "Id": "D4-400",
+        "Name": "400",
+        "BranchId": "D4",
+        "SortOrder": 4
+      },
+      {
+        "Id": "D4-500",
+        "Name": "500",
+        "BranchId": "D4",
+        "SortOrder": 5
+      },
+      {
+        "Id": "D4-600",
+        "Name": "600",
+        "BranchId": "D4",
+        "SortOrder": 6
+      },
+      {
+        "Id": "D4-700",
+        "Name": "700",
+        "BranchId": "D4",
+        "SortOrder": 7
+      },
+      {
+        "Id": "D4-800",
+        "Name": "800",
+        "BranchId": "D4",
+        "SortOrder": 8
+      },
+      {
+        "Id": "D4-900",
+        "Name": "900",
+        "BranchId": "D4",
+        "SortOrder": 9
+      },
+      {
+        "Id": "D5-100",
+        "Name": "100",
+        "BranchId": "D5",
+        "SortOrder": 1
+      },
+      {
+        "Id": "D5-200",
+        "Name": "200",
+        "BranchId": "D5",
+        "SortOrder": 2
+      },
+      {
+        "Id": "D5-300",
+        "Name": "300",
+        "BranchId": "D5",
+        "SortOrder": 3
+      },
+      {
+        "Id": "D5-400",
+        "Name": "400",
+        "BranchId": "D5",
+        "SortOrder": 4
+      },
+      {
+        "Id": "D5-500",
+        "Name": "500",
+        "BranchId": "D5",
+        "SortOrder": 5
+      },
+      {
+        "Id": "D5-600",
+        "Name": "600",
+        "BranchId": "D5",
+        "SortOrder": 6
+      },
+      {
+        "Id": "D5-700",
+        "Name": "700",
+        "BranchId": "D5",
+        "SortOrder": 7
+      },
+      {
+        "Id": "D5-800",
+        "Name": "800",
+        "BranchId": "D5",
+        "SortOrder": 8
+      },
+      {
+        "Id": "D5-900",
+        "Name": "900",
+        "BranchId": "D5",
+        "SortOrder": 9
+      },
+      {
+        "Id": "D6-100",
+        "Name": "100",
+        "BranchId": "D6",
+        "SortOrder": 1
+      },
+      {
+        "Id": "D6-200",
+        "Name": "200",
+        "BranchId": "D6",
+        "SortOrder": 2
+      },
+      {
+        "Id": "D6-300",
+        "Name": "300",
+        "BranchId": "D6",
+        "SortOrder": 3
+      },
+      {
+        "Id": "D6-400",
+        "Name": "400",
+        "BranchId": "D6",
+        "SortOrder": 4
+      },
+      {
+        "Id": "D6-500",
+        "Name": "500",
+        "BranchId": "D6",
+        "SortOrder": 5
+      },
+      {
+        "Id": "D6-600",
+        "Name": "600",
+        "BranchId": "D6",
+        "SortOrder": 6
+      },
+      {
+        "Id": "D6-700",
+        "Name": "700",
+        "BranchId": "D6",
+        "SortOrder": 7
+      },
+      {
+        "Id": "D6-800",
+        "Name": "800",
+        "BranchId": "D6",
+        "SortOrder": 8
+      },
+      {
+        "Id": "D6-900",
+        "Name": "900",
+        "BranchId": "D6",
+        "SortOrder": 9
+      },
+      {
+        "Id": "D7-100",
+        "Name": "100",
+        "BranchId": "D7",
+        "SortOrder": 1
+      },
+      {
+        "Id": "D7-200",
+        "Name": "200",
+        "BranchId": "D7",
+        "SortOrder": 2
+      },
+      {
+        "Id": "D7-300",
+        "Name": "300",
+        "BranchId": "D7",
+        "SortOrder": 3
+      },
+      {
+        "Id": "D7-400",
+        "Name": "400",
+        "BranchId": "D7",
+        "SortOrder": 4
+      },
+      {
+        "Id": "D7-500",
+        "Name": "500",
+        "BranchId": "D7",
+        "SortOrder": 5
+      },
+      {
+        "Id": "D7-600",
+        "Name": "600",
+        "BranchId": "D7",
+        "SortOrder": 6
+      },
+      {
+        "Id": "D7-700",
+        "Name": "700",
+        "BranchId": "D7",
+        "SortOrder": 7
+      },
+      {
+        "Id": "D7-800",
+        "Name": "800",
+        "BranchId": "D7",
+        "SortOrder": 8
+      },
+      {
+        "Id": "D7-900",
+        "Name": "900",
+        "BranchId": "D7",
+        "SortOrder": 9
+      },
+      {
+        "Id": "D8-100",
+        "Name": "100",
+        "BranchId": "D8",
+        "SortOrder": 1
+      },
+      {
+        "Id": "D8-200",
+        "Name": "200",
+        "BranchId": "D8",
+        "SortOrder": 2
+      },
+      {
+        "Id": "D8-300",
+        "Name": "300",
+        "BranchId": "D8",
+        "SortOrder": 3
+      },
+      {
+        "Id": "D8-400",
+        "Name": "400",
+        "BranchId": "D8",
+        "SortOrder": 4
+      },
+      {
+        "Id": "D8-500",
+        "Name": "500",
+        "BranchId": "D8",
+        "SortOrder": 5
+      },
+      {
+        "Id": "D8-600",
+        "Name": "600",
+        "BranchId": "D8",
+        "SortOrder": 6
+      },
+      {
+        "Id": "D8-700",
+        "Name": "700",
+        "BranchId": "D8",
+        "SortOrder": 7
+      },
+      {
+        "Id": "D8-800",
+        "Name": "800",
+        "BranchId": "D8",
+        "SortOrder": 8
+      },
+      {
+        "Id": "D8-900",
+        "Name": "900",
+        "BranchId": "D8",
+        "SortOrder": 9
+      },
+      {
+        "Id": "D9-100",
+        "Name": "100",
+        "BranchId": "D9",
+        "SortOrder": 1
+      },
+      {
+        "Id": "D9-200",
+        "Name": "200",
+        "BranchId": "D9",
+        "SortOrder": 2
+      },
+      {
+        "Id": "D9-300",
+        "Name": "300",
+        "BranchId": "D9",
+        "SortOrder": 3
+      },
+      {
+        "Id": "D9-400",
+        "Name": "400",
+        "BranchId": "D9",
+        "SortOrder": 4
+      },
+      {
+        "Id": "D9-500",
+        "Name": "500",
+        "BranchId": "D9",
+        "SortOrder": 5
+      },
+      {
+        "Id": "D9-600",
+        "Name": "600",
+        "BranchId": "D9",
+        "SortOrder": 6
+      },
+      {
+        "Id": "D9-700",
+        "Name": "700",
+        "BranchId": "D9",
+        "SortOrder": 7
+      },
+      {
+        "Id": "D9-800",
+        "Name": "800",
+        "BranchId": "D9",
+        "SortOrder": 8
+      },
+      {
+        "Id": "D9-900",
+        "Name": "900",
+        "BranchId": "D9",
+        "SortOrder": 9
+      },
+      {
+        "Id": "D10-100",
+        "Name": "100",
+        "BranchId": "D10",
+        "SortOrder": 1
+      },
+      {
+        "Id": "D10-200",
+        "Name": "200",
+        "BranchId": "D10",
+        "SortOrder": 2
+      },
+      {
+        "Id": "D10-300",
+        "Name": "300",
+        "BranchId": "D10",
+        "SortOrder": 3
+      },
+      {
+        "Id": "D10-400",
+        "Name": "400",
+        "BranchId": "D10",
+        "SortOrder": 4
+      },
+      {
+        "Id": "D10-500",
+        "Name": "500",
+        "BranchId": "D10",
+        "SortOrder": 5
+      },
+      {
+        "Id": "D10-600",
+        "Name": "600",
+        "BranchId": "D10",
+        "SortOrder": 6
+      },
+      {
+        "Id": "D10-700",
+        "Name": "700",
+        "BranchId": "D10",
+        "SortOrder": 7
+      },
+      {
+        "Id": "D10-800",
+        "Name": "800",
+        "BranchId": "D10",
+        "SortOrder": 8
+      },
+      {
+        "Id": "D10-900",
+        "Name": "900",
+        "BranchId": "D10",
+        "SortOrder": 9
+      }
+    ],
+    "Vehicles": [
+      {
+        "Id": "V-L01",
+        "Name": "物流貨車 01",
+        "LengthCm": 420,
+        "WidthCm": 180,
+        "HeightCm": 190,
+        "Volume": 14364,
+        "WeightLimit": 3000
+      },
+      {
+        "Id": "V-L02",
+        "Name": "物流貨車 02",
+        "LengthCm": 360,
+        "WidthCm": 175,
+        "HeightCm": 185,
+        "Volume": 11655,
+        "WeightLimit": 2500
+      },
+      {
+        "Id": "V-T01",
+        "Name": "幹線聯結車 01",
+        "LengthCm": 600,
+        "WidthCm": 240,
+        "HeightCm": 240,
+        "Volume": 34560,
+        "WeightLimit": 8000
+      },
+      {
+        "Id": "V-T02",
+        "Name": "幹線貨車 02",
+        "LengthCm": 480,
+        "WidthCm": 200,
+        "HeightCm": 210,
+        "Volume": 20160,
+        "WeightLimit": 5000
+      },
+      {
+        "Id": "V-B01",
+        "Name": "商務廂車 01",
+        "LengthCm": 0,
+        "WidthCm": 0,
+        "HeightCm": 0
+      },
+      {
+        "Id": "V-B02",
+        "Name": "商務轎車 02",
+        "LengthCm": 0,
+        "WidthCm": 0,
+        "HeightCm": 0
+      },
+      {
+        "Id": "V-B03",
+        "Name": "商務廂車 03",
+        "LengthCm": 0,
+        "WidthCm": 0,
+        "HeightCm": 0
+      },
+      {
+        "Id": "V-B04",
+        "Name": "商務廂車 04",
+        "LengthCm": 0,
+        "WidthCm": 0,
+        "HeightCm": 0
+      }
+    ],
+    "Shifts": [
+      {
+        "Id": "D1-R1",
+        "BranchId": "D1",
+        "Label": "08:00 班",
+        "DepartMinute": 480,
+        "SortOrder": 0,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D1-R2",
+        "BranchId": "D1",
+        "Label": "09:00 班",
+        "DepartMinute": 540,
+        "SortOrder": 1,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D1-R3",
+        "BranchId": "D1",
+        "Label": "10:00 班",
+        "DepartMinute": 600,
+        "SortOrder": 2,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D1-R4",
+        "BranchId": "D1",
+        "Label": "11:00 班",
+        "DepartMinute": 660,
+        "SortOrder": 3,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D1-R5",
+        "BranchId": "D1",
+        "Label": "12:00 班",
+        "DepartMinute": 720,
+        "SortOrder": 4,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D1-R6",
+        "BranchId": "D1",
+        "Label": "13:00 班",
+        "DepartMinute": 780,
+        "SortOrder": 5,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D1-R7",
+        "BranchId": "D1",
+        "Label": "14:00 班",
+        "DepartMinute": 840,
+        "SortOrder": 6,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D1-R8",
+        "BranchId": "D1",
+        "Label": "15:00 班",
+        "DepartMinute": 900,
+        "SortOrder": 7,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D1-R9",
+        "BranchId": "D1",
+        "Label": "16:00 班",
+        "DepartMinute": 960,
+        "SortOrder": 8,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D1-R10",
+        "BranchId": "D1",
+        "Label": "17:00 班",
+        "DepartMinute": 1020,
+        "SortOrder": 9,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D1-R11",
+        "BranchId": "D1",
+        "Label": "18:00 班",
+        "DepartMinute": 1080,
+        "SortOrder": 10,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D2-R1",
+        "BranchId": "D2",
+        "Label": "08:00 班",
+        "DepartMinute": 480,
+        "SortOrder": 11,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D2-R2",
+        "BranchId": "D2",
+        "Label": "09:00 班",
+        "DepartMinute": 540,
+        "SortOrder": 12,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D2-R3",
+        "BranchId": "D2",
+        "Label": "10:00 班",
+        "DepartMinute": 600,
+        "SortOrder": 13,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D2-R4",
+        "BranchId": "D2",
+        "Label": "11:00 班",
+        "DepartMinute": 660,
+        "SortOrder": 14,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D2-R5",
+        "BranchId": "D2",
+        "Label": "12:00 班",
+        "DepartMinute": 720,
+        "SortOrder": 15,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D2-R6",
+        "BranchId": "D2",
+        "Label": "13:00 班",
+        "DepartMinute": 780,
+        "SortOrder": 16,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D2-R7",
+        "BranchId": "D2",
+        "Label": "14:00 班",
+        "DepartMinute": 840,
+        "SortOrder": 17,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D2-R8",
+        "BranchId": "D2",
+        "Label": "15:00 班",
+        "DepartMinute": 900,
+        "SortOrder": 18,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D2-R9",
+        "BranchId": "D2",
+        "Label": "16:00 班",
+        "DepartMinute": 960,
+        "SortOrder": 19,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D2-R10",
+        "BranchId": "D2",
+        "Label": "17:00 班",
+        "DepartMinute": 1020,
+        "SortOrder": 20,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D2-R11",
+        "BranchId": "D2",
+        "Label": "18:00 班",
+        "DepartMinute": 1080,
+        "SortOrder": 21,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D3-R1",
+        "BranchId": "D3",
+        "Label": "08:00 班",
+        "DepartMinute": 480,
+        "SortOrder": 22,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D3-R2",
+        "BranchId": "D3",
+        "Label": "09:00 班",
+        "DepartMinute": 540,
+        "SortOrder": 23,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D3-R3",
+        "BranchId": "D3",
+        "Label": "10:00 班",
+        "DepartMinute": 600,
+        "SortOrder": 24,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D3-R4",
+        "BranchId": "D3",
+        "Label": "11:00 班",
+        "DepartMinute": 660,
+        "SortOrder": 25,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D3-R5",
+        "BranchId": "D3",
+        "Label": "12:00 班",
+        "DepartMinute": 720,
+        "SortOrder": 26,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D3-R6",
+        "BranchId": "D3",
+        "Label": "13:00 班",
+        "DepartMinute": 780,
+        "SortOrder": 27,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D3-R7",
+        "BranchId": "D3",
+        "Label": "14:00 班",
+        "DepartMinute": 840,
+        "SortOrder": 28,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D3-R8",
+        "BranchId": "D3",
+        "Label": "15:00 班",
+        "DepartMinute": 900,
+        "SortOrder": 29,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D3-R9",
+        "BranchId": "D3",
+        "Label": "16:00 班",
+        "DepartMinute": 960,
+        "SortOrder": 30,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D3-R10",
+        "BranchId": "D3",
+        "Label": "17:00 班",
+        "DepartMinute": 1020,
+        "SortOrder": 31,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D3-R11",
+        "BranchId": "D3",
+        "Label": "18:00 班",
+        "DepartMinute": 1080,
+        "SortOrder": 32,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D4-R1",
+        "BranchId": "D4",
+        "Label": "08:00 班",
+        "DepartMinute": 480,
+        "SortOrder": 33,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D4-R2",
+        "BranchId": "D4",
+        "Label": "09:00 班",
+        "DepartMinute": 540,
+        "SortOrder": 34,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D4-R3",
+        "BranchId": "D4",
+        "Label": "10:00 班",
+        "DepartMinute": 600,
+        "SortOrder": 35,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D4-R4",
+        "BranchId": "D4",
+        "Label": "11:00 班",
+        "DepartMinute": 660,
+        "SortOrder": 36,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D4-R5",
+        "BranchId": "D4",
+        "Label": "12:00 班",
+        "DepartMinute": 720,
+        "SortOrder": 37,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D4-R6",
+        "BranchId": "D4",
+        "Label": "13:00 班",
+        "DepartMinute": 780,
+        "SortOrder": 38,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D4-R7",
+        "BranchId": "D4",
+        "Label": "14:00 班",
+        "DepartMinute": 840,
+        "SortOrder": 39,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D4-R8",
+        "BranchId": "D4",
+        "Label": "15:00 班",
+        "DepartMinute": 900,
+        "SortOrder": 40,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D4-R9",
+        "BranchId": "D4",
+        "Label": "16:00 班",
+        "DepartMinute": 960,
+        "SortOrder": 41,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D4-R10",
+        "BranchId": "D4",
+        "Label": "17:00 班",
+        "DepartMinute": 1020,
+        "SortOrder": 42,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D4-R11",
+        "BranchId": "D4",
+        "Label": "18:00 班",
+        "DepartMinute": 1080,
+        "SortOrder": 43,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D5-R1",
+        "BranchId": "D5",
+        "Label": "08:00 班",
+        "DepartMinute": 480,
+        "SortOrder": 44,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D5-R2",
+        "BranchId": "D5",
+        "Label": "09:00 班",
+        "DepartMinute": 540,
+        "SortOrder": 45,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D5-R3",
+        "BranchId": "D5",
+        "Label": "10:00 班",
+        "DepartMinute": 600,
+        "SortOrder": 46,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D5-R4",
+        "BranchId": "D5",
+        "Label": "11:00 班",
+        "DepartMinute": 660,
+        "SortOrder": 47,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D5-R5",
+        "BranchId": "D5",
+        "Label": "12:00 班",
+        "DepartMinute": 720,
+        "SortOrder": 48,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D5-R6",
+        "BranchId": "D5",
+        "Label": "13:00 班",
+        "DepartMinute": 780,
+        "SortOrder": 49,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D5-R7",
+        "BranchId": "D5",
+        "Label": "14:00 班",
+        "DepartMinute": 840,
+        "SortOrder": 50,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D5-R8",
+        "BranchId": "D5",
+        "Label": "15:00 班",
+        "DepartMinute": 900,
+        "SortOrder": 51,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D5-R9",
+        "BranchId": "D5",
+        "Label": "16:00 班",
+        "DepartMinute": 960,
+        "SortOrder": 52,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D5-R10",
+        "BranchId": "D5",
+        "Label": "17:00 班",
+        "DepartMinute": 1020,
+        "SortOrder": 53,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D5-R11",
+        "BranchId": "D5",
+        "Label": "18:00 班",
+        "DepartMinute": 1080,
+        "SortOrder": 54,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D6-R1",
+        "BranchId": "D6",
+        "Label": "08:00 班",
+        "DepartMinute": 480,
+        "SortOrder": 55,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D6-R2",
+        "BranchId": "D6",
+        "Label": "09:00 班",
+        "DepartMinute": 540,
+        "SortOrder": 56,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D6-R3",
+        "BranchId": "D6",
+        "Label": "10:00 班",
+        "DepartMinute": 600,
+        "SortOrder": 57,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D6-R4",
+        "BranchId": "D6",
+        "Label": "11:00 班",
+        "DepartMinute": 660,
+        "SortOrder": 58,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D6-R5",
+        "BranchId": "D6",
+        "Label": "12:00 班",
+        "DepartMinute": 720,
+        "SortOrder": 59,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D6-R6",
+        "BranchId": "D6",
+        "Label": "13:00 班",
+        "DepartMinute": 780,
+        "SortOrder": 60,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D6-R7",
+        "BranchId": "D6",
+        "Label": "14:00 班",
+        "DepartMinute": 840,
+        "SortOrder": 61,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D6-R8",
+        "BranchId": "D6",
+        "Label": "15:00 班",
+        "DepartMinute": 900,
+        "SortOrder": 62,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D6-R9",
+        "BranchId": "D6",
+        "Label": "16:00 班",
+        "DepartMinute": 960,
+        "SortOrder": 63,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D6-R10",
+        "BranchId": "D6",
+        "Label": "17:00 班",
+        "DepartMinute": 1020,
+        "SortOrder": 64,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D6-R11",
+        "BranchId": "D6",
+        "Label": "18:00 班",
+        "DepartMinute": 1080,
+        "SortOrder": 65,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D7-R1",
+        "BranchId": "D7",
+        "Label": "08:00 班",
+        "DepartMinute": 480,
+        "SortOrder": 66,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D7-R2",
+        "BranchId": "D7",
+        "Label": "09:00 班",
+        "DepartMinute": 540,
+        "SortOrder": 67,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D7-R3",
+        "BranchId": "D7",
+        "Label": "10:00 班",
+        "DepartMinute": 600,
+        "SortOrder": 68,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D7-R4",
+        "BranchId": "D7",
+        "Label": "11:00 班",
+        "DepartMinute": 660,
+        "SortOrder": 69,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D7-R5",
+        "BranchId": "D7",
+        "Label": "12:00 班",
+        "DepartMinute": 720,
+        "SortOrder": 70,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D7-R6",
+        "BranchId": "D7",
+        "Label": "13:00 班",
+        "DepartMinute": 780,
+        "SortOrder": 71,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D7-R7",
+        "BranchId": "D7",
+        "Label": "14:00 班",
+        "DepartMinute": 840,
+        "SortOrder": 72,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D7-R8",
+        "BranchId": "D7",
+        "Label": "15:00 班",
+        "DepartMinute": 900,
+        "SortOrder": 73,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D7-R9",
+        "BranchId": "D7",
+        "Label": "16:00 班",
+        "DepartMinute": 960,
+        "SortOrder": 74,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D7-R10",
+        "BranchId": "D7",
+        "Label": "17:00 班",
+        "DepartMinute": 1020,
+        "SortOrder": 75,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D7-R11",
+        "BranchId": "D7",
+        "Label": "18:00 班",
+        "DepartMinute": 1080,
+        "SortOrder": 76,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D8-R1",
+        "BranchId": "D8",
+        "Label": "08:00 班",
+        "DepartMinute": 480,
+        "SortOrder": 77,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D8-R2",
+        "BranchId": "D8",
+        "Label": "09:00 班",
+        "DepartMinute": 540,
+        "SortOrder": 78,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D8-R3",
+        "BranchId": "D8",
+        "Label": "10:00 班",
+        "DepartMinute": 600,
+        "SortOrder": 79,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D8-R4",
+        "BranchId": "D8",
+        "Label": "11:00 班",
+        "DepartMinute": 660,
+        "SortOrder": 80,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D8-R5",
+        "BranchId": "D8",
+        "Label": "12:00 班",
+        "DepartMinute": 720,
+        "SortOrder": 81,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D8-R6",
+        "BranchId": "D8",
+        "Label": "13:00 班",
+        "DepartMinute": 780,
+        "SortOrder": 82,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D8-R7",
+        "BranchId": "D8",
+        "Label": "14:00 班",
+        "DepartMinute": 840,
+        "SortOrder": 83,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D8-R8",
+        "BranchId": "D8",
+        "Label": "15:00 班",
+        "DepartMinute": 900,
+        "SortOrder": 84,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D8-R9",
+        "BranchId": "D8",
+        "Label": "16:00 班",
+        "DepartMinute": 960,
+        "SortOrder": 85,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D8-R10",
+        "BranchId": "D8",
+        "Label": "17:00 班",
+        "DepartMinute": 1020,
+        "SortOrder": 86,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D8-R11",
+        "BranchId": "D8",
+        "Label": "18:00 班",
+        "DepartMinute": 1080,
+        "SortOrder": 87,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D9-R1",
+        "BranchId": "D9",
+        "Label": "08:00 班",
+        "DepartMinute": 480,
+        "SortOrder": 88,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D9-R2",
+        "BranchId": "D9",
+        "Label": "09:00 班",
+        "DepartMinute": 540,
+        "SortOrder": 89,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D9-R3",
+        "BranchId": "D9",
+        "Label": "10:00 班",
+        "DepartMinute": 600,
+        "SortOrder": 90,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D9-R4",
+        "BranchId": "D9",
+        "Label": "11:00 班",
+        "DepartMinute": 660,
+        "SortOrder": 91,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D9-R5",
+        "BranchId": "D9",
+        "Label": "12:00 班",
+        "DepartMinute": 720,
+        "SortOrder": 92,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D9-R6",
+        "BranchId": "D9",
+        "Label": "13:00 班",
+        "DepartMinute": 780,
+        "SortOrder": 93,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D9-R7",
+        "BranchId": "D9",
+        "Label": "14:00 班",
+        "DepartMinute": 840,
+        "SortOrder": 94,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D9-R8",
+        "BranchId": "D9",
+        "Label": "15:00 班",
+        "DepartMinute": 900,
+        "SortOrder": 95,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D9-R9",
+        "BranchId": "D9",
+        "Label": "16:00 班",
+        "DepartMinute": 960,
+        "SortOrder": 96,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D9-R10",
+        "BranchId": "D9",
+        "Label": "17:00 班",
+        "DepartMinute": 1020,
+        "SortOrder": 97,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D9-R11",
+        "BranchId": "D9",
+        "Label": "18:00 班",
+        "DepartMinute": 1080,
+        "SortOrder": 98,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D10-R1",
+        "BranchId": "D10",
+        "Label": "08:00 班",
+        "DepartMinute": 480,
+        "SortOrder": 99,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D10-R2",
+        "BranchId": "D10",
+        "Label": "09:00 班",
+        "DepartMinute": 540,
+        "SortOrder": 100,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D10-R3",
+        "BranchId": "D10",
+        "Label": "10:00 班",
+        "DepartMinute": 600,
+        "SortOrder": 101,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D10-R4",
+        "BranchId": "D10",
+        "Label": "11:00 班",
+        "DepartMinute": 660,
+        "SortOrder": 102,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D10-R5",
+        "BranchId": "D10",
+        "Label": "12:00 班",
+        "DepartMinute": 720,
+        "SortOrder": 103,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D10-R6",
+        "BranchId": "D10",
+        "Label": "13:00 班",
+        "DepartMinute": 780,
+        "SortOrder": 104,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D10-R7",
+        "BranchId": "D10",
+        "Label": "14:00 班",
+        "DepartMinute": 840,
+        "SortOrder": 105,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D10-R8",
+        "BranchId": "D10",
+        "Label": "15:00 班",
+        "DepartMinute": 900,
+        "SortOrder": 106,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D10-R9",
+        "BranchId": "D10",
+        "Label": "16:00 班",
+        "DepartMinute": 960,
+        "SortOrder": 107,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      },
+      {
+        "Id": "D10-R10",
+        "BranchId": "D10",
+        "Label": "17:00 班",
+        "DepartMinute": 1020,
+        "SortOrder": 108,
+        "VehicleId": "V-L02",
+        "DriverId": "DR2"
+      },
+      {
+        "Id": "D10-R11",
+        "BranchId": "D10",
+        "Label": "18:00 班",
+        "DepartMinute": 1080,
+        "SortOrder": 109,
+        "VehicleId": "V-L01",
+        "DriverId": "DR1"
+      }
+    ],
+    "Categories": [
+      {
+        "Code": "BOX",
+        "Name": "標準紙箱",
+        "Factor": 1.1,
+        "Active": 1
+      },
+      {
+        "Code": "PALLET",
+        "Name": "棧板貨",
+        "Factor": 1.2,
+        "Active": 1
+      },
+      {
+        "Code": "LONG",
+        "Name": "長條/管材",
+        "Factor": 1.45,
+        "Active": 1
+      },
+      {
+        "Code": "IRREG",
+        "Name": "不規則件",
+        "Factor": 1.65,
+        "Active": 1
+      },
+      {
+        "Code": "DRUM",
+        "Name": "桶裝/圓形",
+        "Factor": 1.35,
+        "Active": 1
+      },
+      {
+        "Code": "FRAG",
+        "Name": "易碎/需空隙",
+        "Factor": 1.55,
+        "Active": 1
+      }
+    ],
+    "Config": {
+      "WasteDefault": 1.3,
+      "InterStationMin": 3,
+      "ShiftHandleBudget": 60
+    }
+  },
+  "Matches": [
+    {
+      "Name": "asap first departure",
+      "Now": "2026-09-21T07:00:00",
+      "Application": {
+        "Id": 1,
+        "SubmitSeq": 1,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-100",
+        "DropStationId": "D1-900",
+        "RecvMode": "asap",
+        "ServiceDate": "2026-09-21",
+        "ExpectedMinute": null,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 10
+          }
+        ]
+      },
+      "Existing": [],
+      "Expected": {
+        "Ok": true,
+        "Reason": null,
+        "ShiftId": "D1-R1",
+        "ArrivalMinute": 507,
+        "ExpectDiffMin": null
+      }
+    },
+    {
+      "Name": "today departure equals now skips",
+      "Now": "2026-09-21T08:00:00",
+      "Application": {
+        "Id": 1,
+        "SubmitSeq": 1,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-100",
+        "DropStationId": "D1-900",
+        "RecvMode": "asap",
+        "ServiceDate": "2026-09-21",
+        "ExpectedMinute": null,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 10
+          }
+        ]
+      },
+      "Existing": [],
+      "Expected": {
+        "Ok": true,
+        "Reason": null,
+        "ShiftId": "D1-R2",
+        "ArrivalMinute": 567,
+        "ExpectDiffMin": null
+      }
+    },
+    {
+      "Name": "last departure cutoff",
+      "Now": "2026-09-21T18:00:00",
+      "Application": {
+        "Id": 1,
+        "SubmitSeq": 1,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-100",
+        "DropStationId": "D1-900",
+        "RecvMode": "asap",
+        "ServiceDate": "2026-09-21",
+        "ExpectedMinute": null,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 10
+          }
+        ]
+      },
+      "Existing": [],
+      "Expected": {
+        "Ok": false,
+        "Reason": "past",
+        "ShiftId": null,
+        "ArrivalMinute": null,
+        "ExpectDiffMin": null
+      }
+    },
+    {
+      "Name": "future date full timetable",
+      "Now": "2026-09-21T20:00:00",
+      "Application": {
+        "Id": 1,
+        "SubmitSeq": 1,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-100",
+        "DropStationId": "D1-900",
+        "RecvMode": "exact",
+        "ServiceDate": "2026-09-22",
+        "ExpectedMinute": null,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 10
+          }
+        ]
+      },
+      "Existing": [],
+      "Expected": {
+        "Ok": true,
+        "Reason": null,
+        "ShiftId": "D1-R1",
+        "ArrivalMinute": 507,
+        "ExpectDiffMin": null
+      }
+    },
+    {
+      "Name": "past date rejected",
+      "Now": "2026-09-21T07:00:00",
+      "Application": {
+        "Id": 1,
+        "SubmitSeq": 1,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-100",
+        "DropStationId": "D1-900",
+        "RecvMode": "asap",
+        "ServiceDate": "2026-09-20",
+        "ExpectedMinute": null,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 10
+          }
+        ]
+      },
+      "Existing": [],
+      "Expected": {
+        "Ok": false,
+        "Reason": "past",
+        "ShiftId": null,
+        "ArrivalMinute": null,
+        "ExpectDiffMin": null
+      }
+    },
+    {
+      "Name": "exact nearest",
+      "Now": "2026-09-21T07:00:00",
+      "Application": {
+        "Id": 1,
+        "SubmitSeq": 1,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-100",
+        "DropStationId": "D1-900",
+        "RecvMode": "exact",
+        "ServiceDate": "2026-09-21",
+        "ExpectedMinute": 840,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 10
+          }
+        ]
+      },
+      "Existing": [],
+      "Expected": {
+        "Ok": true,
+        "Reason": null,
+        "ShiftId": "D1-R7",
+        "ArrivalMinute": 867,
+        "ExpectDiffMin": 27
+      }
+    },
+    {
+      "Name": "exact tie keeps timetable order",
+      "Now": "2026-09-21T07:00:00",
+      "Application": {
+        "Id": 1,
+        "SubmitSeq": 1,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-100",
+        "DropStationId": "D1-900",
+        "RecvMode": "exact",
+        "ServiceDate": "2026-09-21",
+        "ExpectedMinute": 537,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 10
+          }
+        ]
+      },
+      "Existing": [],
+      "Expected": {
+        "Ok": true,
+        "Reason": null,
+        "ShiftId": "D1-R1",
+        "ArrivalMinute": 507,
+        "ExpectDiffMin": -30
+      }
+    },
+    {
+      "Name": "exact earlier departure skipped",
+      "Now": "2026-09-21T14:00:00",
+      "Application": {
+        "Id": 1,
+        "SubmitSeq": 1,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-100",
+        "DropStationId": "D1-900",
+        "RecvMode": "exact",
+        "ServiceDate": "2026-09-21",
+        "ExpectedMinute": 480,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 10
+          }
+        ]
+      },
+      "Existing": [],
+      "Expected": {
+        "Ok": true,
+        "Reason": null,
+        "ShiftId": "D1-R8",
+        "ArrivalMinute": 927,
+        "ExpectDiffMin": 447
+      }
+    },
+    {
+      "Name": "exact blank time earliest",
+      "Now": "2026-09-21T07:00:00",
+      "Application": {
+        "Id": 1,
+        "SubmitSeq": 1,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-100",
+        "DropStationId": "D1-900",
+        "RecvMode": "exact",
+        "ServiceDate": "2026-09-21",
+        "ExpectedMinute": null,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 10
+          }
+        ]
+      },
+      "Existing": [],
+      "Expected": {
+        "Ok": true,
+        "Reason": null,
+        "ShiftId": "D1-R1",
+        "ArrivalMinute": 507,
+        "ExpectDiffMin": null
+      }
+    },
+    {
+      "Name": "sixty minute budget equality",
+      "Now": "2026-09-21T07:00:00",
+      "Application": {
+        "Id": 2,
+        "SubmitSeq": 2,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-100",
+        "DropStationId": "D1-900",
+        "RecvMode": "asap",
+        "ServiceDate": "2026-09-21",
+        "ExpectedMinute": null,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 10
+          }
+        ]
+      },
+      "Existing": [
+        {
+          "Id": 1,
+          "SubmitSeq": 1,
+          "Applicant": "測試人",
+          "BranchId": "D1",
+          "PickStationId": "D1-100",
+          "DropStationId": "D1-900",
+          "RecvMode": "asap",
+          "ServiceDate": "2026-09-21",
+          "ExpectedMinute": null,
+          "LoadMin": 45,
+          "UnloadMin": 0,
+          "Status": "matched",
+          "ShiftId": "D1-R1",
+          "Items": [
+            {
+              "ApplicationId": 0,
+              "LineNo": 1,
+              "Name": "測試箱",
+              "LengthCm": 50,
+              "WidthCm": 40,
+              "HeightCm": 30,
+              "Category": "BOX",
+              "Qty": 1,
+              "Weight": 10
+            }
+          ]
+        }
+      ],
+      "Expected": {
+        "Ok": true,
+        "Reason": null,
+        "ShiftId": "D1-R1",
+        "ArrivalMinute": 507,
+        "ExpectDiffMin": null
+      }
+    },
+    {
+      "Name": "sixty minute budget exceeded",
+      "Now": "2026-09-21T07:00:00",
+      "Application": {
+        "Id": 2,
+        "SubmitSeq": 2,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-100",
+        "DropStationId": "D1-900",
+        "RecvMode": "asap",
+        "ServiceDate": "2026-09-21",
+        "ExpectedMinute": null,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 10
+          }
+        ]
+      },
+      "Existing": [
+        {
+          "Id": 1,
+          "SubmitSeq": 1,
+          "Applicant": "測試人",
+          "BranchId": "D1",
+          "PickStationId": "D1-100",
+          "DropStationId": "D1-900",
+          "RecvMode": "asap",
+          "ServiceDate": "2026-09-21",
+          "ExpectedMinute": null,
+          "LoadMin": 46,
+          "UnloadMin": 0,
+          "Status": "matched",
+          "ShiftId": "D1-R1",
+          "Items": [
+            {
+              "ApplicationId": 0,
+              "LineNo": 1,
+              "Name": "測試箱",
+              "LengthCm": 50,
+              "WidthCm": 40,
+              "HeightCm": 30,
+              "Category": "BOX",
+              "Qty": 1,
+              "Weight": 10
+            }
+          ]
+        }
+      ],
+      "Expected": {
+        "Ok": true,
+        "Reason": null,
+        "ShiftId": "D1-R2",
+        "ArrivalMinute": 567,
+        "ExpectDiffMin": null
+      }
+    },
+    {
+      "Name": "single over budget",
+      "Now": "2026-09-21T07:00:00",
+      "Application": {
+        "Id": 1,
+        "SubmitSeq": 1,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-100",
+        "DropStationId": "D1-900",
+        "RecvMode": "asap",
+        "ServiceDate": "2026-09-21",
+        "ExpectedMinute": null,
+        "LoadMin": 61,
+        "UnloadMin": 0,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 10
+          }
+        ]
+      },
+      "Existing": [],
+      "Expected": {
+        "Ok": false,
+        "Reason": "full",
+        "ShiftId": null,
+        "ArrivalMinute": null,
+        "ExpectDiffMin": null
+      }
+    },
+    {
+      "Name": "all shifts full",
+      "Now": "2026-09-21T07:00:00",
+      "Application": {
+        "Id": 12,
+        "SubmitSeq": 12,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-100",
+        "DropStationId": "D1-900",
+        "RecvMode": "asap",
+        "ServiceDate": "2026-09-21",
+        "ExpectedMinute": null,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 10
+          }
+        ]
+      },
+      "Existing": [
+        {
+          "Id": 1,
+          "SubmitSeq": 1,
+          "Applicant": "測試人",
+          "BranchId": "D1",
+          "PickStationId": "D1-100",
+          "DropStationId": "D1-900",
+          "RecvMode": "asap",
+          "ServiceDate": "2026-09-21",
+          "ExpectedMinute": null,
+          "LoadMin": 60,
+          "UnloadMin": 0,
+          "Status": "matched",
+          "ShiftId": "D1-R1",
+          "Items": [
+            {
+              "ApplicationId": 0,
+              "LineNo": 1,
+              "Name": "測試箱",
+              "LengthCm": 50,
+              "WidthCm": 40,
+              "HeightCm": 30,
+              "Category": "BOX",
+              "Qty": 1,
+              "Weight": 10
+            }
+          ]
+        },
+        {
+          "Id": 2,
+          "SubmitSeq": 2,
+          "Applicant": "測試人",
+          "BranchId": "D1",
+          "PickStationId": "D1-100",
+          "DropStationId": "D1-900",
+          "RecvMode": "asap",
+          "ServiceDate": "2026-09-21",
+          "ExpectedMinute": null,
+          "LoadMin": 60,
+          "UnloadMin": 0,
+          "Status": "matched",
+          "ShiftId": "D1-R2",
+          "Items": [
+            {
+              "ApplicationId": 0,
+              "LineNo": 1,
+              "Name": "測試箱",
+              "LengthCm": 50,
+              "WidthCm": 40,
+              "HeightCm": 30,
+              "Category": "BOX",
+              "Qty": 1,
+              "Weight": 10
+            }
+          ]
+        },
+        {
+          "Id": 3,
+          "SubmitSeq": 3,
+          "Applicant": "測試人",
+          "BranchId": "D1",
+          "PickStationId": "D1-100",
+          "DropStationId": "D1-900",
+          "RecvMode": "asap",
+          "ServiceDate": "2026-09-21",
+          "ExpectedMinute": null,
+          "LoadMin": 60,
+          "UnloadMin": 0,
+          "Status": "matched",
+          "ShiftId": "D1-R3",
+          "Items": [
+            {
+              "ApplicationId": 0,
+              "LineNo": 1,
+              "Name": "測試箱",
+              "LengthCm": 50,
+              "WidthCm": 40,
+              "HeightCm": 30,
+              "Category": "BOX",
+              "Qty": 1,
+              "Weight": 10
+            }
+          ]
+        },
+        {
+          "Id": 4,
+          "SubmitSeq": 4,
+          "Applicant": "測試人",
+          "BranchId": "D1",
+          "PickStationId": "D1-100",
+          "DropStationId": "D1-900",
+          "RecvMode": "asap",
+          "ServiceDate": "2026-09-21",
+          "ExpectedMinute": null,
+          "LoadMin": 60,
+          "UnloadMin": 0,
+          "Status": "matched",
+          "ShiftId": "D1-R4",
+          "Items": [
+            {
+              "ApplicationId": 0,
+              "LineNo": 1,
+              "Name": "測試箱",
+              "LengthCm": 50,
+              "WidthCm": 40,
+              "HeightCm": 30,
+              "Category": "BOX",
+              "Qty": 1,
+              "Weight": 10
+            }
+          ]
+        },
+        {
+          "Id": 5,
+          "SubmitSeq": 5,
+          "Applicant": "測試人",
+          "BranchId": "D1",
+          "PickStationId": "D1-100",
+          "DropStationId": "D1-900",
+          "RecvMode": "asap",
+          "ServiceDate": "2026-09-21",
+          "ExpectedMinute": null,
+          "LoadMin": 60,
+          "UnloadMin": 0,
+          "Status": "matched",
+          "ShiftId": "D1-R5",
+          "Items": [
+            {
+              "ApplicationId": 0,
+              "LineNo": 1,
+              "Name": "測試箱",
+              "LengthCm": 50,
+              "WidthCm": 40,
+              "HeightCm": 30,
+              "Category": "BOX",
+              "Qty": 1,
+              "Weight": 10
+            }
+          ]
+        },
+        {
+          "Id": 6,
+          "SubmitSeq": 6,
+          "Applicant": "測試人",
+          "BranchId": "D1",
+          "PickStationId": "D1-100",
+          "DropStationId": "D1-900",
+          "RecvMode": "asap",
+          "ServiceDate": "2026-09-21",
+          "ExpectedMinute": null,
+          "LoadMin": 60,
+          "UnloadMin": 0,
+          "Status": "matched",
+          "ShiftId": "D1-R6",
+          "Items": [
+            {
+              "ApplicationId": 0,
+              "LineNo": 1,
+              "Name": "測試箱",
+              "LengthCm": 50,
+              "WidthCm": 40,
+              "HeightCm": 30,
+              "Category": "BOX",
+              "Qty": 1,
+              "Weight": 10
+            }
+          ]
+        },
+        {
+          "Id": 7,
+          "SubmitSeq": 7,
+          "Applicant": "測試人",
+          "BranchId": "D1",
+          "PickStationId": "D1-100",
+          "DropStationId": "D1-900",
+          "RecvMode": "asap",
+          "ServiceDate": "2026-09-21",
+          "ExpectedMinute": null,
+          "LoadMin": 60,
+          "UnloadMin": 0,
+          "Status": "matched",
+          "ShiftId": "D1-R7",
+          "Items": [
+            {
+              "ApplicationId": 0,
+              "LineNo": 1,
+              "Name": "測試箱",
+              "LengthCm": 50,
+              "WidthCm": 40,
+              "HeightCm": 30,
+              "Category": "BOX",
+              "Qty": 1,
+              "Weight": 10
+            }
+          ]
+        },
+        {
+          "Id": 8,
+          "SubmitSeq": 8,
+          "Applicant": "測試人",
+          "BranchId": "D1",
+          "PickStationId": "D1-100",
+          "DropStationId": "D1-900",
+          "RecvMode": "asap",
+          "ServiceDate": "2026-09-21",
+          "ExpectedMinute": null,
+          "LoadMin": 60,
+          "UnloadMin": 0,
+          "Status": "matched",
+          "ShiftId": "D1-R8",
+          "Items": [
+            {
+              "ApplicationId": 0,
+              "LineNo": 1,
+              "Name": "測試箱",
+              "LengthCm": 50,
+              "WidthCm": 40,
+              "HeightCm": 30,
+              "Category": "BOX",
+              "Qty": 1,
+              "Weight": 10
+            }
+          ]
+        },
+        {
+          "Id": 9,
+          "SubmitSeq": 9,
+          "Applicant": "測試人",
+          "BranchId": "D1",
+          "PickStationId": "D1-100",
+          "DropStationId": "D1-900",
+          "RecvMode": "asap",
+          "ServiceDate": "2026-09-21",
+          "ExpectedMinute": null,
+          "LoadMin": 60,
+          "UnloadMin": 0,
+          "Status": "matched",
+          "ShiftId": "D1-R9",
+          "Items": [
+            {
+              "ApplicationId": 0,
+              "LineNo": 1,
+              "Name": "測試箱",
+              "LengthCm": 50,
+              "WidthCm": 40,
+              "HeightCm": 30,
+              "Category": "BOX",
+              "Qty": 1,
+              "Weight": 10
+            }
+          ]
+        },
+        {
+          "Id": 10,
+          "SubmitSeq": 10,
+          "Applicant": "測試人",
+          "BranchId": "D1",
+          "PickStationId": "D1-100",
+          "DropStationId": "D1-900",
+          "RecvMode": "asap",
+          "ServiceDate": "2026-09-21",
+          "ExpectedMinute": null,
+          "LoadMin": 60,
+          "UnloadMin": 0,
+          "Status": "matched",
+          "ShiftId": "D1-R10",
+          "Items": [
+            {
+              "ApplicationId": 0,
+              "LineNo": 1,
+              "Name": "測試箱",
+              "LengthCm": 50,
+              "WidthCm": 40,
+              "HeightCm": 30,
+              "Category": "BOX",
+              "Qty": 1,
+              "Weight": 10
+            }
+          ]
+        },
+        {
+          "Id": 11,
+          "SubmitSeq": 11,
+          "Applicant": "測試人",
+          "BranchId": "D1",
+          "PickStationId": "D1-100",
+          "DropStationId": "D1-900",
+          "RecvMode": "asap",
+          "ServiceDate": "2026-09-21",
+          "ExpectedMinute": null,
+          "LoadMin": 60,
+          "UnloadMin": 0,
+          "Status": "matched",
+          "ShiftId": "D1-R11",
+          "Items": [
+            {
+              "ApplicationId": 0,
+              "LineNo": 1,
+              "Name": "測試箱",
+              "LengthCm": 50,
+              "WidthCm": 40,
+              "HeightCm": 30,
+              "Category": "BOX",
+              "Qty": 1,
+              "Weight": 10
+            }
+          ]
+        }
+      ],
+      "Expected": {
+        "Ok": false,
+        "Reason": "full",
+        "ShiftId": null,
+        "ArrivalMinute": null,
+        "ExpectDiffMin": null
+      }
+    },
+    {
+      "Name": "different dates isolated",
+      "Now": "2026-09-21T07:00:00",
+      "Application": {
+        "Id": 2,
+        "SubmitSeq": 2,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-100",
+        "DropStationId": "D1-900",
+        "RecvMode": "exact",
+        "ServiceDate": "2026-09-22",
+        "ExpectedMinute": null,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 10
+          }
+        ]
+      },
+      "Existing": [
+        {
+          "Id": 1,
+          "SubmitSeq": 1,
+          "Applicant": "測試人",
+          "BranchId": "D1",
+          "PickStationId": "D1-100",
+          "DropStationId": "D1-900",
+          "RecvMode": "asap",
+          "ServiceDate": "2026-09-21",
+          "ExpectedMinute": null,
+          "LoadMin": 60,
+          "UnloadMin": 0,
+          "Status": "matched",
+          "ShiftId": "D1-R1",
+          "Items": [
+            {
+              "ApplicationId": 0,
+              "LineNo": 1,
+              "Name": "測試箱",
+              "LengthCm": 50,
+              "WidthCm": 40,
+              "HeightCm": 30,
+              "Category": "BOX",
+              "Qty": 1,
+              "Weight": 10
+            }
+          ]
+        }
+      ],
+      "Expected": {
+        "Ok": true,
+        "Reason": null,
+        "ShiftId": "D1-R1",
+        "ArrivalMinute": 507,
+        "ExpectDiffMin": null
+      }
+    },
+    {
+      "Name": "different branches isolated",
+      "Now": "2026-09-21T07:00:00",
+      "Application": {
+        "Id": 2,
+        "SubmitSeq": 2,
+        "Applicant": "測試人",
+        "BranchId": "D2",
+        "PickStationId": "D2-100",
+        "DropStationId": "D2-900",
+        "RecvMode": "asap",
+        "ServiceDate": "2026-09-21",
+        "ExpectedMinute": null,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 10
+          }
+        ]
+      },
+      "Existing": [
+        {
+          "Id": 1,
+          "SubmitSeq": 1,
+          "Applicant": "測試人",
+          "BranchId": "D1",
+          "PickStationId": "D1-100",
+          "DropStationId": "D1-900",
+          "RecvMode": "asap",
+          "ServiceDate": "2026-09-21",
+          "ExpectedMinute": null,
+          "LoadMin": 60,
+          "UnloadMin": 0,
+          "Status": "matched",
+          "ShiftId": "D1-R1",
+          "Items": [
+            {
+              "ApplicationId": 0,
+              "LineNo": 1,
+              "Name": "測試箱",
+              "LengthCm": 50,
+              "WidthCm": 40,
+              "HeightCm": 30,
+              "Category": "BOX",
+              "Qty": 1,
+              "Weight": 10
+            }
+          ]
+        }
+      ],
+      "Expected": {
+        "Ok": true,
+        "Reason": null,
+        "ShiftId": "D2-R1",
+        "ArrivalMinute": 507,
+        "ExpectDiffMin": null
+      }
+    },
+    {
+      "Name": "too big all empty vehicles",
+      "Now": "2026-09-21T07:00:00",
+      "Application": {
+        "Id": 1,
+        "SubmitSeq": 1,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-100",
+        "DropStationId": "D1-900",
+        "RecvMode": "asap",
+        "ServiceDate": "2026-09-21",
+        "ExpectedMinute": null,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 480,
+            "WidthCm": 25,
+            "HeightCm": 25,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 10
+          }
+        ]
+      },
+      "Existing": [],
+      "Expected": {
+        "Ok": false,
+        "Reason": "toobig",
+        "ShiftId": null,
+        "ArrivalMinute": null,
+        "ExpectDiffMin": null
+      }
+    },
+    {
+      "Name": "unknown category fallback",
+      "Now": "2026-09-21T07:00:00",
+      "Application": {
+        "Id": 1,
+        "SubmitSeq": 1,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-100",
+        "DropStationId": "D1-900",
+        "RecvMode": "asap",
+        "ServiceDate": "2026-09-21",
+        "ExpectedMinute": null,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "UNKNOWN",
+            "Qty": 1,
+            "Weight": 10
+          }
+        ]
+      },
+      "Existing": [],
+      "Expected": {
+        "Ok": true,
+        "Reason": null,
+        "ShiftId": "D1-R1",
+        "ArrivalMinute": 507,
+        "ExpectDiffMin": null
+      }
+    },
+    {
+      "Name": "overlapping weight moves shift",
+      "Now": "2026-09-21T07:00:00",
+      "Application": {
+        "Id": 2,
+        "SubmitSeq": 2,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-300",
+        "DropStationId": "D1-900",
+        "RecvMode": "asap",
+        "ServiceDate": "2026-09-21",
+        "ExpectedMinute": null,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 2000
+          }
+        ]
+      },
+      "Existing": [
+        {
+          "Id": 1,
+          "SubmitSeq": 1,
+          "Applicant": "測試人",
+          "BranchId": "D1",
+          "PickStationId": "D1-100",
+          "DropStationId": "D1-600",
+          "RecvMode": "asap",
+          "ServiceDate": "2026-09-21",
+          "ExpectedMinute": null,
+          "LoadMin": 10,
+          "UnloadMin": 5,
+          "Status": "matched",
+          "ShiftId": "D1-R1",
+          "Items": [
+            {
+              "ApplicationId": 0,
+              "LineNo": 1,
+              "Name": "測試箱",
+              "LengthCm": 50,
+              "WidthCm": 40,
+              "HeightCm": 30,
+              "Category": "BOX",
+              "Qty": 1,
+              "Weight": 2000
+            }
+          ]
+        }
+      ],
+      "Expected": {
+        "Ok": true,
+        "Reason": null,
+        "ShiftId": "D1-R2",
+        "ArrivalMinute": 567,
+        "ExpectDiffMin": null
+      }
+    },
+    {
+      "Name": "unload releases capacity at same station",
+      "Now": "2026-09-21T07:00:00",
+      "Application": {
+        "Id": 2,
+        "SubmitSeq": 2,
+        "Applicant": "測試人",
+        "BranchId": "D1",
+        "PickStationId": "D1-600",
+        "DropStationId": "D1-900",
+        "RecvMode": "asap",
+        "ServiceDate": "2026-09-21",
+        "ExpectedMinute": null,
+        "LoadMin": 10,
+        "UnloadMin": 5,
+        "Status": "submitted",
+        "ShiftId": null,
+        "Items": [
+          {
+            "ApplicationId": 0,
+            "LineNo": 1,
+            "Name": "測試箱",
+            "LengthCm": 50,
+            "WidthCm": 40,
+            "HeightCm": 30,
+            "Category": "BOX",
+            "Qty": 1,
+            "Weight": 2000
+          }
+        ]
+      },
+      "Existing": [
+        {
+          "Id": 1,
+          "SubmitSeq": 1,
+          "Applicant": "測試人",
+          "BranchId": "D1",
+          "PickStationId": "D1-100",
+          "DropStationId": "D1-600",
+          "RecvMode": "asap",
+          "ServiceDate": "2026-09-21",
+          "ExpectedMinute": null,
+          "LoadMin": 10,
+          "UnloadMin": 5,
+          "Status": "matched",
+          "ShiftId": "D1-R1",
+          "Items": [
+            {
+              "ApplicationId": 0,
+              "LineNo": 1,
+              "Name": "測試箱",
+              "LengthCm": 50,
+              "WidthCm": 40,
+              "HeightCm": 30,
+              "Category": "BOX",
+              "Qty": 1,
+              "Weight": 2000
+            }
+          ]
+        }
+      ],
+      "Expected": {
+        "Ok": true,
+        "Reason": null,
+        "ShiftId": "D1-R1",
+        "ArrivalMinute": 507,
+        "ExpectDiffMin": null
+      }
+    }
+  ],
+  "Loads": [
+    {
+      "Name": "normal",
+      "Items": [
+        {
+          "ApplicationId": 0,
+          "LineNo": 1,
+          "Name": "測試箱",
+          "LengthCm": 50,
+          "WidthCm": 40,
+          "HeightCm": 30,
+          "Category": "BOX",
+          "Qty": 1,
+          "Weight": 10
+        }
+      ],
+      "VehicleId": "V-L01",
+      "Expected": {
+        "Ok": true,
+        "Volume": 66,
+        "Weight": 10,
+        "Floor": 1200
+      }
+    },
+    {
+      "Name": "unknown",
+      "Items": [
+        {
+          "ApplicationId": 0,
+          "LineNo": 1,
+          "Name": "測試箱",
+          "LengthCm": 50,
+          "WidthCm": 40,
+          "HeightCm": 30,
+          "Category": "UNKNOWN",
+          "Qty": 1,
+          "Weight": 10
+        }
+      ],
+      "VehicleId": "V-L01",
+      "Expected": {
+        "Ok": true,
+        "Volume": 78,
+        "Weight": 10,
+        "Floor": 1200
+      }
+    },
+    {
+      "Name": "aspect exactly two",
+      "Items": [
+        {
+          "ApplicationId": 0,
+          "LineNo": 1,
+          "Name": "測試箱",
+          "LengthCm": 60,
+          "WidthCm": 30,
+          "HeightCm": 30,
+          "Category": "BOX",
+          "Qty": 1,
+          "Weight": 10
+        }
+      ],
+      "VehicleId": "V-L01",
+      "Expected": {
+        "Ok": true,
+        "Volume": 59.400000000000006,
+        "Weight": 10,
+        "Floor": 900
+      }
+    },
+    {
+      "Name": "aspect above two",
+      "Items": [
+        {
+          "ApplicationId": 0,
+          "LineNo": 1,
+          "Name": "測試箱",
+          "LengthCm": 60.01,
+          "WidthCm": 30,
+          "HeightCm": 30,
+          "Category": "BOX",
+          "Qty": 1,
+          "Weight": 10
+        }
+      ],
+      "VehicleId": "V-L01",
+      "Expected": {
+        "Ok": true,
+        "Volume": 62.38039500000001,
+        "Weight": 10,
+        "Floor": 900
+      }
+    },
+    {
+      "Name": "aspect exactly three",
+      "Items": [
+        {
+          "ApplicationId": 0,
+          "LineNo": 1,
+          "Name": "測試箱",
+          "LengthCm": 90,
+          "WidthCm": 30,
+          "HeightCm": 30,
+          "Category": "BOX",
+          "Qty": 1,
+          "Weight": 10
+        }
+      ],
+      "VehicleId": "V-L01",
+      "Expected": {
+        "Ok": true,
+        "Volume": 93.555,
+        "Weight": 10,
+        "Floor": 900
+      }
+    },
+    {
+      "Name": "aspect above three",
+      "Items": [
+        {
+          "ApplicationId": 0,
+          "LineNo": 1,
+          "Name": "測試箱",
+          "LengthCm": 90.01,
+          "WidthCm": 30,
+          "HeightCm": 30,
+          "Category": "BOX",
+          "Qty": 1,
+          "Weight": 10
+        }
+      ],
+      "VehicleId": "V-L01",
+      "Expected": {
+        "Ok": true,
+        "Volume": 98.02089000000002,
+        "Weight": 10,
+        "Floor": 900
+      }
+    },
+    {
+      "Name": "rotation required",
+      "Items": [
+        {
+          "ApplicationId": 0,
+          "LineNo": 1,
+          "Name": "測試箱",
+          "LengthCm": 180,
+          "WidthCm": 400,
+          "HeightCm": 180,
+          "Category": "BOX",
+          "Qty": 1,
+          "Weight": 10
+        }
+      ],
+      "VehicleId": "V-L01",
+      "Expected": {
+        "Ok": false,
+        "Volume": 14968.800000000003,
+        "Weight": 10,
+        "Floor": 32400
+      }
+    },
+    {
+      "Name": "weight equality",
+      "Items": [
+        {
+          "ApplicationId": 0,
+          "LineNo": 1,
+          "Name": "測試箱",
+          "LengthCm": 50,
+          "WidthCm": 40,
+          "HeightCm": 30,
+          "Category": "BOX",
+          "Qty": 1,
+          "Weight": 3000
+        }
+      ],
+      "VehicleId": "V-L01",
+      "Expected": {
+        "Ok": true,
+        "Volume": 66,
+        "Weight": 3000,
+        "Floor": 1200
+      }
+    },
+    {
+      "Name": "weight exceeded",
+      "Items": [
+        {
+          "ApplicationId": 0,
+          "LineNo": 1,
+          "Name": "測試箱",
+          "LengthCm": 50,
+          "WidthCm": 40,
+          "HeightCm": 30,
+          "Category": "BOX",
+          "Qty": 1,
+          "Weight": 3000.001
+        }
+      ],
+      "VehicleId": "V-L01",
+      "Expected": {
+        "Ok": false,
+        "Volume": 66,
+        "Weight": 3000.001,
+        "Floor": 1200
+      }
+    },
+    {
+      "Name": "quantity floor overflow",
+      "Items": [
+        {
+          "ApplicationId": 0,
+          "LineNo": 1,
+          "Name": "測試箱",
+          "LengthCm": 200,
+          "WidthCm": 150,
+          "HeightCm": 150,
+          "Category": "BOX",
+          "Qty": 4,
+          "Weight": 10
+        }
+      ],
+      "VehicleId": "V-L01",
+      "Expected": {
+        "Ok": false,
+        "Volume": 19800,
+        "Weight": 40,
+        "Floor": 90000
+      }
+    },
+    {
+      "Name": "mixed",
+      "Items": [
+        {
+          "ApplicationId": 0,
+          "LineNo": 1,
+          "Name": "測試箱",
+          "LengthCm": 50,
+          "WidthCm": 40,
+          "HeightCm": 30,
+          "Category": "BOX",
+          "Qty": 1,
+          "Weight": 10
+        },
+        {
+          "ApplicationId": 0,
+          "LineNo": 1,
+          "Name": "測試箱",
+          "LengthCm": 100,
+          "WidthCm": 90,
+          "HeightCm": 80,
+          "Category": "PALLET",
+          "Qty": 2,
+          "Weight": 10
+        }
+      ],
+      "VehicleId": "V-L01",
+      "Expected": {
+        "Ok": true,
+        "Volume": 1794,
+        "Weight": 30,
+        "Floor": 15600
+      }
+    }
+  ]
+}

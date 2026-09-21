@@ -1,0 +1,102 @@
+@model VD.Web.Models.PageModel
+<section id="dispatch-list">
+<div class="section-h">已排定車次異動（業務單位）</div>
+<div class="section-sub">以日期＋班次聚合已排定申請；可修改車輛／司機，並新增或移出申請單。</div>
+<div class="card">
+<div class="card-title split">
+<span>查詢條件</span>
+<span>
+<button type="button" class="btn btn-primary btn-sm" id="dq-search">🔍 查詢</button>
+</span>
+</div>
+<div class="fgrid">
+<div class="grid-sizer">
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">收貨日期</span> <span class="fcard-value">@(Html.Kendo().DatePicker().Name("dq-date").Format("yyyy-MM-dd"))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">車輛</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("dq-vehicle").BindTo(Model.Vehicles).OptionLabel("全部車輛"))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">司機</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("dq-driver").BindTo(Model.Drivers).OptionLabel("全部司機"))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">班次</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("dq-shift").BindTo(Model.Shifts).OptionLabel("全部班次"))</span>
+</div>
+</div>
+</div>
+</div>
+<div class="card">
+<div class="card-title split">
+<span>已排定車次</span>
+<span>
+</span>
+</div>@(Html.Kendo().Grid<TripRow>().Name("dispatch-grid").AutoBind(false).NoRecords(n=>n.Template("查無符合條件的紀錄")).Columns(columns=>{columns.Bound(x=>x.ServiceDate).ClientTemplate("<button type='button' class='btn btn-ghost btn-sm' data-command='trip'>細節</button>").Title(" ").Width(80);
+columns.Bound(x=>x.ServiceDate).Title("收貨日期");
+columns.Bound(x=>x.BranchName).Title("分公司");
+columns.Bound(x=>x.ShiftLabel).Title("班次");
+columns.Bound(x=>x.VehicleName).Title("車輛");
+columns.Bound(x=>x.DriverName).Title("司機");
+columns.Bound(x=>x.Count).Title("申請單數");}).Scrollable(s=>s.Height("auto")).DataSource(ds=>ds.Ajax().ServerOperation(false)))</div>
+</section>
+<section id="dispatch-detail" hidden>
+<div class="section-h" id="trip-title">
+</div>
+<div class="card">
+<div class="card-title split">
+<span>班次車輛資訊</span>
+<span>
+</span>
+</div>
+<div id="trip-info">
+</div>
+<div class="fgrid">
+<div class="grid-sizer">
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">車輛（可修改）</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("trip-vehicle").BindTo(Model.Vehicles))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">司機（可修改）</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("trip-driver").BindTo(Model.Drivers))</span>
+</div>
+</div>
+</div>
+<button type="button" class="btn btn-primary btn-sm" id="trip-save">💾 儲存車輛／司機</button>
+<span class="hint">此調整為本車次（日期＋班次）覆寫，不影響班次主檔預設。</span>
+</div>
+<div class="card">
+<div class="card-title split">
+<span>
+<span id="trip-count">本車次申請單</span>
+</span>
+<span>
+<button type="button" class="btn btn-accent btn-sm" id="trip-add">＋ 新增</button>
+</span>
+</div>@(Html.Kendo().Grid<ApplicationRow>().Name("trip-apps").AutoBind(false).NoRecords(n=>n.Template("查無符合條件的紀錄")).Columns(columns=>{columns.Bound(x=>x.AppNo).ClientTemplate("<button type='button' class='btn btn-ghost btn-sm' data-command='remove'>刪除</button>").Title(" ").Width(80);
+columns.Bound(x=>x.AppNo).Title("單號");
+columns.Bound(x=>x.Applicant).Title("申請人");
+columns.Bound(x=>x.Pickup).Title("收貨地點（起）");
+columns.Bound(x=>x.Destination).Title("送貨站（迄）");
+columns.Bound(x=>x.CargoSummary).Title("貨物");}).Scrollable(s=>s.Height("auto")).DataSource(ds=>ds.Ajax().ServerOperation(false)))<p class="muted">「刪除」＝移出本班次，保留申請。「新增」＝將同日、同分公司其他班次或未排入的單改派至本班次。</p>
+</div>
+<button type="button" class="btn btn-ghost btn-sm" id="trip-back">← 返回查詢</button>
+</section>
+@(Html.Kendo().Window().Name("assign-window").Title("新增單到本車次").Visible(false).Modal(true).Width(850).Content(@<text>
+<div class="card-desc">選取同日、同分公司申請。加入後移出原班次，並重算到站時間。</div>@(Html.Kendo().Grid<ApplicationRow>().Name("assign-grid").AutoBind(false).NoRecords(n=>n.Template("查無符合條件的紀錄")).Columns(columns=>{columns.Bound(x=>x.AppNo).ClientTemplate("<button type='button' class='btn btn-ghost btn-sm' data-command='assign'>加入</button>").Title(" ").Width(80);
+columns.Bound(x=>x.AppNo).Title("單號");
+columns.Bound(x=>x.Applicant).Title("申請人");
+columns.Bound(x=>x.Destination).Title("送貨站");
+columns.Bound(x=>x.ShiftLabel).Title("目前班次");}).Scrollable(s=>s.Height("auto")).DataSource(ds=>ds.Ajax().ServerOperation(false)))</text>))
+@section scripts {<script src="@Url.Content("~/Scripts/module-a/dispatch.js")">
+</script>}

@@ -1,0 +1,72 @@
+@model VD.Web.Models.PageModel
+<div class="section-h">車次追蹤（業務單位）</div>
+<div class="section-sub">供業務單位追蹤已排定車次與交貨狀態、路線班次、進行駕駛異常回報。</div>
+<a class="btn btn-ghost btn-sm" href="@Url.Action("Driver")">🧑‍✈️ 查看司機任務單</a>
+@(Html.Kendo().TabStrip().Name("tracking-tabs").Items(tabs=> {
+tabs.Add().Text("① 已排定車次").Selected(true).Content(@<text>
+<div class="card">
+<div class="card-title split">
+<span>自動媒合機制 <span class="g-tag">G10–G12/G16/G19</span>
+</span>
+<span>
+</span>
+</div>
+<div class="card-desc">送出即自動媒合；每據點每小時一班，每班上下貨合計上限 60 分。同班依送出先後累計，容量或時間不足即嘗試下一班。當日仍無法排入則提醒改期，不留候補、不排隔日。</div>
+</div>
+<div id="unscheduled-card" hidden>
+<div class="card">
+<div class="card-title split">
+<span>未排入·待使用者改期</span>
+<span>
+</span>
+</div>@(Html.Kendo().Grid<ApplicationRow>().Name("unscheduled-grid").AutoBind(false).NoRecords(n=>n.Template("查無符合條件的紀錄")).Columns(columns=>{columns.Bound(x=>x.AppNo).Title("單號");
+columns.Bound(x=>x.Applicant).Title("申請人");
+columns.Bound(x=>x.Destination).Title("目的地");
+columns.Bound(x=>x.Application.Note).Title("原因");}).Scrollable(s=>s.Height("auto")).DataSource(ds=>ds.Ajax().ServerOperation(false)))</div>
+</div>
+<div class="card">
+<div class="card-title split">
+<span>已排定車次一覽</span>
+<span>
+</span>
+</div>@(Html.Kendo().Grid<ApplicationRow>().Name("scheduled-grid").AutoBind(false).NoRecords(n=>n.Template("查無符合條件的紀錄")).Columns(columns=>{columns.Bound(x=>x.AppNo).Title("單號");
+columns.Bound(x=>x.Applicant).Title("申請人");
+columns.Bound(x=>x.Destination).Title("目的地");
+columns.Bound(x=>x.ServiceDate).Title("日期");
+columns.Bound(x=>x.ShiftLabel).Title("班次");
+columns.Bound(x=>x.VehicleName).Title("車輛");
+columns.Bound(x=>x.Arrival).Title("到站");}).Scrollable(s=>s.Height("auto")).DataSource(ds=>ds.Ajax().ServerOperation(false)))</div>
+</text>);
+tabs.Add().Text("② 路線與班次").Content(@<text>
+<div id="route-cards">
+</div>
+</text>);
+tabs.Add().Text("③ 駕駛異常回報").Content(@<text>
+<div class="card">
+<div class="card-title split">
+<span>駕駛異常回報 <span class="g-tag">G20</span>
+</span>
+<span>
+</span>
+</div>
+<div class="card-desc">每張單預設正常運送。編輯不準時／沒出現狀態後存檔；郵件通知沿用原型示意，目前不寄信。</div>@(Html.Kendo().Grid<ApplicationRow>().Name("incident-grid").AutoBind(false).NoRecords(n=>n.Template("查無符合條件的紀錄")).Columns(columns=>{columns.Bound(x=>x.AppNo).ClientTemplate("<button type='button' class='btn btn-ghost btn-sm' data-command='incident'>編輯</button>").Title(" ").Width(80);
+columns.Bound(x=>x.AppNo).Title("單號");
+columns.Bound(x=>x.Applicant).Title("申請人");
+columns.Bound(x=>x.Destination).Title("目的地");
+columns.Bound(x=>x.ShiftLabel).Title("班次");
+columns.Bound(x=>x.Application.Incident).Title("異常回報");}).Scrollable(s=>s.Height("auto")).DataSource(ds=>ds.Ajax().ServerOperation(false)))</div>
+</text>);
+}))
+@(Html.Kendo().Window().Name("incident-window").Title("編輯異常回報").Visible(false).Modal(true).Width(600).Content(@<text>
+<p id="incident-summary">
+</p>
+<div class="grid-item full">
+<div class="fcard fcard-input">
+<span class="fcard-label">異常回報</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("incident-reason").BindTo(PageModel.Options("","正常運送","使用者不準時","不準時","使用者沒出現","沒出現")))</span>
+</div>
+</div>
+<button type="button" class="btn btn-primary btn-sm" id="incident-save">▶ 送出</button>
+<button type="button" class="btn btn-ghost btn-sm" id="incident-cancel">取消</button>
+</text>))
+@section scripts {<script src="@Url.Content("~/Scripts/module-a/tracking.js")">
+</script>}

@@ -1,0 +1,26 @@
+/* Preserve prototype layout, with the 2019 Kendo Default theme underneath. */
+[hidden] { display:none !important; }
+a.nav-item, a.btn { text-decoration:none; }
+.split { justify-content:space-between; }
+.fcard-value { min-width:0; }
+.fcard-value > .k-widget, .field > .k-widget { width:100%; }
+.k-dropdown-wrap,.k-picker-wrap,.k-numeric-wrap { border:0; border-bottom:1px solid var(--line); border-radius:0; background:transparent; box-shadow:none; }
+.k-dropdown,.k-datepicker,.k-timepicker,.k-numerictextbox { background:transparent; }
+.k-dropdown .k-input,.k-picker-wrap .k-input,.k-numeric-wrap .k-input { padding-top:8px; padding-bottom:8px; font:inherit; background:transparent; }
+.k-select { background:transparent; }
+.k-grid { border:1px solid var(--line); border-radius:10px; overflow:hidden; font-size:13px; }
+.k-grid-header,.k-grid-header .k-header { background:var(--navy); color:white; }
+.k-grid-header .k-header { padding:9px 12px; font-weight:600; }
+.k-grid td { border-width:0 0 1px; padding:9px 12px; white-space:normal; vertical-align:middle; }
+.k-grid .k-alt { background:#F8FAFC; }
+.k-grid tbody tr:hover { background:var(--blue-bg); }
+.k-grid-content { min-height:38px; }
+.k-window-content { padding:20px; }
+.k-window-titlebar { background:var(--navy); color:white; }
+.k-textbox { font:inherit; }
+.recipient { white-space:pre-line; }
+.k-tabstrip { border:0; background:transparent; }
+.k-tabstrip>.k-content { border:0; padding:16px 0 0; background:transparent; }
+.route { overflow-x:auto; }
+#page-error { margin-bottom:16px; }
+.card pre { white-space:pre-wrap; overflow-wrap:anywhere; }

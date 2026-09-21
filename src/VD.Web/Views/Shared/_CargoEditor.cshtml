@@ -1,0 +1,46 @@
+@model VD.Web.Models.PageModel
+@(Html.Kendo().Window().Name("cargo-window").Title("貨物項目").Visible(false).Modal(true).Width(680).Content(@<text>
+<div class="fgrid">
+<div class="grid-sizer">
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">品名</span> <span class="fcard-value">@Html.TextBox("cargo-name", "", new { @class="k-textbox", maxlength=200 })</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">長（cm）</span> <span class="fcard-value">@(Html.Kendo().NumericTextBox<double>().Name("cargo-length").Min(0.001).Max(1000000).Decimals(3).Format("n3").Value(50))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">寬（cm）</span> <span class="fcard-value">@(Html.Kendo().NumericTextBox<double>().Name("cargo-width").Min(0.001).Max(1000000).Decimals(3).Format("n3").Value(40))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">高（cm）</span> <span class="fcard-value">@(Html.Kendo().NumericTextBox<double>().Name("cargo-height").Min(0.001).Max(1000000).Decimals(3).Format("n3").Value(30))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">貨物分類</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("cargo-category").BindTo(Model.Categories))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">件數</span> <span class="fcard-value">@(Html.Kendo().NumericTextBox<int>().Name("cargo-qty").Min(1).Max(1000000).Decimals(0).Format("n0").Value(1))</span>
+</div>
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">每件重量（kg）</span> <span class="fcard-value">@(Html.Kendo().NumericTextBox<double>().Name("cargo-weight").Min(0).Max(1000000000).Decimals(3).Format("n3").Value(10))</span>
+</div>
+</div>
+</div>
+<button type="button" class="btn btn-primary btn-sm" id="cargo-save">儲存</button>
+<button type="button" class="btn btn-ghost btn-sm" id="cargo-cancel">取消</button>
+<div id="cargo-error" class="callout warn" hidden>
+</div>
+</text>))

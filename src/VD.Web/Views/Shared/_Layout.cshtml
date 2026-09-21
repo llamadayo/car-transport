@@ -1,0 +1,75 @@
+@model VD.Web.Models.PageModel
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" id="viewport-meta"/>
+<title>@Model.Title · 車輛派遣系統整合</title>
+<script>if(Math.min(screen.width||9999,screen.height||9999)<768)document.getElementById('viewport-meta').content='width=1100';</script>
+<link rel="stylesheet" href="@Url.Content("~/Content/kendo/kendo.common.min.css")"/>
+<link rel="stylesheet" href="@Url.Content("~/Content/kendo/kendo.default.min.css")"/>
+<link rel="stylesheet" href="@Url.Content("~/Content/site.css")"/>
+<link rel="stylesheet" href="@Url.Content("~/Content/mvc.css")"/>
+<script src="@Url.Content("~/Scripts/kendo/jquery.min.js")">
+</script>
+<script src="@Url.Content("~/Scripts/kendo/kendo.all.min.js")">
+</script>
+<script src="@Url.Content("~/Scripts/kendo/kendo.aspnetmvc.min.js")">
+</script>
+<script src="@Url.Content("~/Scripts/kendo/cultures/kendo.culture.zh-TW.min.js")">
+</script>
+<script src="@Url.Content("~/Scripts/kendo/messages/kendo.messages.zh-TW.min.js")">
+</script>
+<script src="@Url.Content("~/Scripts/masonry.pkgd.min.js")">
+</script>
+<script>window.vdConfig={moduleUrl:'@Url.Action("ReadApplications","ModuleA")'.replace(/ReadApplications$/, ''), masterUrl:'@Url.Action("Read","MasterData")'.replace(/Read$/, ''),today:'@Model.Today.ToString("yyyy-MM-dd")'}; if(window.kendo)kendo.culture('zh-TW');</script>
+<script src="@Url.Content("~/Scripts/module-a/common.js")">
+</script>
+</head>
+<body>
+<button id="menu-toggle" class="menu-toggle" aria-label="切換選單">☰</button>
+<div class="app">
+<aside class="sidebar">
+<div class="brand">
+<div class="logo">車輛派遣系統整合</div>
+<div class="sub">INTEGRATED DISPATCH</div>
+</div>
+<nav class="nav">
+<div class="nav-group-label">共用基礎</div>
+<a class="nav-item" href="@Url.Action("Index","MasterData")">📚 主檔資料</a>
+<a class="nav-item" href="@Url.Action("Engine","MasterData")">📦 裝載可行性引擎</a>
+<div class="nav-group-label">模組 A · 區域內物流</div>
+@foreach(var entry in new[] {new[]{"Apply","📝 A｜收貨申請（使用者）"},new[]{"Tracking","🗂 A｜車次追蹤（業務）"},new[]{"Dispatch","🔧 A｜已排定車次異動（業務）"},new[]{"Cards","🧩 A｜資訊卡試做（Masonry）"},new[]{"Driver","🧑‍✈️ A｜司機任務單（駕駛）"}}) {
+<a class="nav-item @(ViewContext.RouteData.Values["action"].ToString()==entry[0]?"active":"")" href="@Url.Action(entry[0],"ModuleA")">@entry[1]</a>
+}
+<div class="nav-group-label">模組 B · 南北幹線（原型）</div>
+@foreach(var entry in new[]{new[]{"b_apply","📝 B｜幹線託運申請（使用者）"},new[]{"b_approve","✅ B｜主管准駁（主管）"},new[]{"b_review","🚚 B｜派車調度（業務）"},new[]{"b_driver","🧑‍✈️ B｜司機任務單"},new[]{"c_apply","📝 C｜出差用車申請（使用者）"},new[]{"c_approve","✅ C｜主管准駁（主管）"},new[]{"c_review","🔀 C｜媒合調度（業務）"},new[]{"c_driver","🧑‍✈️ C｜司機任務單"}}) {
+ if(entry[0]=="c_apply") {<div class="nav-group-label">模組 C · 差旅共乘（原型）</div>}
+ <a class="nav-item" href="@Url.Content("~/Prototype/index.html?page="+entry[0])">@entry[1]</a>
+}
+</nav>
+<div class="sidebar-foot">車輛派遣系統整合</div>
+</aside>
+<main class="main">
+<div class="topbar">
+<h1>@Model.Title</h1>
+<div class="clock" id="clock">
+</div>
+</div>
+<div class="content">
+<div id="page-error" class="callout warn" role="alert" hidden>
+</div>@RenderBody()
+</div>
+</main>
+</div>
+<div id="request-token" hidden>@Html.AntiForgeryToken()</div>
+<div id="toast-wrap" role="status" aria-live="polite">
+</div>
+@(Html.Kendo().Window().Name("confirm-window").Title("確認操作").Visible(false).Modal(true).Width(430).Content(@<text>
+<p id="confirm-message">
+</p>
+<button type="button" class="btn btn-primary" id="confirm-ok">確定</button> <button type="button" class="btn btn-ghost" id="confirm-cancel">取消</button>
+</text>))
+@RenderSection("scripts",required:false)
+</body>
+</html>

@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net48</TargetFramework><LangVersion>7.3</LangVersion></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../VD.Core/VD.Core.csproj" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Oracle.ManagedDataAccess" Version="19.21.0" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+    <Reference Include="System.Configuration" />
+  </ItemGroup>
+</Project>

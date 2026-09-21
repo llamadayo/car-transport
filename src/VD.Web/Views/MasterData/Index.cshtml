@@ -1,0 +1,24 @@
+@model VD.Web.Models.PageModel
+<div class="section-h">共用主檔資料</div>
+<div class="section-sub">據點、站點、車輛、司機與共用規則資料。</div>
+<div class="card">
+<div class="card-title split">
+<span>資料表</span>
+<span>
+<button type="button" class="btn btn-ghost btn-sm" id="master-refresh">重新載入貨物係數</button>
+</span>
+</div>
+<div class="fgrid">
+<div class="grid-sizer">
+</div>
+<div class="grid-item">
+<div class="fcard fcard-input">
+<span class="fcard-label">主檔</span> <span class="fcard-value">@(Html.Kendo().DropDownList().Name("master-table").BindTo(PageModel.Options("Sites","據點","Stations","站點","Buildings","建物","Vehicles","車輛","Drivers","司機","Shifts","區域班次","Categories","貨物係數","Config","共用設定","Travel","行車時間","Breaks","駕駛休息","MinDays","最短趟次天數","Maintenance","保養","Leaves","司機請假","BizTravel","公務行車時間")))</span>
+</div>
+</div>
+</div>
+<div id="master-grid">
+</div>
+</div>
+@section scripts {<script src="@Url.Content("~/Scripts/module-a/master.js")">
+</script>}

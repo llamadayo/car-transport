@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+ <PropertyGroup><TargetFramework>net48</TargetFramework><LangVersion>7.3</LangVersion><IsTestProject>true</IsTestProject><AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects><GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType></PropertyGroup>
+ <ItemGroup><ProjectReference Include="../../src/VD.Services/VD.Services.csproj"/><PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/><PackageReference Include="NUnit" Version="3.14.0"/><PackageReference Include="NUnit3TestAdapter" Version="4.5.0"/><PackageReference Include="Newtonsoft.Json" Version="13.0.3"/></ItemGroup>
+ <ItemGroup><None Include="../fixtures/module-a/parity.json" Link="Fixtures/parity.json" CopyToOutputDirectory="PreserveNewest"/><None Include="../../database/sqlite/*.sql" Link="Database/%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest"/></ItemGroup>
+</Project>
