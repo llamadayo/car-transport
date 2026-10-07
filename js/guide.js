@@ -135,11 +135,12 @@ const Guide = {
         break;
       }
       case 'D': {
-        const place = `${this.placeName(v.origin)} → ${this.placeName(v.dest)}${(v.otherPlace || '').trim() ? '：' + v.otherPlace.trim() : ''}`;
+        const place = value => value === this.OTHER ? (v.otherPlace || '').trim() : this.placeName(value);
         data = Object.assign({}, who, { startDate: v.startDate, startTime: v.departTime, endDate: v.endDate, endTime: v.backTime,
-          pax: +v.pax, selfDrive: v.selfDrive, purpose: place, items: v.hasCargo === 'yes' ? items : [] });
+          pax: +v.pax, selfDrive: v.selfDrive, pickupLocation: place(v.origin), purpose: '',
+          locations: [{ name: place(v.dest), order: 1 }], items: v.hasCargo === 'yes' ? items : [] });
         labels.push('申請人', `用車 ${v.startDate} ${v.departTime} ～ ${v.endDate} ${v.backTime}`, `${v.pax} 人`,
-          `自駕：${v.selfDrive ? '可以' : '不行'}`, '行程說明');
+          `自駕：${v.selfDrive ? '可以' : '不行'}`, '上車地點', '行程地點');
         if (v.hasCargo === 'yes') labels.push(`隨行貨物 ${items.length} 項`);
         break;
       }
