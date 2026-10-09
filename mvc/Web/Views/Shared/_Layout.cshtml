@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title · 車輛派遣系統</title>
+    <link rel="stylesheet" href="@Url.Content("~/Content/vendor/kendo-theme.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/prototype.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/cargo.css")?v=20261009-d04" />
+    <script src="@Url.Content("~/Scripts/vendor/jquery.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/vendor/kendo.all.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/vendor/kendo.aspnetmvc.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/vendor/kendo.culture.zh-TW.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/vendor/kendo.messages.zh-TW.min.js")"></script>
+    <script>if (window.kendo) { kendo.culture("zh-TW"); }</script>
+</head>
+<body>
+    <button id="menu-toggle" class="menu-toggle" aria-label="切換選單" aria-controls="navigation" aria-expanded="true">☰</button>
+    <div class="app">
+    @Html.Partial("_Navigation")
+    <main class="main">
+      <header class="topbar"><h1>一般用車申請作業 · @(ViewBag.Module == null ? "一般用車申請（使用者）" : ViewBag.Title)</h1><time class="clock" id="clock"></time></header>
+      <div class="content">
+        @if (System.Configuration.ConfigurationManager.AppSettings["CARGO.LocalDemo"] == "true") {
+            <div class="notice" role="status"><strong>本機示範模式</strong> · 虛構申請人與假資料，不會連線 Oracle 或寄信。網站重啟後資料重置。</div>
+        }
+        @if (TempData["Message"] != null) { <div class="notice" role="status">@TempData["Message"]</div> }
+        @if (TempData["Error"] != null) { <div class="validation-summary-errors" role="alert">@TempData["Error"]</div> }
+        @RenderBody()
+      </div>
+    </main>
+    </div>
+    <div class="swal-mask" id="confirm-mask" hidden>
+      <div class="swal-box" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+        <div class="swal-icon">?</div><h2 class="swal-title" id="confirm-title">確認操作</h2>
+        <p class="swal-text" id="confirm-text"></p>
+        <div class="swal-actions"><button type="button" class="btn btn-ghost" id="confirm-cancel">取消</button><button type="button" class="btn btn-primary" id="confirm-ok">確定</button></div>
+      </div>
+    </div>
+    <script src="@Url.Content("~/Scripts/cargo-shell.js")"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

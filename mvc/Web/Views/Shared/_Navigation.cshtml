@@ -1,0 +1,37 @@
+@{ string current = Convert.ToString(ViewContext.RouteData.Values["controller"]); }
+<aside class="sidebar" id="navigation"><div class="brand"><div class="logo">車輛派遣系統整合</div><div class="sub">INTEGRATED DISPATCH</div></div><nav class="nav" aria-label="功能選單">
+<div class="nav-group-label">總覽</div>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">▤</span>系統儀表板</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">🧭</span>申請引導</span>
+<div class="nav-group-label">共用基礎</div>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">⚙</span>裝載判定引擎</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">▦</span>主檔資料</span>
+<div class="nav-group-label">模組 A · 巡迴物品轉運作業</div>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">📝</span>A｜巡迴物品轉運申請（使用者）</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">🗂</span>A｜車次追蹤／異動（業務）</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">⛽</span>A｜車輛使用實登（業務）</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">🚌</span>A｜路線與班次（業務）</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">🧩</span>A｜資訊卡試做（Masonry）</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">🧑‍✈️</span>A｜司機任務單（駕駛）</span>
+<div class="nav-group-label">模組 B · 院區物品轉運作業</div>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">📝</span>B｜院區物品轉運申請（使用者）</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">✅</span>B｜單位主管審核（主管）</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">🚚</span>B｜派車調度（業務）</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">🖋</span>B｜運輸主管簽審（運輸主管）</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">⛽</span>B｜車輛使用實登（業務）</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">🧑‍✈️</span>B｜司機任務單（駕駛）</span>
+<div class="nav-group-label">模組 C · 差旅共乘作業</div>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">📝</span>C｜差旅共乘申請（使用者）</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">✅</span>C｜單位主管審核（主管）</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">🚐</span>C｜派車調度（業務）</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">🖋</span>C｜運輸主管簽審（運輸主管）</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">⛽</span>C｜車輛使用實登（業務）</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">🧑‍✈️</span>C｜司機任務單（駕駛）</span>
+<div class="nav-group-label">模組 D · 一般用車申請作業</div>
+<a class="nav-item @(current == "CARGO_D01" ? "active" : "")" href="@Url.Action("Index", "CARGO_D01")"><span class="ico">📝</span>D｜一般用車申請（使用者）</a>
+<a class="nav-item @(current == "CARGO_D02" ? "active" : "")" href="@Url.Action("Index", "CARGO_D02")"><span class="ico">✅</span>D｜單位主管審核（主管）</a>
+<a class="nav-item @(current == "CARGO_D03" ? "active" : "")" href="@Url.Action("Index", "CARGO_D03")"><span class="ico">🚗</span>D｜派車調度（業務）</a>
+<a class="nav-item @(current == "CARGO_D04" ? "active" : "")" href="@Url.Action("Index", "CARGO_D04")"><span class="ico">🖋</span>D｜運輸主管簽審（運輸主管）</a>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">⛽</span>D｜車輛使用實登（業務）</span>
+<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">🧑‍✈️</span>D｜司機任務單（駕駛）</span>
+</nav><div class="sidebar-foot">CARGO 車輛派遣系統<br />一般用車申請作業</div></aside>

@@ -1,0 +1,12 @@
+@using System.Linq
+@using CARGO.Web.ViewModels.CARGO_D01
+@model CARGO_D01FormViewModel
+<div class="table-scroll"><table class="editor-table"><thead><tr><th>地點</th><th>操作</th></tr></thead>
+<tbody id="rows-Locations">
+@for (var i = 0; i < Model.Locations.Count; i++)
+{
+    <tr><td>@Html.TextBox("Locations[" + i + "].Name", Model.Locations[i].Name, new { type = "text", maxlength = "300", aria_label = "地點" })</td><td><button type="button" data-remove>刪除</button></td></tr>
+}
+</tbody></table></div>
+<template id="template-Locations"><tr><td><input name="Locations[__index__].Name" type="text" maxlength="300" aria-label="地點" /></td><td><button type="button" data-remove>刪除</button></td></tr></template>
+

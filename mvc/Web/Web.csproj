@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.props" Condition="Exists('$(MSBuildToolsPath)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+    <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
+    <ProjectGuid>{8F385BE3-B661-4B2F-AFFB-C3F76986E22B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>CARGO.Web</RootNamespace>
+    <AssemblyName>CARGO.Web</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>5</LangVersion>
+    <OutputPath>bin\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize Condition="'$(Configuration)' == 'Release'">true</Optimize>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <MvcVersion>5.2.7</MvcVersion>
+    <RazorVersion>3.2.7</RazorVersion>
+    <JsonVersion>9.0.1</JsonVersion>
+    <InfrastructureVersion>1.0.0.0</InfrastructureVersion>
+    <KendoAssemblyPath>$(MSBuildProjectDirectory)\..\lib\company\Kendo.Mvc.dll</KendoAssemblyPath>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(UseLocalTelerik)' == 'true'">
+    <TelerikLicensingVerbosity>Quiet</TelerikLicensingVerbosity>
+    <MvcVersion>5.3.0</MvcVersion>
+    <RazorVersion>3.3.0</RazorVersion>
+    <JsonVersion>13.0.3</JsonVersion>
+    <InfrastructureVersion>2.0.0</InfrastructureVersion>
+    <KendoAssemblyPath>$(MSBuildProjectDirectory)\..\lib\local\Kendo.Mvc.dll</KendoAssemblyPath>
+    <OutputPath>bin\LocalPreview\</OutputPath>
+    <IntermediateOutputPath>obj\LocalPreview\</IntermediateOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(LocalDemo)' == 'true' And '$(UseLocalTelerik)' == 'true'">
+    <DefineConstants>$(DefineConstants);LOCAL_DEMO</DefineConstants>
+    <OutputPath>bin\LocalDemo\</OutputPath>
+    <IntermediateOutputPath>obj\LocalDemo\</IntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System">
+    </Reference>
+    <Reference Include="System.Core">
+    </Reference>
+    <Reference Include="System.Web">
+    </Reference>
+    <Reference Include="System.Web.Extensions">
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations">
+    </Reference>
+    <Reference Include="System.Configuration">
+    </Reference>
+    <Reference Include="System.Data">
+    </Reference>
+    <Reference Include="System.Xml">
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.$(MvcVersion)\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.$(RazorVersion)\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.$(RazorVersion)\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.$(RazorVersion)\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.$(RazorVersion)\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.$(RazorVersion)\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.$(InfrastructureVersion)\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Kendo.Mvc">
+      <HintPath>$(KendoAssemblyPath)</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseLocalTelerik)' == 'true'">
+    <Reference Include="System.Web.Http">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.3.0\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="netstandard" />
+    <Reference Include="Telerik.SvgIcons">
+      <HintPath>..\packages\Telerik.SvgIcons.4.11.0\lib\netstandard2.0\Telerik.SvgIcons.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.FontIcons">
+      <HintPath>..\packages\Telerik.FontIcons.4.11.0\lib\netstandard2.0\Telerik.FontIcons.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Telerik.Licensing.Runtime">
+      <HintPath>..\packages\Telerik.Licensing.1.9.1\lib\net462\Telerik.Licensing.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DTO\DTO.csproj">
+      <Project>{784E5425-1F3D-4AF1-9739-EE08497E01B1}</Project>
+      <Name>DTO</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Service\Service.csproj">
+      <Project>{ADC5D2B9-F798-4563-9B75-858B2B866033}</Project>
+      <Name>Service</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="**\*.cs" Exclude="bin\**;obj\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="**\*.cshtml;**\*.config;**\*.css;**\*.js;Global.asax" Exclude="bin\**;obj\**" />
+  </ItemGroup>
+  <Target Name="CheckKendo" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="'$(LocalDemo)' == 'true' And '$(UseLocalTelerik)' != 'true'" Text="LocalDemo requires UseLocalTelerik=true. Company builds cannot enable demo mode." />
+    <Error Condition="!Exists('$(KendoAssemblyPath)')" Text="Missing matching Kendo.Mvc.dll. See mvc/README.md. UseLocalTelerik=true is for local 2026 verification only." />
+  </Target>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- Local 2026 builds use the vendor task to activate the user's installed license. -->
+  <Import Project="..\packages\Telerik.Licensing.1.9.1\build\Telerik.Licensing.targets" Condition="'$(UseLocalTelerik)' == 'true'" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:10490/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

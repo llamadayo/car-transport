@@ -1,0 +1,58 @@
+@using CARGO.Web.ViewModels
+@model CARGO_DWorkDetailViewModel
+@{ int module = ViewBag.Module; string controller = "CARGO_D0" + module; var app = Model.Application; }
+<h1 class="section-h">@ViewBag.Title</h1>
+<div class="back-bar"><a class="btn btn-ghost" href="@Url.Action("Index",controller)">← 回清單</a></div>
+@if ((module == 2 && Model.CanApprove) || (module == 4 && Model.CanSign)) {
+<section class="card"><h2 class="card-title">@(module == 2 ? "主管審核" : "運輸主管簽審")</h2>
+@using (Html.BeginForm("Change",controller,FormMethod.Post,new { @class="workflow-action", data_confirm="確認送出審核結果？" })) {
+@Html.AntiForgeryToken()<input type="hidden" name="RequestId" value="@app.Form.RequestId" /><input type="hidden" name="Version" value="@app.Form.Version" />
+<label><span class="field-label">審核意見（退回時必填）</span><textarea name="Note" maxlength="1000" rows="3"></textarea></label>
+<div class="actions"><button name="Command" value="approve" type="submit" class="btn btn-primary">✓ @(module == 2 ? "核准" : "同意派車")</button><button name="Command" value="reject" type="submit" class="btn btn-danger">@(module == 2 ? "退回修編" : "不同意，退回調度")</button></div>
+}
+</section>
+}
+@if (module == 3 && (Model.CanDispatch || Model.CanChange)) {
+<section class="card"><h2 class="card-title">@(Model.CanDispatch ? "派車調度" : "換車／換司機")</h2>
+@if (Model.PriorityRequests.Count > 0) { <div class="notice">同期間尚有例行用車待調度：@String.Join("、",Model.PriorityRequests)。請優先安排。</div> }
+@if (app.Form.EnterTaipei) { <div class="notice">需進入台北市：請留意 6.5 噸以上車輛通行規定，依實際通行許可人工確認。</div> }
+<p class="intro">車種順位為申請偏好，請按座位與 K／P 證需求選車。資源清單顯示原申請期間的占用情形；異動會依生效時間重新檢核。加班時數尚未接入公司資料，請人工確認。</p>
+@using (Html.BeginForm("Change",controller,FormMethod.Post,new { @class="workflow-action", data_confirm=Model.CanDispatch ? "確認送出派車結果並交由運輸主管簽審？" : "確認變更車輛／司機與指派區間？" })) {
+@Html.AntiForgeryToken()<input type="hidden" name="RequestId" value="@app.Form.RequestId" /><input type="hidden" name="Version" value="@app.Form.Version" />
+<div class="fields">
+@foreach (var field in new[] { new { Name="Vehicle",Title="車輛",Kind="VEHICLE",Selected=app.Vehicle }, new {Name="Driver1",Title="司機 1",Kind="DRIVER",Selected=app.Driver1},new {Name="Driver2",Title="司機 2（選填）",Kind="DRIVER",Selected=app.Driver2} }) {
+<label><span class="field-label">@field.Title</span><select name="@field.Name" aria-label="@field.Title"><option value="">— 請選擇 —</option>
+@foreach (var resource in Model.Resources.Where(x => x.Kind == field.Kind)) { <option value="@resource.Id" selected="@(resource.Id == field.Selected)">@resource.Label@(resource.Reason == null ? "" : " · ⚠ " + resource.Reason)</option> }
+</select></label>
+}
+@if (Model.CanChange) { <label><span class="field-label">生效時間</span><input type="datetime-local" name="EffectiveAt" required value="@(app.Form.StartAt.Value.ToString("yyyy-MM-ddTHH:mm"))" /></label> }
+<label class="wide"><span class="field-label">調度備註</span><textarea name="Note" rows="2" maxlength="1000"></textarea></label>
+</div><div class="actions">
+@if (Model.CanDispatch) { <button type="submit" name="Command" value="dispatch" class="btn btn-primary">完成派車，送簽審</button><button type="submit" name="Command" value="noVehicle" class="btn btn-danger">無車退回</button> }
+else { <button type="submit" name="Command" value="reassign" class="btn btn-primary">確認異動</button> }
+</div>
+}
+</section>
+}
+@if (module == 3 && Model.CanChange) {
+<section class="card"><h2 class="card-title">展延用車</h2>
+@using (Html.BeginForm("Change",controller,FormMethod.Post,new { @class="workflow-action", data_confirm="確認展延？既有提前歸還申請將一併撤銷。" })) {
+@Html.AntiForgeryToken()<input type="hidden" name="RequestId" value="@app.Form.RequestId" /><input type="hidden" name="Version" value="@app.Form.Version" /><input type="hidden" name="Command" value="extend" />
+<div class="fields"><label><span class="field-label">新的結束時間</span><input type="datetime-local" name="EndAt" required value="@app.Form.EndAt.Value.ToString("yyyy-MM-ddTHH:mm")" /></label><label><span class="field-label">原因</span><input name="Note" maxlength="1000" /></label></div><button type="submit" class="btn btn-primary">確認展延</button>
+}
+</section>
+if (app.PendingReturnAt.HasValue) {
+<section class="card"><h2 class="card-title">提前歸還確認</h2><p>申請時間：@app.PendingReturnAt.Value.ToString("yyyy-MM-dd HH:mm") · @app.ReturnReason</p>
+@using (Html.BeginForm("Change",controller,FormMethod.Post,new { @class="workflow-action", data_confirm="確認處理提前歸還申請？" })) {
+@Html.AntiForgeryToken()<input type="hidden" name="RequestId" value="@app.Form.RequestId" /><input type="hidden" name="Version" value="@app.Form.Version" /><label><span class="field-label">意見</span><input name="Note" maxlength="1000" /></label><div class="actions"><button type="submit" name="Command" value="returnApprove" class="btn btn-primary">確認歸還</button><button type="submit" name="Command" value="returnReject" class="btn btn-danger">退回</button></div>
+}
+</section>
+}
+}
+@if (Model.Signs.Count > 0) {
+<section class="card"><h2 class="card-title">派車簽審歷程</h2><div class="table-scroll"><table class="detail-table"><thead><tr><th>輪次</th><th>送簽時間／人員</th><th>指派摘要</th><th>結果</th><th>簽審人員／時間</th><th>意見</th></tr></thead><tbody>
+@foreach (var sign in Model.Signs) { <tr><td>@sign.Round</td><td>@sign.SubmittedAt.ToString("yyyy-MM-dd HH:mm")<br />@sign.SubmittedBy</td><td>@sign.Summary</td><td>@sign.Status</td><td>@sign.DecidedBy @(sign.DecidedAt.HasValue ? sign.DecidedAt.Value.ToString("yyyy-MM-dd HH:mm") : "")</td><td>@sign.Note</td></tr> }
+</tbody></table></div></section>
+}
+@Html.Partial("_DApplication",app)
+@section scripts { <script src="@Url.Content("~/Scripts/cargo-workflow.js")"></script> }

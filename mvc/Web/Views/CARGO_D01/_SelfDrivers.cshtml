@@ -1,0 +1,12 @@
+@using System.Linq
+@using CARGO.Web.ViewModels.CARGO_D01
+@model CARGO_D01FormViewModel
+<div class="table-scroll"><table class="editor-table"><thead><tr><th>姓名</th><th>分機</th><th>手機</th><th>操作</th></tr></thead>
+<tbody id="rows-SelfDrivers">
+@for (var i = 0; i < Model.SelfDrivers.Count; i++)
+{
+    <tr><td>@Html.TextBox("SelfDrivers[" + i + "].Name", Model.SelfDrivers[i].Name, new { type = "text", maxlength = "100", aria_label = "姓名" })</td><td>@Html.TextBox("SelfDrivers[" + i + "].Extension", Model.SelfDrivers[i].Extension, new { type = "text", maxlength = "30", aria_label = "分機" })</td><td>@Html.TextBox("SelfDrivers[" + i + "].Phone", Model.SelfDrivers[i].Phone, new { type = "text", maxlength = "30", aria_label = "手機" })</td><td><button type="button" data-remove>刪除</button></td></tr>
+}
+</tbody></table></div>
+<template id="template-SelfDrivers"><tr><td><input name="SelfDrivers[__index__].Name" type="text" maxlength="100" aria-label="姓名" /></td><td><input name="SelfDrivers[__index__].Extension" type="text" maxlength="30" aria-label="分機" /></td><td><input name="SelfDrivers[__index__].Phone" type="text" maxlength="30" aria-label="手機" /></td><td><button type="button" data-remove>刪除</button></td></tr></template>
+

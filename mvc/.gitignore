@@ -1,0 +1,15 @@
+packages/
+lib/
+Web/Scripts/vendor/
+Web/Content/vendor/
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+*.local.config
+*.local.props
+TestResults/
+artifacts/
+telerik-license.txt
+TelerikLicense.cs

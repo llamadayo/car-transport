@@ -1,0 +1,120 @@
+@using CARGO.Web.ViewModels.CARGO_D01
+@model CARGO_D01DetailViewModel
+@{
+    ViewBag.Title = "一般用車申請明細";
+    Func<string, string, string> optionLabel = (type, code) => {
+        var option = Model.Form.Options.FirstOrDefault(x => x.Type == type && x.Code == code);
+        return option == null ? code : option.Label;
+    };
+}
+<h1 class="section-h">@Model.Form.RequestNo · 一般用車申請明細</h1>
+<p class="intro">@Model.StatusLabel · 建立時間 @Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</p>
+<section class="card"><h2 class="card-title">基本資料</h2><div class="fields">
+<dl><dt>用車類別</dt><dd>@(Model.Form.Category == "routine" ? "例行用車" : "一般用車")</dd></dl>
+<dl><dt>運輸類別</dt><dd>@Model.Form.TransportType</dd></dl>
+<dl><dt>申請人</dt><dd>@Model.Form.Applicant</dd></dl>
+<dl><dt>部門</dt><dd>@Model.Form.Department</dd></dl>
+<dl><dt>分機</dt><dd>@Model.Form.Extension</dd></dl>
+<dl><dt>計畫代號</dt><dd>@Model.Form.PlanCode</dd></dl>
+<dl><dt>車屬院區</dt><dd>@optionLabel("CAMPUS", Model.Form.Campus)</dd></dl>
+<dl><dt>車種順位 1</dt><dd>@optionLabel("VEHICLE_TYPE", Model.Form.Preference1)</dd></dl>
+<dl><dt>車種順位 2</dt><dd>@optionLabel("VEHICLE_TYPE", Model.Form.Preference2)</dd></dl>
+<dl><dt>車種順位 3</dt><dd>@optionLabel("VEHICLE_TYPE", Model.Form.Preference3)</dd></dl>
+<dl><dt>演訓計畫名稱</dt><dd>@Model.Form.ExercisePlan</dd></dl>
+<dl><dt>車長</dt><dd>@Model.Form.Leader</dd></dl>
+<dl><dt>車長分機</dt><dd>@Model.Form.LeaderExtension</dd></dl>
+<dl><dt>車長手機</dt><dd>@Model.Form.LeaderPhone</dd></dl>
+<dl><dt>上車地點</dt><dd>@Model.Form.PickupLocation</dd></dl>
+<dl><dt>事由</dt><dd>@Model.Form.Purpose</dd></dl>
+<dl><dt>三聯單表單編號</dt><dd>@Model.Form.TriplicateNo</dd></dl>
+<dl><dt>護運單號</dt><dd>@Model.Form.EscortNo</dd></dl>
+<dl><dt>異動事由</dt><dd>@Model.Form.ChangeReason</dd></dl>
+<dl><dt>備註</dt><dd>@Model.Form.Remarks</dd></dl>
+<dl><dt>用車起時</dt><dd>@(Model.Form.StartAt.HasValue ? Model.Form.StartAt.Value.ToString("yyyy-MM-dd HH:mm") : "—")</dd></dl>
+<dl><dt>用車迄時</dt><dd>@(Model.Form.EndAt.HasValue ? Model.Form.EndAt.Value.ToString("yyyy-MM-dd HH:mm") : "—")</dd></dl>
+<dl><dt>乘客數</dt><dd>@Model.Form.Passengers</dd></dl>
+<dl><dt>是否自駕</dt><dd>@(Model.Form.SelfDrive == true ? "是" : "否")</dd></dl>
+<dl><dt>需 K 證</dt><dd>@(Model.Form.NeedK ? "是" : "否")</dd></dl>
+<dl><dt>需 P 證</dt><dd>@(Model.Form.NeedP ? "是" : "否")</dd></dl>
+<dl><dt>是否單程運輸</dt><dd>@(Model.Form.OneWay ? "是" : "否")</dd></dl>
+<dl><dt>是否同意併車</dt><dd>@(Model.Form.AllowMerge ? "是" : "否")</dd></dl>
+<dl><dt>需要夜間加班</dt><dd>@(Model.Form.NightOvertime ? "是" : "否")</dd></dl>
+<dl><dt>需要假日加班</dt><dd>@(Model.Form.HolidayOvertime ? "是" : "否")</dd></dl>
+<dl><dt>願意持續媒合駕駛</dt><dd>@(Model.Form.ContinueMatching ? "是" : "否")</dd></dl>
+<dl><dt>無駕駛時願意自駕</dt><dd>@(Model.Form.WillingSelfDrive ? "是" : "否")</dd></dl>
+<dl><dt>自駕人擁有合格駕駛證照</dt><dd>@(Model.Form.QualifiedLicense ? "是" : "否")</dd></dl>
+<dl><dt>進入台北市</dt><dd>@(Model.Form.EnterTaipei ? "是" : "否")</dd></dl>
+<dl><dt>跨院區</dt><dd>@(Model.Form.CrossCampus ? "是" : "否")</dd></dl>
+<dl><dt>有載運品</dt><dd>@(Model.Form.HasCargo ? "是" : "否")</dd></dl>
+<dl><dt>危險品</dt><dd>@(Model.Form.HazardousCargo ? "是" : "否")</dd></dl>
+<dl><dt>火工品</dt><dd>@(Model.Form.PyrotechnicCargo ? "是" : "否")</dd></dl>
+<dl><dt>需吊掛</dt><dd>@(Model.Form.NeedsHoisting ? "是" : "否")</dd></dl>
+<dl><dt>是否送審</dt><dd>@(Model.Form.RequestReview ? "是" : "否")</dd></dl>
+</div></section>
+<section class="card"><h2 class="card-title">行程地點</h2>
+@if (Model.Form.Locations.Count == 0) { <p class="muted">無資料</p> }
+else { <div class="table-scroll"><table class="detail-table"><thead><tr><th>地點</th></tr></thead><tbody>
+@foreach (var row in Model.Form.Locations) { <tr><td>@row.Name</td></tr> }
+</tbody></table></div> }</section>
+<section class="card"><h2 class="card-title">自駕人</h2>
+@if (Model.Form.SelfDrivers.Count == 0) { <p class="muted">無資料</p> }
+else { <div class="table-scroll"><table class="detail-table"><thead><tr><th>姓名</th><th>分機</th><th>手機</th></tr></thead><tbody>
+@foreach (var row in Model.Form.SelfDrivers) { <tr><td>@row.Name</td><td>@row.Extension</td><td>@row.Phone</td></tr> }
+</tbody></table></div> }</section>
+<section class="card"><h2 class="card-title">隨行貨物</h2>
+@if (Model.Form.Cargo.Count == 0) { <p class="muted">無資料</p> }
+else { <div class="table-scroll"><table class="detail-table"><thead><tr><th>品名</th><th>長 cm</th><th>寬 cm</th><th>高 cm</th><th>重量 kg</th><th>件數</th><th>品類</th><th>外包裝</th><th>危險品</th></tr></thead><tbody>
+@foreach (var row in Model.Form.Cargo) { <tr><td>@row.Name</td><td>@row.Length</td><td>@row.Width</td><td>@row.Height</td><td>@row.Weight</td><td>@row.Quantity</td><td>@row.Category</td><td>@row.Packaging</td><td>@(row.Hazardous ? "是" : "否")</td></tr> }
+</tbody></table></div> }</section>
+<section class="card"><h2 class="card-title">簽核與派車結果</h2><div class="fields">
+<dl><dt>簽核主管</dt><dd>@Model.Approver</dd></dl><dl><dt>審核備註</dt><dd>@Model.Form.ReviewNote</dd></dl>
+<dl><dt>派車結果</dt><dd>@Model.Outcome</dd></dl><dl><dt>派車單號</dt><dd>@Model.DispatchNo</dd></dl>
+<dl><dt>目前車輛</dt><dd>@Model.Vehicle</dd></dl><dl><dt>駕駛人 1</dt><dd>@Model.Driver1</dd></dl><dl><dt>駕駛人 2</dt><dd>@Model.Driver2</dd></dl>
+<dl><dt>調度完成確認</dt><dd>@Model.DispatchedAt @Model.DispatchedBy</dd></dl><dl><dt>調度備註</dt><dd>@Model.DispatchNote</dd></dl>
+</div></section>
+<section class="card"><h2 class="card-title">申請人操作</h2>
+@if (Model.CanEdit) { <a class="button" href="@Url.Action("Edit", new { id = Model.Form.RequestId })">@(Model.Form.Status == "rejected" ? "修改後重新送出" : "編輯並送出")</a> }
+@if (Model.CanWithdraw) {
+    using (Html.BeginForm("Withdraw", "CARGO_D01", FormMethod.Post, new { @class = "confirm-action", data_confirm = "撤回後回到申請中，重送須重新審核。確認撤回修改？" })) {
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="RequestId" value="@Model.Form.RequestId" />
+        <input type="hidden" name="Version" value="@Model.Form.Version" />
+        <button type="submit">撤回修改</button>
+    }
+}
+@if (!Model.CanEdit && !Model.CanWithdraw) { <p>目前不可修改申請。派車生效後若需換車、換司機或展延，請聯繫調度。</p> }
+@if (Model.PendingReturnAt.HasValue) { <div class="notice">已提出提前歸還：@Model.PendingReturnAt.Value.ToString("yyyy-MM-dd HH:mm")。@Model.ReturnReason<br />待調度確認前，原用車時段仍保留。</div> }
+@if (Model.CanReturn) {
+    using (Html.BeginForm("EarlyReturn", "CARGO_D01", FormMethod.Post, new { @class = "confirm-action", data_confirm = "確認提出提前歸還？調度確認前不會縮短原用車期間。" })) {
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="RequestId" value="@Model.Form.RequestId" />
+        <input type="hidden" name="Version" value="@Model.Form.Version" />
+        <div class="fields"><label>提前歸還時間<input type="datetime-local" name="ReturnAt" required /></label><label>原因（選填）<input name="Reason" maxlength="1000" /></label></div>
+        <p>須晚於用車起時、早於目前結束時間，經調度確認才生效。</p><button type="submit">提出提前歸還</button>
+    }
+}
+</section>
+@if (Model.Assignments.Count > 0) {
+<section class="card"><h2 class="card-title">指派區間歷史</h2><div class="table-scroll"><table class="detail-table"><thead><tr><th>起訖</th><th>車輛</th><th>駕駛</th><th>類型</th><th>原因</th></tr></thead><tbody>
+@foreach (var row in Model.Assignments) { <tr><td>@row.From.ToString("yyyy-MM-dd HH:mm") ～ @row.To.ToString("yyyy-MM-dd HH:mm")</td><td>@row.Vehicle</td><td>@row.Driver1 @row.Driver2</td><td>@row.Kind</td><td>@row.Reason</td></tr> }
+</tbody></table></div></section>
+}
+@foreach (var section in new[] { new { Title = "異動紀錄", Rows = Model.History }, new { Title = "通知紀錄", Rows = Model.Notices } }) {
+<section class="card"><h2 class="card-title">@(section.Title)</h2>
+@if (section.Rows.Count == 0) { <p class="muted">尚無紀錄</p> }
+else { <div class="table-scroll"><table class="detail-table"><thead><tr><th>時間</th><th>動作／類型</th><th>人員</th><th>說明</th></tr></thead><tbody>
+@foreach (var row in section.Rows) { <tr><td>@(row.At.HasValue ? row.At.Value.ToString("yyyy-MM-dd HH:mm") : "待寄送")</td><td>@row.Kind</td><td>@row.Actor</td><td>@row.Text</td></tr> }
+</tbody></table></div> }
+</section>
+}
+<div class="back-bar"><a class="btn btn-ghost" href="@Url.Action("Index")">← 回上一頁</a></div>
+@section scripts {
+<script>
+document.querySelectorAll(".confirm-action").forEach(function (form) {
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        window.cargoConfirm(form.getAttribute("data-confirm"), function () { HTMLFormElement.prototype.submit.call(form); });
+    });
+});
+</script>
+}

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.props" Condition="Exists('$(MSBuildToolsPath)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+    <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
+    <ProjectGuid>{ADC5D2B9-F798-4563-9B75-858B2B866033}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>CARGO.Service</RootNamespace>
+    <AssemblyName>CARGO.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>5</LangVersion>
+    <OutputPath>bin\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize Condition="'$(Configuration)' == 'Release'">true</Optimize>
+
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(LocalDemo)' == 'true' And '$(UseLocalTelerik)' == 'true'">
+    <DefineConstants>$(DefineConstants);LOCAL_DEMO</DefineConstants>
+    <OutputPath>bin\LocalDemo\</OutputPath>
+    <IntermediateOutputPath>obj\LocalDemo\</IntermediateOutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System"></Reference>
+    <Reference Include="System.Core"></Reference>
+    <Reference Include="System.Data"></Reference>
+    <Reference Include="System.Configuration"></Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Dapper"><HintPath>..\packages\Dapper.1.50.5\lib\net451\Dapper.dll</HintPath><Private>True</Private></Reference>
+    <Reference Include="Oracle.ManagedDataAccess"><HintPath>..\packages\Oracle.ManagedDataAccess.12.1.2400\lib\net40\Oracle.ManagedDataAccess.dll</HintPath><Private>True</Private></Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DTO\DTO.csproj"><Project>{784E5425-1F3D-4AF1-9739-EE08497E01B1}</Project><Name>DTO</Name></ProjectReference>
+  </ItemGroup>
+  <ItemGroup><Compile Include="**\*.cs" Exclude="bin\**;obj\**" /></ItemGroup>
+  <ItemGroup><None Include="packages.config" /></ItemGroup>
+
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+</Project>

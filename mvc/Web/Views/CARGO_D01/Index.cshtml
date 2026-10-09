@@ -1,0 +1,69 @@
+@using CARGO.Web.Models
+@using CARGO.Web.ViewModels.CARGO_D01
+@using Kendo.Mvc.UI
+@model CARGO_D01IndexViewModel
+@{ ViewBag.Title = "一般用車申請"; }
+<h1 class="section-h">一般用車申請（使用者）</h1>
+<p class="intro">彈性時長用車（數小時～數個月，不分類別）。送出後先經單位主管審核，再由調度人工確認共用商務車輛／司機資源並派車。例行用車僅特定角色可選；車種順位為偏好，實際車輛由調度指派。</p>
+<section class="card">
+    <div class="card-title"><span>查詢條件</span><div><button type="button" class="btn btn-primary btn-sm" id="search">🔍 查詢</button> <a class="btn btn-accent btn-sm" href="@Url.Action("Create")">＋ 新增</a></div></div>
+    <form id="query-form">
+        @Html.AntiForgeryToken()
+        <div class="fields">
+            <label class="query-field"><span>申請人（模糊）</span>@Html.TextBoxFor(m => m.Applicant, new { placeholder = "輸入姓名關鍵字" })</label>
+            <label class="query-field"><span>用車日期 <small>落在起訖期間內</small></span>@Html.TextBoxFor(m => m.UseDate, "{0:yyyy-MM-dd}", new { type = "date" })</label>
+            <label class="query-field"><span>狀態</span> @Html.DropDownListFor(m => m.Status, new SelectList(CARGO_D01Mapper.Statuses, "Key", "Value"), "全部狀態")</label>
+        </div>
+    </form>
+</section>
+<section class="card"><h2 class="card-title">歷史用車申請 <span class="result-count" id="result-count"></span></h2>
+<script>
+function d01StatusBadge(value) {
+    var colors = { "申請中": "b-gray", "待二級審": "b-amber", "退回修編": "b-red", "待調度": "b-navy", "無車退回": "b-red", "調度主管審": "b-amber", "待出車": "b-green", "已出車": "b-green", "已回登": "b-gray" };
+    return "<span class='badge " + (colors[value] || "b-gray") + "'>" + kendo.htmlEncode(value) + "</span>";
+}
+function d01Bound(e) { jQuery("#result-count").text(e.sender.dataSource.total() + " 筆"); }
+function d01Query() {
+    return {
+        __RequestVerificationToken: jQuery("#query-form input[name=__RequestVerificationToken]").val(),
+        Applicant: jQuery("#Applicant").val(), UseDate: jQuery("#UseDate").val(), Status: jQuery("#Status").val()
+    };
+}
+function d01GridError(e) {
+    jQuery("#grid-error").text(e.errors || "查詢失敗，請確認登入狀態與資料庫設定後重試。").prop("hidden", false).show();
+}
+</script>
+<p id="grid-error" role="alert" hidden></p>
+@(Html.Kendo().Grid<CARGO_D01RowViewModel>()
+    .Name("requestsGrid")
+    .Columns(columns => {
+        columns.Bound(x => x.RequestId).Title("明細").Sortable(false)
+            .ClientTemplate("<a class='btn btn-ghost btn-sm' href='" + Url.Action("Detail") + "/#= RequestId #'>細節</a>").Width(80);
+        columns.Bound(x => x.RequestNo).Title("單號").ClientTemplate("<strong class='request-no'>#: RequestNo #</strong>").Width(125);
+        columns.Bound(x => x.Category).Title("類別").ClientTemplate("<span class='badge b-navy'>#: Category #</span>").Sortable(false).Width(110);
+        columns.Bound(x => x.Applicant).Title("申請人").Width(130);
+        columns.Bound(x => x.StartAt).Title("用車時段").ClientTemplate("#: kendo.toString(StartAt, 'yyyy-MM-dd HH:mm') #<br/>～ #: kendo.toString(EndAt, 'yyyy-MM-dd HH:mm') #").Width(190);
+        columns.Bound(x => x.Passengers).Title("人數").Width(85);
+        columns.Bound(x => x.SelfDrive).Title("自駕").Sortable(false).Width(80);
+        columns.Bound(x => x.Cargo).Title("隨行貨物").Sortable(false).Width(130);
+        columns.Bound(x => x.Status).Title("狀態").ClientTemplate("#= d01StatusBadge(Status) #").Sortable(false).Width(110);
+        columns.Bound(x => x.Outcome).Title("派車結果").Sortable(false).Width(145);
+        columns.Bound(x => x.CreatedAt).Title("建立時間").Format("{0:yyyy-MM-dd HH:mm}").Width(165);
+    })
+    .Events(e => e.DataBound("d01Bound"))
+    .Pageable(p => p.PageSizes(new[] { 20, 50, 100 }))
+    .Sortable()
+    .Scrollable(s => s.Height("auto"))
+    .DataSource(ds => ds.Ajax().PageSize(20).ServerOperation(true)
+        .Read(read => read.Action("Read", "CARGO_D01").Type(HttpVerbs.Post).Data("d01Query"))
+        .Events(events => events.Error("d01GridError"))))
+</section>
+@section scripts {
+<script>
+jQuery(function () {
+    function search(e) { if (e) e.preventDefault(); jQuery("#grid-error").hide(); jQuery("#requestsGrid").data("kendoGrid").dataSource.page(1); }
+    jQuery("#search").on("click", search);
+    jQuery("#query-form").on("submit", search);
+});
+</script>
+}

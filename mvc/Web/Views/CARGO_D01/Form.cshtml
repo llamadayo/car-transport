@@ -1,0 +1,89 @@
+@using System.Linq
+@using CARGO.Web.ViewModels.CARGO_D01
+@model CARGO_D01FormViewModel
+@{
+    ViewBag.Title = Model.RequestId == 0 ? "新增一般用車申請" : "修改一般用車申請";
+    var categories = new List<SelectListItem> { new SelectListItem { Value = "general", Text = "一般用車" } };
+    if (Model.CanChooseRoutine) { categories.Add(new SelectListItem { Value = "routine", Text = "例行用車" }); }
+}
+
+@helper Choice(string name, string label, bool? value, string yes = "是") {
+<div class="field choice-field"><span class="field-label" id="label-@name">@label</span><div class="radio-group" role="group" aria-labelledby="label-@name">
+<label class="radio-pill">@Html.RadioButton(name, "true", value == true, new { id = name + "Yes" }) @yes</label>
+<label class="radio-pill">@Html.RadioButton(name, "false", value == false, new { id = name + "No" }) 否</label>
+</div></div>
+}
+
+<h1 class="section-h">@ViewBag.Title</h1>
+@if (!String.IsNullOrEmpty(Model.ReviewNote)) { <div class="notice">退回修編意見：@Model.ReviewNote</div> }
+@using (Html.BeginForm("Save", "CARGO_D01", FormMethod.Post, new { id = "application-form" })) {
+@Html.AntiForgeryToken()
+@Html.HiddenFor(m => m.RequestId)
+@Html.HiddenFor(m => m.Version)
+@Html.ValidationSummary(false, "", new { role = "alert" })
+<section class="card"><h2 class="card-title">用車申請</h2>
+<div class="fields">
+<div class="field"><span class="field-label">申請單狀態</span><span class="badge b-gray">@(Model.Status == "rejected" ? "退回修編" : "申請中")</span></div>
+<div class="field"><span class="field-label">申請單號</span><span>@(Model.RequestNo ?? "儲存後自動產生")</span></div>
+<div class="field">@Html.LabelFor(m => m.Applicant) @Html.TextBoxFor(m => m.Applicant, new { maxlength = "100" }) @Html.ValidationMessageFor(m => m.Applicant)</div>
+<div class="field">@Html.LabelFor(m => m.Department) @Html.TextBoxFor(m => m.Department, new { maxlength = "100" }) @Html.ValidationMessageFor(m => m.Department)</div>
+<div class="field">@Html.LabelFor(m => m.Extension) @Html.TextBoxFor(m => m.Extension, new { maxlength = "30" }) @Html.ValidationMessageFor(m => m.Extension)</div>
+<div class="field"><span class="field-label">申請人身分</span><span>@(Model.CanChooseRoutine ? "可申請例行用車" : "一般申請人")</span></div>
+<div class="field">@Html.LabelFor(m => m.PlanCode) @Html.TextBoxFor(m => m.PlanCode, new { maxlength = "100" }) @Html.ValidationMessageFor(m => m.PlanCode)</div>
+<div class="field">@Html.LabelFor(m => m.Campus) @Html.DropDownListFor(m => m.Campus, new SelectList(Model.Options.Where(x => x.Type == "CAMPUS"), "Code", "Label"), "不指定") @Html.ValidationMessageFor(m => m.Campus)</div>
+<div class="field">@Html.LabelFor(m => m.Preference1) @Html.DropDownListFor(m => m.Preference1, new SelectList(Model.Options.Where(x => x.Type == "VEHICLE_TYPE"), "Code", "Label"), "請選擇車種（必填）") @Html.ValidationMessageFor(m => m.Preference1)</div>
+<div class="field">@Html.LabelFor(m => m.Preference2) @Html.DropDownListFor(m => m.Preference2, new SelectList(Model.Options.Where(x => x.Type == "VEHICLE_TYPE"), "Code", "Label"), "不指定") @Html.ValidationMessageFor(m => m.Preference2)</div>
+<div class="field">@Html.LabelFor(m => m.Preference3) @Html.DropDownListFor(m => m.Preference3, new SelectList(Model.Options.Where(x => x.Type == "VEHICLE_TYPE"), "Code", "Label"), "不指定") @Html.ValidationMessageFor(m => m.Preference3)</div>
+<div class="field">@Html.LabelFor(m => m.Category) @Html.DropDownListFor(m => m.Category, new SelectList(categories, "Value", "Text"))</div>
+<div class="field">@Html.LabelFor(m => m.TransportType) @Html.DropDownListFor(m => m.TransportType, new SelectList(new[] { "一般", "自駕", "演訓", "演訓自駕", "院區接駁" }))</div>
+<div class="field" id="exercise-field">@Html.LabelFor(m => m.ExercisePlan) @Html.TextBoxFor(m => m.ExercisePlan, new { maxlength = "200" }) @Html.ValidationMessageFor(m => m.ExercisePlan)</div>
+</div><p class="group-caption">用車起訖（必填；數小時～數個月皆可，不分類別）</p><div class="fields">
+@Html.HiddenFor(m => m.StartAt)
+<div class="field"><label for="StartAtDate">起 · 日期</label><input type="date" id="StartAtDate" data-period="StartAt" value="@(Model.StartAt.HasValue ? Model.StartAt.Value.ToString("yyyy-MM-dd") : "")" required /></div>
+<div class="field"><label for="StartAtTime">起 · 時間</label><input type="time" id="StartAtTime" data-period="StartAt" value="@(Model.StartAt.HasValue ? Model.StartAt.Value.ToString("HH:mm") : "")" required /></div>
+@Html.HiddenFor(m => m.EndAt)
+<div class="field"><label for="EndAtDate">迄 · 日期</label><input type="date" id="EndAtDate" data-period="EndAt" value="@(Model.EndAt.HasValue ? Model.EndAt.Value.ToString("yyyy-MM-dd") : "")" required /></div>
+<div class="field"><label for="EndAtTime">迄 · 時間</label><input type="time" id="EndAtTime" data-period="EndAt" value="@(Model.EndAt.HasValue ? Model.EndAt.Value.ToString("HH:mm") : "")" required /></div>
+<div class="field">@Html.LabelFor(m => m.Leader) @Html.TextBoxFor(m => m.Leader, new { maxlength = "100" }) @Html.ValidationMessageFor(m => m.Leader)</div>
+<div class="field">@Html.LabelFor(m => m.LeaderExtension) @Html.TextBoxFor(m => m.LeaderExtension, new { maxlength = "30" }) @Html.ValidationMessageFor(m => m.LeaderExtension)</div>
+<div class="field">@Html.LabelFor(m => m.LeaderPhone) @Html.TextBoxFor(m => m.LeaderPhone, new { maxlength = "30" }) @Html.ValidationMessageFor(m => m.LeaderPhone)</div>
+<div class="field">@Html.LabelFor(m => m.Passengers) @Html.TextBoxFor(m => m.Passengers, new { type = "number", min = "1", max = "999999", step = "1", required = "required" }) @Html.ValidationMessageFor(m => m.Passengers)</div>
+@Choice("SelfDrive", "是否自駕（必填）", Model.SelfDrive, "是，可自駕")</div>
+<div id="self-driver-section" class="form-group"><div class="group-heading"><span class="field-label">自駕人（最多 8 筆）</span><button type="button" class="btn btn-accent btn-sm" data-add="SelfDrivers">＋ 新增自駕人</button></div>@Html.Partial("_SelfDrivers", Model)</div><div class="fields">
+<div class="field full">@Html.LabelFor(m => m.PickupLocation) @Html.TextBoxFor(m => m.PickupLocation, new { maxlength = "300" }) @Html.ValidationMessageFor(m => m.PickupLocation)</div>
+<div class="field full">@Html.LabelFor(m => m.Purpose) @Html.TextAreaFor(m => m.Purpose, new { maxlength = "1000" }) @Html.ValidationMessageFor(m => m.Purpose)</div>
+</div><div class="fields">
+@Choice("NeedK", Html.DisplayNameFor(m => m.NeedK).ToString(), Model.NeedK)
+@Choice("NeedP", Html.DisplayNameFor(m => m.NeedP).ToString(), Model.NeedP)
+@Choice("OneWay", Html.DisplayNameFor(m => m.OneWay).ToString(), Model.OneWay)
+@Choice("AllowMerge", Html.DisplayNameFor(m => m.AllowMerge).ToString(), Model.AllowMerge)
+@Choice("NightOvertime", Html.DisplayNameFor(m => m.NightOvertime).ToString(), Model.NightOvertime)
+@Choice("HolidayOvertime", Html.DisplayNameFor(m => m.HolidayOvertime).ToString(), Model.HolidayOvertime)
+@Choice("ContinueMatching", Html.DisplayNameFor(m => m.ContinueMatching).ToString(), Model.ContinueMatching)
+@Choice("WillingSelfDrive", Html.DisplayNameFor(m => m.WillingSelfDrive).ToString(), Model.WillingSelfDrive)
+@Choice("QualifiedLicense", Html.DisplayNameFor(m => m.QualifiedLicense).ToString(), Model.QualifiedLicense)
+@Choice("EnterTaipei", Html.DisplayNameFor(m => m.EnterTaipei).ToString(), Model.EnterTaipei)
+@Choice("CrossCampus", Html.DisplayNameFor(m => m.CrossCampus).ToString(), Model.CrossCampus)
+@Choice("HasCargo", Html.DisplayNameFor(m => m.HasCargo).ToString(), Model.HasCargo)
+@Choice("HazardousCargo", Html.DisplayNameFor(m => m.HazardousCargo).ToString(), Model.HazardousCargo)
+@Choice("PyrotechnicCargo", Html.DisplayNameFor(m => m.PyrotechnicCargo).ToString(), Model.PyrotechnicCargo)
+@Choice("NeedsHoisting", Html.DisplayNameFor(m => m.NeedsHoisting).ToString(), Model.NeedsHoisting)
+</div><p class="card-desc">駕駛證照、危險品、加班及進入台北市為申請資訊或提示，不會自動判定能否派車。</p>
+<div class="group-heading"><span class="field-label">行程地點</span><button type="button" class="btn btn-accent btn-sm" data-add="Locations">＋ 新增地點</button></div>
+@Html.Partial("_Locations", Model)<div class="fields">
+<div class="field">@Html.LabelFor(m => m.TriplicateNo) @Html.TextBoxFor(m => m.TriplicateNo, new { maxlength = "100" }) @Html.ValidationMessageFor(m => m.TriplicateNo)</div>
+<div class="field">@Html.LabelFor(m => m.EscortNo) @Html.TextBoxFor(m => m.EscortNo, new { maxlength = "100" }) @Html.ValidationMessageFor(m => m.EscortNo)</div>
+<div class="field full">@Html.LabelFor(m => m.ChangeReason) @Html.TextAreaFor(m => m.ChangeReason, new { maxlength = "1000" }) @Html.ValidationMessageFor(m => m.ChangeReason)</div>
+<div class="field full">@Html.LabelFor(m => m.Remarks) @Html.TextAreaFor(m => m.Remarks, new { maxlength = "1000" }) @Html.ValidationMessageFor(m => m.Remarks)</div>
+@Choice("RequestReview", "是否送審", Model.RequestReview)</div>
+<p class="card-desc">選「否」請暫存，選「是」可送出申請。暫存仍須填妥必填欄位。</p></section>
+<section class="card"><div class="card-title"><span>隨行貨物（選填）</span><button type="button" class="btn btn-accent btn-sm" data-add="Cargo">＋ 新增</button></div>
+<p class="card-desc">有貨才填；欄位比照物流運輸申請（長寬高／重量／件數／品類）。人數與貨物各自獨立、不互斥。</p>
+@Html.Partial("_Cargo", Model)</section>
+<div class="actions">
+<button type="submit" class="btn btn-primary" name="command" value="submit" id="submit-request">▶ 送出申請（待二級審）</button>
+@if (Model.RequestId == 0 || Model.Status == "draft") { <button type="submit" name="command" value="draft" class="btn btn-ghost">💾 暫存（申請中）</button> }
+<a class="btn btn-ghost" href="@(Model.RequestId == 0 ? Url.Action("Index") : Url.Action("Detail", new { id = Model.RequestId }))">取消</a></div>
+}
+<div class="back-bar"><a class="btn btn-ghost" href="@(Model.RequestId == 0 ? Url.Action("Index") : Url.Action("Detail", new { id = Model.RequestId }))">← 回上一頁</a></div>
+@section scripts { <script src="@Url.Content("~/Scripts/cargo-d01.js")"></script> }
