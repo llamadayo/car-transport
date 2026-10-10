@@ -1,4 +1,4 @@
-@using CARGO.Web.ViewModels
+@using CARGO.Web.ViewModels.CARGO_D05
 @model CARGO_D05DetailViewModel
 @{var app=Model.Application; var types=Model.Resources.Where(x=>x.Kind=="VEHICLE").Select(x=>x.Type).Distinct().OrderBy(x=>x).ToList();
 var drivers=Model.Resources.Where(x=>x.Kind=="DRIVER").Select(x=>new SelectListItem {Value=x.Id,Text=x.Name+"（"+x.Id+"）"}).ToList();

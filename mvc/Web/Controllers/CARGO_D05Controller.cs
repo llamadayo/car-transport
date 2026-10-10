@@ -4,7 +4,7 @@ using System.Web.Mvc;
 using CARGO.DTO;
 using CARGO.Service;
 using CARGO.Web.Models;
-using CARGO.Web.ViewModels;
+using CARGO.Web.ViewModels.CARGO_D05;
 using Kendo.Mvc.UI;
 namespace CARGO.Web.Controllers {
  [Authorize(Roles="業務")]

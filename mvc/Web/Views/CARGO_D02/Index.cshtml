@@ -26,7 +26,7 @@ function workError(e) { jQuery('#grid-error').text(e.errors || '查詢失敗，�
 function workBadge(value) { var cls = /退回/.test(value) ? 'b-red' : /審/.test(value) ? 'b-amber' : /同意|出車/.test(value) ? 'b-green' : 'b-navy'; return '<span class="badge ' + cls + '">' + kendo.htmlEncode(value) + '</span>'; }
 </script>
 @(Html.Kendo().Grid<CARGO_D02RowViewModel>().Name("workGrid").Columns(c => {
- c.Bound(x => x.RequestId).Title("操作").ClientTemplate("<a class='btn btn-ghost btn-sm' href='" + Url.Action("Detail",controller) + "/#= RequestId #'>開啟</a>").Width(85);
+ c.Bound(x => x.RequestId).Title("操作").ClientTemplate("<a class='btn btn-ghost btn-sm grid-detail-link' href='" + Url.Action("Detail",controller) + "/#= RequestId #' title='查看明細' aria-label='查看明細：#: RequestNo #'><img src='" + Url.Content("~/Content/vendor/fontawesome/newspaper.svg") + "' width='18' height='18' alt='' aria-hidden='true' /></a>").Width(85);
  c.Bound(x => x.RequestNo).Title("申請單號").ClientTemplate("<strong class='request-no'>#: RequestNo #</strong>").Width(125);
  c.Bound(x => x.Category).Title("類別").ClientTemplate("<span class='badge b-navy'>#: Category #</span>").Width(110);
  c.Bound(x => x.Applicant).Title("申請人").Width(120);

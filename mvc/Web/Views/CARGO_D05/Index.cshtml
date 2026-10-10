@@ -1,4 +1,4 @@
-﻿@using CARGO.Web.ViewModels
+﻿@using CARGO.Web.ViewModels.CARGO_D05
 @using Kendo.Mvc.UI
 @model CARGO_D05IndexViewModel
 <h1 class="section-h">車輛使用實登（業務）</h1>
@@ -16,7 +16,7 @@ function usageEnd(e){if(e.response && e.response.Pending!=null)jQuery('#pending-
 function usageError(e){jQuery('#grid-error').text(e.errors||'查詢失敗，請確認登入與資料庫設定。').prop('hidden',false);}
 </script>
 @(Html.Kendo().Grid<CARGO_D05RowViewModel>().Name("usageGrid").Columns(c=>{
- c.Bound(x=>x.RequestId).Title("明細").Width(80).ClientTemplate("<a class='btn btn-ghost btn-sm' href='"+Url.Action("Detail")+"/#= RequestId #'>明細</a>");
+ c.Bound(x=>x.RequestId).Title("明細").Width(80).ClientTemplate("<a class='btn btn-ghost btn-sm grid-detail-link' href='"+Url.Action("Detail")+"/#= RequestId #' title='查看明細' aria-label='查看明細：#: DispatchNo #'><img src='" + Url.Content("~/Content/vendor/fontawesome/newspaper.svg") + "' width='18' height='18' alt='' aria-hidden='true' /></a>");
  c.Bound(x=>x.DispatchNo).Title("派車單號").Width(125);c.Bound(x=>x.UseDate).Title("用車起日").Format("{0:yyyy-MM-dd}").Width(115);
  c.Bound(x=>x.VehicleType).Title("車種類型").Width(110);c.Bound(x=>x.Vehicle).Title("車號").Width(120);c.Bound(x=>x.Driver1).Title("駕駛人 1").Width(130);c.Bound(x=>x.Driver2).Title("駕駛人 2").Width(130);
  c.Bound(x=>x.RequestId).Title("申請單數").ClientTemplate("1").Width(100);c.Bound(x=>x.FlowStatus).Title("派車單狀態").Width(110);
@@ -24,5 +24,5 @@ function usageError(e){jQuery('#grid-error').text(e.errors||'查詢失敗，請�
  c.Bound(x=>x.Distance).Title("行駛里程 km").Format("{0:n1}").Width(130);
 }).Pageable(p=>p.PageSizes(new[]{20,50,100})).Scrollable(s=>s.Height("auto")).Events(e=>e.DataBound("usageBound"))
 .DataSource(ds=>ds.Ajax().PageSize(20).ServerOperation(true).Read(r=>r.Action("Read","CARGO_D05").Type(HttpVerbs.Post).Data("usageQuery")).Events(e=>e.Error("usageError").RequestEnd("usageEnd"))))
-<p class="intro">已實登者顯示實際車輛與駕駛；點「明細」登打或修改。D 模組每張派車單對應一張一般用車申請。</p></section>
+<p class="intro">已實登者顯示實際車輛與駕駛；點明細欄的圖示登打或修改。D 模組每張派車單對應一張一般用車申請。</p></section>
 @section scripts {<script>jQuery(function(){function search(e){if(e)e.preventDefault();jQuery('#grid-error').prop('hidden',true);jQuery('#usageGrid').data('kendoGrid').dataSource.page(1);}jQuery('#usage-search').on('click',search);jQuery('#usage-query').on('submit',search);});</script>}

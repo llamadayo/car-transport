@@ -9,7 +9,10 @@ namespace CARGO.Web.Models {
     internal static class CARGO_DSharedMapper {
         internal static string SignStatus(string value) { return value == "pending" ? "待簽審" : value == "approved" ? "已同意" : value == "rejected" ? "已退回" : "—"; }
         internal static CARGO_D01DetailViewModel Application(CARGO_DWorkDetailDto d) {
-            var application = CARGO_D01Mapper.Detail(d.Detail);
+            return Application(d.Detail);
+        }
+        internal static CARGO_D01DetailViewModel Application(CARGO_D01DetailDto d) {
+            var application = CARGO_D01Mapper.Detail(d);
             application.Form.Options = CARGO_D01Mapper.Options(new CARGO_DService().GetOptions());
             return application;
         }
