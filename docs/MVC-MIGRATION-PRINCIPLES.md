@@ -235,4 +235,8 @@ Kendo Helper 可以搭配 Dapper，不要求 EF。對已由 Dapper 查出的集�
 
 ## D02～D04 接續轉換紀錄（2026-10-09）
 
-三個功能使用獨立 `CARGO_D02Controller`、`CARGO_D03Controller`、`CARGO_D04Controller` 與同名 Service；共用流程 DTO／ViewModel 使用 `CARGO_DWork…`，共用規則留在 Service。主管、車輛／司機、資源停用區間、簽審輪次先採 `mvc/Database/003_D02_D04.sql` 草案，尚未代表公司實際 Schema。界面仍沿用原型樣式及 `Html.Kendo().Grid(...)`。詳見 [接續轉換說明](../mvc/D02-D04.md)。
+三個功能使用獨立 `CARGO_D02Controller`、`CARGO_D03Controller`、`CARGO_D04Controller` 與同名 Service；共用流程 DTO 使用 `CARGO_DWork…`，共用規則留在 Service。ViewModel 依功能分放 `ViewModels/CARGO_D02`、`CARGO_D03`、`CARGO_D04`，類別與檔名使用相同功能代號；共用簽審歷程模型放在 `ViewModels/Shared`。主管、車輛／司機、資源停用區間、簽審輪次先採 `mvc/Database/003_D02_D04.sql` 草案，尚未代表公司實際 Schema。界面仍沿用原型樣式及 `Html.Kendo().Grid(...)`。詳見 [接續轉換說明](../mvc/D02-D04.md)。
+
+## D05～D06 接續轉換紀錄（2026-10-10）
+
+功能編號 D05 車輛使用實登（業務）、D06 司機任務單（駕駛），各為獨立 Controller 與 Service，沿用原 UI。實登採附加修訂紀錄，實際資源不覆寫派車規劃。使用者確認駕駛只看自己的指派區間，業務可看全部與自駕交接；帳號至司機代碼先採資料表草案。詳見 [D05～D06 轉換說明](../mvc/D05-D06.md)。

@@ -1,4 +1,4 @@
-﻿# CARGO 模組 D MVC 版（D01～D04）
+﻿# CARGO 模組 D MVC 版（D01～D06）
 
 本目錄為 ASP.NET MVC 5／.NET Framework 4.8 的模組 D 移植功能，採 Web、DTO、Service 三個 Project。原有根目錄 HTML／JavaScript 原型仍可獨立使用。分層與命名依 [轉換原則](../docs/MVC-MIGRATION-PRINCIPLES.md)。
 
@@ -12,6 +12,8 @@
 - 自駕人最多 8 筆、可增刪行程地點及隨行貨物，保留現有申請資訊與提示欄位。
 
 D02 單位主管審核、D03 派車調度、D04 運輸主管簽審已接上同一套申請資料；詳細範圍、公司接入點及驗收方式見 [D02～D04 轉換說明](D02-D04.md)。SMTP、跨模組申請引導與 C 模組本體尚未接入 MVC。
+
+D05 車輛使用實登與 D06 司機任務單已新增，說明與待驗收項目見 [D05～D06 轉換說明](D05-D06.md)。駕駛僅看自己的任務，業務可看全部及自駕交接。
 
 ## 開啟與相依
 
@@ -90,6 +92,9 @@ Schema 中 `CARGO_D_REQUEST` 保存申請主檔、狀態及後續流程結果；
 
 # D02～D04 狀態、角色、資源、批次及生命週期
 .\mvc\tools\Test-Workflow.ps1
+
+# D05／D06 實登、修訂與司機授權範圍
+.\mvc\tools\Test-Usage.ps1
 
 # Schema 與 DTO 欄位對照、專案分層
 python .\mvc\tests\check-structure.py

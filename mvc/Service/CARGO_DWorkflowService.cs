@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using CARGO.DTO;
@@ -111,7 +111,7 @@ namespace CARGO.Service {
             foreach (var id in run(state)) Save(db, tx, state, state.Records.Single(x => x.Application.Request.REQUEST_ID == id), versions[id]);
             tx.Commit();
         } }
-        private static CARGO_DWorkState Load(IDbConnection db, IDbTransaction tx) {
+        internal static CARGO_DWorkState Load(IDbConnection db, IDbTransaction tx) {
             var state = new CARGO_DWorkState {
                 Resources = db.Query<CARGO_D_RESOURCE>("SELECT * FROM CARGO_D_RESOURCE", transaction: tx).ToList(),
                 Blocks = db.Query<CARGO_D_RESOURCE_BLOCK>("SELECT * FROM CARGO_D_RESOURCE_BLOCK", transaction: tx).ToList(),

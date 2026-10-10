@@ -1,0 +1,17 @@
+﻿@using CARGO.Web.ViewModels.CARGO_D04
+@model CARGO_D04DetailViewModel
+@{ string controller = "CARGO_D04"; var app = Model.Application; }
+<h1 class="section-h">@ViewBag.Title</h1>
+<div class="back-bar"><a class="btn btn-ghost" href="@Url.Action("Index",controller)">← 回清單</a></div>
+@if (Model.CanSign) {
+<section class="card"><h2 class="card-title">運輸主管簽審</h2>
+@using (Html.BeginForm("Change",controller,FormMethod.Post,new { @class="workflow-action", data_confirm="確認送出審核結果？" })) {
+@Html.AntiForgeryToken()<input type="hidden" name="RequestId" value="@app.Form.RequestId" /><input type="hidden" name="Version" value="@app.Form.Version" />
+<label><span class="field-label">審核意見（退回時必填）</span><textarea name="Note" maxlength="1000" rows="3"></textarea></label>
+<div class="actions"><button name="Command" value="approve" type="submit" class="btn btn-primary">✓ 同意派車</button><button name="Command" value="reject" type="submit" class="btn btn-danger">不同意，退回調度</button></div>
+}
+</section>
+}
+@Html.Partial("_DSignHistory", Model.Signs)
+@Html.Partial("_DApplication",app)
+@section scripts { <script src="@Url.Content("~/Scripts/cargo-workflow.js")"></script> }

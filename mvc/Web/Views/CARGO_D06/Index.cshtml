@@ -1,0 +1,24 @@
+@using CARGO.Web.ViewModels
+@model List<CARGO_D06TaskViewModel>
+<h1 class="section-h">一般用車申請作業 · 司機任務單（駕駛）</h1>
+<p class="intro">依指派區間列出車輛、使用人、行程與隨行貨物，雙駕駛各自列出並標示搭檔。僅顯示運輸主管同意後的任務；狀態包含待出車、已出車與已回登。@(ViewBag.IsBusiness==true?"目前為業務總覽。":"目前僅顯示你的指派區間。")</p>
+@if(Model.Count==0){<section class="card"><div class="empty">目前沒有可顯示的任務。派車須先通過簽審；駕駛帳號也須完成司機代碼對應。</div></section>}
+@foreach(var group in Model.GroupBy(x=>x.DriverId)){
+<section class="card"><div class="card-title"><span>🚗 @group.First().DriverName</span><span class="badge b-green">共 @group.Count() 段</span></div>
+<p class="intro">@(group.Key=="SELF"?"自駕用車的車輛交接參考；無派司機。":"依指派區間歷史呈現，換車／換司機後依生效時間切換。")</p>
+<div class="table-scroll"><table class="detail-table"><thead><tr><th>順序</th><th>指派區間</th><th>車輛</th><th>使用人／行程</th><th>隨行貨物</th><th>狀態</th></tr></thead><tbody>
+@{int index=0;}
+@foreach(var t in group){index++;<tr><td>@index</td><td>@t.From.ToString("yyyy-MM-dd HH:mm")<br />至 @t.To.ToString("yyyy-MM-dd HH:mm")<br /><span class="badge b-navy">@t.Kind</span></td>
+<td>@t.Vehicle @if(!String.IsNullOrEmpty(t.Partner)){<br /><span class="badge b-navy">雙駕駛・搭檔 @t.Partner</span>}</td>
+<td><strong>@t.RequestNo</strong><br /><span class="badge b-navy">@t.Category</span> @t.Applicant（分機 @t.Extension）｜@t.Passengers 人
+@if(group.Key=="SELF"&&t.Waiting){<span class="badge b-navy">等待駕駛媒合</span>}
+@if(!String.IsNullOrEmpty(t.Campus)){<div>車屬院區 @t.Campus</div>}
+@if(!String.IsNullOrEmpty(t.Pickup)){<div>上車地點 @t.Pickup</div>}
+@if(!String.IsNullOrEmpty(t.Purpose)){<div>事由 @t.Purpose</div>}
+@if(!String.IsNullOrEmpty(t.PlanCode)){<div>計畫 @t.PlanCode</div>}
+@if(!String.IsNullOrEmpty(t.Contact)){<div>車長 @t.Contact</div>}
+<ol>@foreach(var location in t.Locations){<li>@location</li>}</ol></td>
+<td>@if(t.Cargo.Count==0){<span class="muted">無</span>}
+@foreach(var c in t.Cargo){<div>@if(c.Hazardous){<span class="badge b-red">⚠ 危險品</span>} @c.Name × @c.Quantity<br /><small>@c.Length × @c.Width × @c.Height cm｜@c.Weight kg</small></div>}</td>
+<td><span class="badge b-green">@t.Status</span></td></tr>}
+</tbody></table></div></section>}

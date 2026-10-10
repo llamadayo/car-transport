@@ -1,0 +1,41 @@
+﻿@using CARGO.Web.ViewModels.CARGO_D04
+@using CARGO.Web.Models
+@using Kendo.Mvc.UI
+@model CARGO_D04IndexViewModel
+@{ string controller = "CARGO_D04";
+   var statuses = new Dictionary<string,string> { {"pending","待簽審"}, {"approved","已同意"}, {"rejected","已退回"} };
+}
+
+<h1 class="section-h">@ViewBag.Title</h1>
+<p class="intro">審核業務送出的派車結果。同意後派車生效；不同意時釋放資源，退回調度重新安排。</p>
+<section class="card"><div class="card-title"><span>查詢條件</span><button type="button" class="btn btn-primary btn-sm" id="search">🔍 查詢</button></div>
+<form id="query-form">@Html.AntiForgeryToken()<div class="fields">
+<label class="query-field"><span>申請人（模糊）</span>@Html.TextBoxFor(x => x.Applicant, new { placeholder="輸入姓名關鍵字" })</label>
+<label class="query-field"><span>用車日期</span> @Html.TextBoxFor(x => x.UseDate, "{0:yyyy-MM-dd}", new { type="date" })</label>
+<label class="query-field"><span>狀態</span> @Html.DropDownListFor(x => x.Status, new SelectList(statuses,"Key","Value"), "全部狀態")</label>
+</div></form></section>
+<section class="card"><div class="card-title"><span>派車簽審清單 <span id="result-count" class="result-count"></span></span>
+<button id="batch" type="button" class="btn btn-accent btn-sm">✓ 本頁待審全部同意</button>
+
+</div>
+<p id="grid-error" role="alert" hidden></p>
+<script>
+function workQuery() { return { __RequestVerificationToken: jQuery('#query-form input[name=__RequestVerificationToken]').val(), Applicant: jQuery('#Applicant').val(), UseDate: jQuery('#UseDate').val(), Status: jQuery('#Status').val() }; }
+function workBound(e) { jQuery('#result-count').text(e.sender.dataSource.total() + ' 筆'); }
+function workError(e) { jQuery('#grid-error').text(e.errors || '查詢失敗，請確認登入狀態與資料庫設定。').prop('hidden',false).show(); }
+function workBadge(value) { var cls = /退回/.test(value) ? 'b-red' : /審/.test(value) ? 'b-amber' : /同意|出車/.test(value) ? 'b-green' : 'b-navy'; return '<span class="badge ' + cls + '">' + kendo.htmlEncode(value) + '</span>'; }
+</script>
+@(Html.Kendo().Grid<CARGO_D04RowViewModel>().Name("workGrid").Columns(c => {
+ c.Bound(x => x.RequestId).Title("操作").ClientTemplate("<a class='btn btn-ghost btn-sm' href='" + Url.Action("Detail",controller) + "/#= RequestId #'>開啟</a>").Width(85);
+ c.Bound(x => x.RequestNo).Title("申請單號").ClientTemplate("<strong class='request-no'>#: RequestNo #</strong>").Width(125);
+ c.Bound(x => x.Category).Title("類別").ClientTemplate("<span class='badge b-navy'>#: Category #</span>").Width(110);
+ c.Bound(x => x.Applicant).Title("申請人").Width(120);
+ c.Bound(x => x.StartAt).Title("用車時段").ClientTemplate("#: kendo.toString(StartAt, 'yyyy-MM-dd HH:mm') #<br>～ #: kendo.toString(EndAt, 'yyyy-MM-dd HH:mm') #").Width(195);
+ c.Bound(x => x.Passengers).Title("人數").Width(75);
+ c.Bound(x => x.Status).Title("狀態").ClientTemplate("#= workBadge(Status) #").Width(115);
+ c.Bound(x => x.Outcome).Title("派車結果").Width(150); c.Bound(x => x.Vehicle).Title("車輛").Width(120); c.Bound(x => x.Driver).Title("司機").Width(155); c.Bound(x => x.SignStatus).Title("簽審").ClientTemplate("#= workBadge(SignStatus) #").Width(100);
+}).Pageable(p => p.PageSizes(new[] {20,50,100})).Scrollable(s => s.Height("auto")).Events(e => e.DataBound("workBound"))
+.DataSource(ds => ds.Ajax().PageSize(20).ServerOperation(true).Read(r => r.Action("Read",controller).Type(HttpVerbs.Post).Data("workQuery")).Events(e => e.Error("workError"))))
+</section>
+@using (Html.BeginForm("Batch",controller,FormMethod.Post,new { id="batch-form" })) { @Html.AntiForgeryToken()<div id="batch-items"></div> }
+@section scripts { <script src="@Url.Content("~/Scripts/cargo-workflow.js")"></script> }

@@ -1,4 +1,4 @@
-@{ string current = Convert.ToString(ViewContext.RouteData.Values["controller"]); }
+﻿@{ string current = Convert.ToString(ViewContext.RouteData.Values["controller"]); }
 <aside class="sidebar" id="navigation"><div class="brand"><div class="logo">車輛派遣系統整合</div><div class="sub">INTEGRATED DISPATCH</div></div><nav class="nav" aria-label="功能選單">
 <div class="nav-group-label">總覽</div>
 <span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">▤</span>系統儀表板</span>
@@ -32,6 +32,6 @@
 <a class="nav-item @(current == "CARGO_D02" ? "active" : "")" href="@Url.Action("Index", "CARGO_D02")"><span class="ico">✅</span>D｜單位主管審核（主管）</a>
 <a class="nav-item @(current == "CARGO_D03" ? "active" : "")" href="@Url.Action("Index", "CARGO_D03")"><span class="ico">🚗</span>D｜派車調度（業務）</a>
 <a class="nav-item @(current == "CARGO_D04" ? "active" : "")" href="@Url.Action("Index", "CARGO_D04")"><span class="ico">🖋</span>D｜運輸主管簽審（運輸主管）</a>
-<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">⛽</span>D｜車輛使用實登（業務）</span>
-<span class="nav-item unavailable" aria-disabled="true" title="此功能尚未轉換"><span class="ico">🧑‍✈️</span>D｜司機任務單（駕駛）</span>
+<a class="nav-item @(current == "CARGO_D05" ? "active" : "")" href="@Url.Action("Index", "CARGO_D05")"><span class="ico">⛽</span>D｜車輛使用實登（業務）</a>
+<a class="nav-item @(current == "CARGO_D06" ? "active" : "")" href="@Url.Action("Index", "CARGO_D06")"><span class="ico">🧑‍✈️</span>D｜司機任務單（駕駛）</a>
 </nav><div class="sidebar-foot">CARGO 車輛派遣系統<br />一般用車申請作業</div></aside>

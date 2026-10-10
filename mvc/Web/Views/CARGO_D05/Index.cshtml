@@ -1,0 +1,28 @@
+﻿@using CARGO.Web.ViewModels
+@using Kendo.Mvc.UI
+@model CARGO_D05IndexViewModel
+<h1 class="section-h">車輛使用實登（業務）</h1>
+<p class="intro">以派車單為單位實登。運輸主管簽審通過後，確認實際車種類型、車號與駕駛人，輸入起訖里程並儲存即完成實登；每次修改保留歷程。</p>
+<section class="card"><div class="card-title"><span>查詢條件</span><button class="btn btn-primary btn-sm" type="button" id="usage-search">🔍 查詢</button></div>
+<form id="usage-query">@Html.AntiForgeryToken()<div class="fields">
+<label class="query-field"><span>關鍵字</span>@Html.TextBoxFor(x=>x.Keyword,new {placeholder="派車單／申請單／姓名／部門／車號"})</label>
+<label class="query-field"><span>實登狀態</span>@Html.DropDownListFor(x=>x.Status,new[]{new SelectListItem {Value="todo",Text="待實登"},new SelectListItem {Value="done",Text="已實登"}},"全部")</label>
+</div></form></section>
+<section class="card"><h2 class="card-title">派車單 <span class="result-count" id="usage-count"></span><span class="badge b-amber" id="pending-count"></span></h2><p id="grid-error" role="alert" hidden></p>
+<script>
+function usageQuery(){return {__RequestVerificationToken:jQuery('#usage-query input[name=__RequestVerificationToken]').val(),Keyword:jQuery('#Keyword').val(),Status:jQuery('#Status').val()};}
+function usageBound(e){jQuery('#usage-count').text(e.sender.dataSource.total()+' 張');}
+function usageEnd(e){if(e.response && e.response.Pending!=null)jQuery('#pending-count').text('待實登 '+e.response.Pending+' 張');}
+function usageError(e){jQuery('#grid-error').text(e.errors||'查詢失敗，請確認登入與資料庫設定。').prop('hidden',false);}
+</script>
+@(Html.Kendo().Grid<CARGO_D05RowViewModel>().Name("usageGrid").Columns(c=>{
+ c.Bound(x=>x.RequestId).Title("明細").Width(80).ClientTemplate("<a class='btn btn-ghost btn-sm' href='"+Url.Action("Detail")+"/#= RequestId #'>明細</a>");
+ c.Bound(x=>x.DispatchNo).Title("派車單號").Width(125);c.Bound(x=>x.UseDate).Title("用車起日").Format("{0:yyyy-MM-dd}").Width(115);
+ c.Bound(x=>x.VehicleType).Title("車種類型").Width(110);c.Bound(x=>x.Vehicle).Title("車號").Width(120);c.Bound(x=>x.Driver1).Title("駕駛人 1").Width(130);c.Bound(x=>x.Driver2).Title("駕駛人 2").Width(130);
+ c.Bound(x=>x.RequestId).Title("申請單數").ClientTemplate("1").Width(100);c.Bound(x=>x.FlowStatus).Title("派車單狀態").Width(110);
+ c.Bound(x=>x.UsageStatus).Title("實登狀態").ClientTemplate("<span class='badge #= UsageStatus === '已實登' ? 'b-green' : 'b-amber' #'>#: UsageStatus #</span>").Width(105);
+ c.Bound(x=>x.Distance).Title("行駛里程 km").Format("{0:n1}").Width(130);
+}).Pageable(p=>p.PageSizes(new[]{20,50,100})).Scrollable(s=>s.Height("auto")).Events(e=>e.DataBound("usageBound"))
+.DataSource(ds=>ds.Ajax().PageSize(20).ServerOperation(true).Read(r=>r.Action("Read","CARGO_D05").Type(HttpVerbs.Post).Data("usageQuery")).Events(e=>e.Error("usageError").RequestEnd("usageEnd"))))
+<p class="intro">已實登者顯示實際車輛與駕駛；點「明細」登打或修改。D 模組每張派車單對應一張一般用車申請。</p></section>
+@section scripts {<script>jQuery(function(){function search(e){if(e)e.preventDefault();jQuery('#grid-error').prop('hidden',true);jQuery('#usageGrid').data('kendoGrid').dataSource.page(1);}jQuery('#usage-search').on('click',search);jQuery('#usage-query').on('submit',search);});</script>}

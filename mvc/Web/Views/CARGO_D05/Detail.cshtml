@@ -1,0 +1,30 @@
+@using CARGO.Web.ViewModels
+@model CARGO_D05DetailViewModel
+@{var app=Model.Application; var types=Model.Resources.Where(x=>x.Kind=="VEHICLE").Select(x=>x.Type).Distinct().OrderBy(x=>x).ToList();
+var drivers=Model.Resources.Where(x=>x.Kind=="DRIVER").Select(x=>new SelectListItem {Value=x.Id,Text=x.Name+"（"+x.Id+"）"}).ToList();
+var firstDrivers=drivers.ToList();if(app.Form.SelfDrive==true){firstDrivers.Insert(0,new SelectListItem {Value="SELF",Text="使用者自駕（"+app.Form.Applicant+"）"});}}
+<h1 class="section-h">車輛使用實登明細 · 派車單 @app.DispatchNo</h1>
+<section class="card"><h2 class="card-title">派車單資訊 <span class="badge b-green">@app.StatusLabel</span><span class="badge b-amber">@(Model.History.Count==0?"待實登":"已實登")</span></h2>
+@if(!String.IsNullOrEmpty(Model.Difference)){<div class="notice">實際使用的 @Model.Difference 與派車規劃不同。</div>}
+@using(Html.BeginForm("Save","CARGO_D05",FormMethod.Post,new {id="usage-form"})){
+ @Html.AntiForgeryToken() @Html.HiddenFor(x=>x.Form.RequestId) @Html.HiddenFor(x=>x.Form.Version)
+ @Html.ValidationSummary(false,"",new {role="alert"})
+ <div class="fields"><dl><dt>派車單號</dt><dd>@app.DispatchNo</dd></dl><dl><dt>派遣人</dt><dd>@app.DispatchedBy</dd></dl><dl><dt>派遣時間</dt><dd>@app.DispatchedAt</dd></dl>
+ <div class="field"><label for="Form_VehicleType">車種類型</label>@Html.DropDownListFor(x=>x.Form.VehicleType,new SelectList(types),"請選擇")</div>
+ <div class="field"><label for="Form_Vehicle">車號</label>@Html.DropDownListFor(x=>x.Form.Vehicle,new SelectList(Model.Resources.Where(x=>x.Kind=="VEHICLE"),"Id","Name"),"請選擇")</div>
+ <div class="field"><label for="Form_Driver1">駕駛人 1</label>@Html.DropDownListFor(x=>x.Form.Driver1,firstDrivers,"請選擇")</div>
+ <div class="field"><label for="Form_Driver2">駕駛人 2</label>@Html.DropDownListFor(x=>x.Form.Driver2,drivers,"（無）")</div>
+ <div class="field"><label for="Form_StartKm">起始里程 km *</label>@Html.TextBoxFor(x=>x.Form.StartKm,new {type="number",min="0",max="999999999",step="0.001",required="required"})</div>
+ <div class="field"><label for="Form_EndKm">結束里程 km *</label>@Html.TextBoxFor(x=>x.Form.EndKm,new {type="number",min="0",max="999999999",step="0.001",required="required"})</div>
+ <dl><dt>行駛里程</dt><dd id="usage-distance" aria-live="polite">—</dd></dl><dl><dt>實登人員</dt><dd>@(Model.History.Count==0?User.Identity.Name:Model.History[0].Actor)</dd></dl>
+ </div><div class="actions"><button type="submit" class="btn btn-primary">💾 @(Model.History.Count==0?"儲存實登":"儲存修改")</button></div>
+ <p class="intro">實際使用不同請直接修改；只記錄實登，不改派車規劃。結束里程不可小於起始里程。</p>
+}
+<div hidden id="usage-vehicles">@foreach(var v in Model.Resources.Where(x=>x.Kind=="VEHICLE")){<span data-id="@v.Id" data-type="@v.Type" data-name="@v.Name"></span>}</div>
+</section>
+@if(Model.History.Count>0){<section class="card"><h2 class="card-title">實登歷程</h2><div class="table-scroll"><table class="detail-table"><thead><tr><th>時間</th><th>動作</th><th>實登人員</th><th>車號／車種類型</th><th>駕駛</th><th>起訖里程</th><th>行駛里程</th></tr></thead><tbody>
+@foreach(var h in Model.History){<tr><td>@h.At.ToString("yyyy-MM-dd HH:mm")</td><td>@(h.Revision==1?"實登":"修改實登") #@h.Revision</td><td>@h.Actor</td><td>@h.Vehicle（@h.VehicleType）</td><td>@h.Driver1 @h.Driver2</td><td>@h.StartKm → @h.EndKm</td><td>@h.Distance km</td></tr>}
+</tbody></table></div></section>}
+@Html.Partial("_DApplication",app)
+<div class="back-bar"><a class="btn btn-ghost" href="@Url.Action("Index")">← 回清單</a></div>
+@section scripts {<script src="@Url.Content("~/Scripts/cargo-usage.js")"></script>}
