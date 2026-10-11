@@ -10,6 +10,9 @@ namespace CARGO.Web.ViewModels.CARGO_D03 {
         public List<CARGO_D03ResourceViewModel> Resources { get; set; }
         public List<CARGO_DSignViewModel> Signs { get; set; }
         public List<string> PriorityRequests { get; set; }
+        public List<string> ExcludedVehicles { get; set; }
+        public bool CanSupplement { get; set; }
+        public bool Signing { get; set; }
         public bool CanDispatch { get; set; }
         public bool CanChange { get; set; }
         public DateTime? EffectiveAt { get; set; }

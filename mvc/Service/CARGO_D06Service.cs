@@ -4,6 +4,10 @@ using System.Linq;
 using CARGO.DTO;
 namespace CARGO.Service {
  public sealed class CARGO_D06Service {
+  private static string VehicleLabel(IEnumerable<CARGO.DTO.Tables.CARGO_D_RESOURCE> resources,string id) {
+   var vehicle=resources.FirstOrDefault(x=>x.KIND=="VEHICLE" && x.RESOURCE_ID==id);
+   return vehicle==null || String.IsNullOrEmpty(vehicle.NAME) || vehicle.NAME==id ? id : id+"（"+vehicle.NAME+"）";
+  }
   public List<CARGO_D06TaskDto> Tasks(CARGO_DUsageActorDto actor) {
    return Query(new CARGO_D06QueryDto(), actor).Items;
   }
@@ -19,7 +23,7 @@ namespace CARGO.Service {
      var drivers=new[]{segment.DRIVER1,segment.DRIVER2}.Where(x=>!String.IsNullOrEmpty(x)).Distinct().ToList();
      if(drivers.Count==0 && actor.IsBusiness) drivers.Add("SELF");
      foreach(var driver in drivers.Where(x=>actor.IsBusiness || mine.Contains(x))) tasks.Add(new CARGO_D06TaskDto {Request=d.Application.Request,Assignment=segment,DriverId=driver,DriverName=driver=="SELF"?"自駕用車（無派司機）· 車輛交接參考":name(driver),
-      Partner=String.Join("、",drivers.Where(x=>x!=driver && x!="SELF").Select(name)),VehicleName=name(segment.VEHICLE),Locations=d.Application.Locations,Cargo=d.Application.Cargo});
+      Partner=String.Join("、",drivers.Where(x=>x!=driver && x!="SELF").Select(name)),VehicleName=VehicleLabel(state.Work.Resources,segment.VEHICLE),Locations=d.Application.Locations,Cargo=d.Application.Cargo});
     }
     // Options and results both originate from authorized assignments. Keep options when dates yield no tasks.
     var choices=tasks.GroupBy(x=>x.DriverId).Select(x=>new CARGO_D06DriverDto {Id=x.Key,Name=x.First().DriverName})

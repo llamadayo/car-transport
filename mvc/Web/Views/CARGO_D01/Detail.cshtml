@@ -9,6 +9,7 @@
 }
 <h1 class="section-h">@Model.Form.RequestNo · 一般用車申請明細</h1>
 <p class="intro">@Model.StatusLabel · 建立時間 @Model.CreatedAt.ToString("yyyy-MM-dd HH:mm")</p>
+@if (Model.Form.HazardousCargo) { <div class="notice" role="note"><span class="badge b-red">⚠ 危險品</span> 本申請單為危險品案件，請依公司規定人工判斷派車方式；此標記不會自動限制派車。</div> }
 <section class="card"><h2 class="card-title">基本資料</h2><div class="fields">
 <dl><dt>用車類別</dt><dd>@(Model.Form.Category == "routine" ? "例行用車" : "一般用車")</dd></dl>
 <dl><dt>運輸類別</dt><dd>@Model.Form.TransportType</dd></dl>
@@ -95,8 +96,8 @@ else { <div class="table-scroll"><table class="detail-table"><thead><tr><th>品�
 }
 </section>
 @if (Model.Assignments.Count > 0) {
-<section class="card"><h2 class="card-title">指派區間歷史</h2><div class="table-scroll"><table class="detail-table"><thead><tr><th>起訖</th><th>車輛</th><th>駕駛</th><th>類型</th><th>原因</th></tr></thead><tbody>
-@foreach (var row in Model.Assignments) { <tr><td>@row.From.ToString("yyyy-MM-dd HH:mm") ～ @row.To.ToString("yyyy-MM-dd HH:mm")</td><td>@row.VehicleLabel</td><td>@row.Driver1Label @row.Driver2Label</td><td>@row.Kind</td><td>@row.Reason</td></tr> }
+<section class="card"><h2 class="card-title">指派區間歷史</h2><div class="table-scroll"><table class="detail-table"><thead><tr><th>起訖</th><th>車輛</th><th>駕駛</th><th>類型</th><th>原因</th><th>操作人</th></tr></thead><tbody>
+@foreach (var row in Model.Assignments) { <tr><td>@row.From.ToString("yyyy-MM-dd HH:mm") ～ @row.To.ToString("yyyy-MM-dd HH:mm")@if (row.IsEmpty) { <br /><span class="muted">生效前即更換（不佔用）</span> }</td><td>@row.VehicleLabel</td><td>@if (row.IsSelfDrive) { <span>使用者自駕</span> } else { <span>@row.Driver1Label @row.Driver2Label</span> }</td><td>@row.Kind</td><td>@row.Reason</td><td>@row.Actor</td></tr> }
 </tbody></table></div></section>
 }
 @foreach (var section in new[] { new { Title = "異動紀錄", Rows = Model.History }, new { Title = "通知紀錄", Rows = Model.Notices } }) {

@@ -32,6 +32,7 @@ namespace CARGO.Service
                         PAX = d.Application.Request.PAX, SELF_DRIVE = d.Application.Request.SELF_DRIVE.Value,
                         CREATED_AT = d.Application.Request.CREATED_AT, OUTCOME = d.Application.Request.OUTCOME,
                         DISPLAY_STATUS = CARGO_D01Rules.DisplayStatus(d.Application.Request, DateTime.Now),
+                        SIGN_STATUS = d.Application.Request.SIGN_STATUS, PENDING_RETURN_AT = d.Application.Request.PENDING_RETURN_AT, HAZARDOUS_CARGO = d.Application.Request.HAZARDOUS_CARGO,
                         CARGO_COUNT = d.Application.Cargo.Count, CARGO_QUANTITY = d.Application.Cargo.Sum(c => c.QUANTITY)
                     }).Where(r => (String.IsNullOrEmpty(query.Applicant) || r.APPLICANT.Contains(query.Applicant))
                         && (!query.UseDate.HasValue || (r.START_AT < query.UseDate.Value.Date.AddDays(1) && r.END_AT >= query.UseDate.Value.Date))
@@ -56,7 +57,12 @@ namespace CARGO.Service
             CheckActor(actor);
             lock (CARGO_D01DemoData.Sync) {
                 var item = Find(id, actor);
-                return item == null ? null : CARGO_D01DemoData.Copy(item);
+                if (item == null) return null;
+                var detail = CARGO_D01DemoData.Copy(item);
+                var r = detail.Application.Request;
+                detail.ReviewApprover = r.STATUS == "submitted" ? String.Join("、", CARGO_D01DemoData.Approvers()
+                    .Where(x => x.OWNER_ID == r.OWNER_ID && x.ACTIVE == 1).Select(x => x.APPROVER_ID).Distinct().OrderBy(x => x)) : r.APPROVER_NAME;
+                return detail;
             }
         }
         public long Save(CARGO_D01SaveDto data, CARGO_DActorDto actor, bool submit)

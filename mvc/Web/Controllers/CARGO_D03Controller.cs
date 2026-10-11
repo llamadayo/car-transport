@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
@@ -23,6 +23,14 @@ namespace CARGO.Web.Controllers {
         [HttpGet] public ActionResult Detail(long id) {
             var data = service.Detail(id, Actor()); if (data == null) return HttpNotFound();
             Page(); return View(CARGO_D03Mapper.Detail(data));
+        }
+        [HttpGet] public ActionResult Resources(long id, DateTime? effectiveAt) {
+            if (!ModelState.IsValid || !effectiveAt.HasValue) return new HttpStatusCodeResult(400, "Invalid effective time");
+            try {
+                var data = service.Detail(id, Actor(), effectiveAt);
+                if (data == null) return HttpNotFound();
+                return Json(CARGO_D03Mapper.Detail(data).Resources, JsonRequestBehavior.AllowGet);
+            } catch (InvalidOperationException) { return new HttpStatusCodeResult(400, "Invalid effective time"); }
         }
         [HttpPost, ValidateAntiForgeryToken] public ActionResult Change(CARGO_D03ActionViewModel model) {
             if (!ModelState.IsValid) { TempData["Error"] = "操作資料格式不正確"; return RedirectToAction("Detail", new { id = model.RequestId }); }

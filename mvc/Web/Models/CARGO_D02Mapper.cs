@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using CARGO.DTO;
 using CARGO.DTO.Tables;
@@ -14,7 +14,7 @@ namespace CARGO.Web.Models {
                 StartAt = r.START_AT, EndAt = r.END_AT, Passengers = r.PAX, Status = CARGO_D01Mapper.Status(CARGO_D01Rules.DisplayStatus(r, DateTime.Now)),
                 Approver = String.IsNullOrWhiteSpace(info.Approver) ? "未設定" : info.Approver,
                 SelfDrive = r.SELF_DRIVE == 1 ? "是" : "否", Cargo = info.CargoCount + " 項／" + info.CargoQuantity + " 件",
-                CanApprove = r.STATUS == "submitted" };
+                HazardousCargo = r.HAZARDOUS_CARGO == 1, CanApprove = r.STATUS == "submitted" };
         }
         public static CARGO_D02DetailViewModel Detail(CARGO_DWorkDetailDto d) {
             var r = d.Detail.Application.Request;

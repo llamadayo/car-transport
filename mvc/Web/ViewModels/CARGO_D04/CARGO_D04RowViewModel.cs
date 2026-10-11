@@ -18,6 +18,12 @@ namespace CARGO.Web.ViewModels.CARGO_D04 {
         public string SignStatus { get; set; }
         public string Vehicle { get; set; }
         public string Driver { get; set; }
+        public int Round { get; set; }
+        public DateTime? SubmittedAt { get; set; }
+        public string SubmittedBy { get; set; }
+        public DateTime? DecidedAt { get; set; }
+        public string DecidedBy { get; set; }
+        public string SignSummary { get; set; }
         public bool CanApprove { get; set; }
     }
 }

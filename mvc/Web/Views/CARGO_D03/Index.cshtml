@@ -33,10 +33,12 @@ function workBadge(value) { var cls = /退回/.test(value) ? 'b-red' : /審/.tes
  c.Bound(x => x.Applicant).Title("申請人").Width(120);
  c.Bound(x => x.StartAt).Title("用車時段").ClientTemplate("#: kendo.toString(StartAt, 'yyyy-MM-dd HH:mm') #<br>～ #: kendo.toString(EndAt, 'yyyy-MM-dd HH:mm') #").Width(195);
  c.Bound(x => x.Passengers).Title("人數").Width(75);
+ c.Bound(x => x.SelfDrive).Title("自駕").ClientTemplate("# if (SelfDrive) { #<span class='badge b-navy'>自駕</span># } else { #否# } #").Width(90);
+ c.Bound(x => x.Requirements).Title("需求").ClientTemplate("# if (HazardousCargo) { #<span class='badge b-red'>危險品</span><br># } ##: Requirements #").Width(210);
  c.Bound(x => x.Status).Title("狀態").ClientTemplate("#= workBadge(Status) ## if (HasPendingReturn) { #<br><span class='badge b-amber'>提前歸還待確認</span># } #").Width(175);
  c.Bound(x => x.Outcome).Title("派車結果").Width(150); c.Bound(x => x.Vehicle).Title("車輛").Width(120); c.Bound(x => x.Driver).Title("司機").Width(155); c.Bound(x => x.SignStatus).Title("簽審").ClientTemplate("#= workBadge(SignStatus) #").Width(100);
 }).Pageable(p => p.PageSizes(new[] {20,50,100})).Scrollable(s => s.Height("auto")).Events(e => e.DataBound("workBound"))
 .DataSource(ds => ds.Ajax().PageSize(20).ServerOperation(true).Read(r => r.Action("Read",controller).Type(HttpVerbs.Post).Data("workQuery")).Events(e => e.Error("workError"))))
 </section>
 
-@section scripts { <script src="@Url.Content("~/Scripts/cargo-workflow.js")?v=20261011-validation"></script> }
+@section scripts { <script src="@Url.Content("~/Scripts/cargo-workflow.js")?v=20261011-audit-parity"></script> }

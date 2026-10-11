@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using CARGO.DTO.Tables;
 namespace CARGO.DTO {
@@ -20,6 +20,7 @@ namespace CARGO.DTO {
         public List<CARGO_D_REQUEST> Items { get; set; }
         public int Total { get; set; }
         public Dictionary<long, CARGO_D02ListInfoDto> ReviewInfo { get; set; }
+        public Dictionary<long, CARGO_D_SIGN> SignInfo { get; set; }
     }
     public sealed class CARGO_D02ListInfoDto {
         public long REQUEST_ID { get; set; }
@@ -31,6 +32,7 @@ namespace CARGO.DTO {
         public long RequestId { get; set; }
         public int Version { get; set; }
         public string Command { get; set; }
+        public bool SupplementDriver { get; set; }
         public string Note { get; set; }
         public string Vehicle { get; set; }
         public string Driver1 { get; set; }

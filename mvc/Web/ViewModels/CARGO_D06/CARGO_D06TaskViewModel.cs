@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using CARGO.Web.ViewModels.CARGO_D01;
 namespace CARGO.Web.ViewModels.CARGO_D06 {
     public sealed class CARGO_D06TaskViewModel {
+        public long RequestId { get; set; }
+        public CARGO_D06IndexViewModel ReturnQuery { get; set; }
         public string DriverId { get; set; }
         public string DriverName { get; set; }
         public string Partner { get; set; }

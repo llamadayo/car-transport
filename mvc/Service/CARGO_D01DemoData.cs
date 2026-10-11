@@ -24,6 +24,8 @@ namespace CARGO.Service
                 return (T)serializer.ReadObject(stream);
             }
         }
+        internal static List<CARGO_D_APPROVER> Approvers()
+        { return new List<CARGO_D_APPROVER> { new CARGO_D_APPROVER { OWNER_ID = "示範申請人", APPROVER_ID = "示範申請人", ACTIVE = 1 } }; }
         internal static List<CARGO_D_OPTION> Options()
         {
             return new List<CARGO_D_OPTION> {

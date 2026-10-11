@@ -91,3 +91,5 @@ input[type=datetime-local]{font:inherit;border:0;border-bottom:1px solid var(--l
 .supervisor-review .review-note label{white-space:nowrap}
 .supervisor-review .review-note input{flex:1;min-width:0}
 .supervisor-review .actions{margin:36px 0 0;gap:4px}
+
+.d06-task-info>.wide{grid-column:1/-1}

@@ -18,6 +18,9 @@ namespace CARGO.Web.ViewModels.CARGO_D03 {
         public string SignStatus { get; set; }
         public string Vehicle { get; set; }
         public string Driver { get; set; }
+        public bool SelfDrive { get; set; }
+        public string Requirements { get; set; }
+        public bool HazardousCargo { get; set; }
         public bool HasPendingReturn { get; set; }
         public string ActionLabel { get; set; }
     }

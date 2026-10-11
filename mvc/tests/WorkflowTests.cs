@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using CARGO.DTO;
@@ -153,7 +153,72 @@ internal static class WorkflowTests {
   var report=d03.Backfill(Actor);Check(report.Any(x=>x.Contains("已補派")) && d03.Detail(4,Actor).Detail.Application.Request.OUTCOME=="withDriver","backfill uses newly free driver");
   s=CARGO_DWorkflowDemoData.Load();d=Record(s,2);Apply(s,d,"approve",2);Apply(s,d,"noVehicle",3);
   Check(d.Application.Request.STATUS=="noVehicle" && d.Assignments.Count==0 && d.Application.Request.SIGN_STATUS==null,"no vehicle closes without sign or occupancy");
+  D03Parity(d03);
+  BackfillIsolation(d03);
   Console.WriteLine("PASS " + count + " workflow checks");
+ }
+ static void D03Parity(CARGO_D03Service service) {
+  var state=CARGO_DWorkflowDemoData.Load();state.Records.Clear();state.Blocks.Clear();
+  var d=Dispatchable(900,DateTime.Today.AddDays(20),DateTime.Today.AddDays(20).AddHours(4));state.Records.Add(d);var r=d.Application.Request;
+  r.STATUS="dispatched";r.SIGN_STATUS="approved";r.VEHICLE="測試車 C";r.DRIVER1="示範駕駛 A";
+  d.Assignments.Add(new CARGO_D_ASSIGNMENT{LINE_NO=1,FROM_AT=r.START_AT.Value,TO_AT=r.END_AT.Value,VEHICLE=r.VEHICLE,DRIVER1=r.DRIVER1});
+  var vehicle=state.Resources.Single(x=>x.RESOURCE_ID==r.VEHICLE);vehicle.SEATS=0;vehicle.PERMIT_K=0;r.NEED_K=1;
+  var a=ActionFor(d,"reassign");a.Vehicle=r.VEHICLE;a.Driver1="示範駕駛 C";a.EffectiveAt=r.START_AT.Value.AddHours(1);
+  CARGO_DWorkflowRules.Apply(state,d,a,Actor,3);Check(r.DRIVER1=="示範駕駛 C","D03 driver-only change preserves original vehicle despite changed qualifications");
+  a=ActionFor(d,"extend");a.EndAt=r.END_AT.Value.AddHours(1);CARGO_DWorkflowRules.Apply(state,d,a,Actor,3);
+  Check(r.END_AT==a.EndAt,"D03 extension ignores changed original vehicle qualifications");
+  state.Blocks.Add(new CARGO_D_RESOURCE_BLOCK {RESOURCE_ID=r.VEHICLE,FROM_AT=r.END_AT.Value,TO_AT=r.END_AT.Value.AddHours(1),SOURCE="MAINTENANCE"});
+  a=ActionFor(d,"extend");a.EndAt=r.END_AT.Value.AddHours(1);Fails(()=>CARGO_DWorkflowRules.Apply(state,d,a,Actor,3),"D03 extension still blocks maintenance in added interval");
+  var replacement=state.Resources.Single(x=>x.RESOURCE_ID=="測試車 D");replacement.SEATS=0;
+  a=ActionFor(d,"reassign");a.Vehicle=replacement.RESOURCE_ID;a.Driver1=r.DRIVER1;a.EffectiveAt=r.START_AT.Value.AddHours(2);
+  Fails(()=>CARGO_DWorkflowRules.Apply(state,d,a,Actor,3),"D03 replacement vehicle still requires sufficient seats");
+  var backup=CARGO_D01DemoData.Records.ToDictionary(x=>x.Key,x=>x.Value);
+  try {
+   CARGO_D01DemoData.Records.Clear();
+   for(int i=0;i<3;i++){var row=Dispatchable(200+i,DateTime.Today.AddDays(10+i),DateTime.Today.AddDays(10+i).AddHours(2));row.Application.Request.CATEGORY=i==2?"routine":"general";row.Application.Request.CREATED_AT=DateTime.Today.AddHours(i);CARGO_D01DemoData.Records[200+i]=row;}
+   var ids=service.Query(new CARGO_DWorkQueryDto {PageSize=100},Actor).Items.Select(x=>x.REQUEST_ID);
+   Check(ids.SequenceEqual(new long[]{202,200,201}),"D03 pending routine first then use start, not creation time");
+   var live=CARGO_D01DemoData.Records[200];live.Application.Request.STATUS="dispatched";live.Application.Request.SIGN_STATUS="approved";live.Application.Request.VEHICLE="測試車 C";
+   live.Assignments.Add(new CARGO_D_ASSIGNMENT{LINE_NO=1,FROM_AT=live.Application.Request.START_AT.Value,TO_AT=live.Application.Request.END_AT.Value,VEHICLE="測試車 C"});
+   var other=CARGO_D01DemoData.Records[201];other.Application.Request.STATUS="dispatched";
+   other.Assignments.Add(new CARGO_D_ASSIGNMENT{LINE_NO=1,FROM_AT=live.Application.Request.START_AT.Value,TO_AT=live.Application.Request.START_AT.Value.AddHours(1),DRIVER1="示範駕駛 C"});
+   var before=service.Detail(200,Actor,live.Application.Request.START_AT.Value).Candidates.Single(x=>x.Resource.RESOURCE_ID=="示範駕駛 C");
+   var after=service.Detail(200,Actor,live.Application.Request.START_AT.Value.AddHours(1)).Candidates.Single(x=>x.Resource.RESOURCE_ID=="示範駕駛 C");
+   Check(before.UnavailableReason!=null&&after.UnavailableReason==null,"D03 candidates refresh for selected effective interval");
+   Fails(()=>service.Detail(200,Actor,live.Application.Request.END_AT),"D03 candidate refresh rejects out-of-range effective time");
+  } finally {CARGO_D01DemoData.Records.Clear();foreach(var entry in backup)CARGO_D01DemoData.Records[entry.Key]=entry.Value;}
+ }
+ static void BackfillIsolation(CARGO_D03Service service) {
+  var saved=CARGO_D01DemoData.Records.ToDictionary(x=>x.Key,x=>x.Value);
+  try {
+   CARGO_D01DemoData.Records.Clear();
+   var start=DateTime.Today.AddDays(30);
+   for(int i=0;i<5;i++) {
+    var d=Dispatchable(100+i,start.AddDays(i),start.AddDays(i).AddHours(2));var r=d.Application.Request;
+    r.STATUS="dispatched";r.SIGN_STATUS="approved";r.OUTCOME="selfDrive";r.SELF_DRIVE=1;r.CONTINUE_MATCHING=1;
+    r.VEHICLE="測試車 C";
+    d.Assignments.Add(new CARGO_D_ASSIGNMENT {REQUEST_ID=r.REQUEST_ID,LINE_NO=1,FROM_AT=r.START_AT.Value,TO_AT=r.END_AT.Value,VEHICLE=r.VEHICLE});
+    CARGO_D01DemoData.Records[r.REQUEST_ID]=d;
+   }
+   CARGO_D01DemoData.Records[101].Assignments[0].FROM_AT=start.AddDays(1).AddHours(3);
+   var expired=CARGO_D01DemoData.Records[103];expired.Application.Request.START_AT=DateTime.Today.AddDays(-2);expired.Application.Request.END_AT=DateTime.Today.AddDays(-1);
+   expired.Assignments[0].FROM_AT=expired.Application.Request.START_AT.Value;expired.Assignments[0].TO_AT=expired.Application.Request.END_AT.Value;
+   CARGO_D01DemoData.Records[104].Application.Request.CONTINUE_MATCHING=0;
+   var reports=service.Backfill(Actor);
+   Check(reports.Any(x=>x.Contains("REG103")&&x.Contains("用車時段已結束")),"backfill reports expired request without changing it");
+   Check(reports.Any(x=>x.Contains("REG101")&&x.Contains("沒有可補派的剩餘用車時段")),"backfill reports failed request individually");
+   foreach(var id in new[]{100,102}) {
+    var d=CARGO_D01DemoData.Records[id];
+    Check(d.Application.Request.OUTCOME=="withDriver"&&d.Application.Request.VERSION_NO==2,"backfill commits success before and after failure: "+id);
+    Check(d.Assignments.Count==2&&d.History.Count==1&&d.Notices.Count==1,"backfill retains history and queued notice: "+id);
+   }
+   var failed=CARGO_D01DemoData.Records[101];
+   Check(failed.Application.Request.VERSION_NO==1&&failed.Assignments.Count==1&&failed.History.Count==0&&failed.Notices.Count==0,"failed backfill leaves no partial writes");
+   Check(expired.Application.Request.VERSION_NO==1&&!reports.Any(x=>x.Contains("REG104")),"expired remains unchanged and opt-out is excluded");
+   reports=service.Backfill(Actor);
+   Check(!reports.Any(x=>x.Contains("已補派"))&&CARGO_D01DemoData.Records[100].Application.Request.VERSION_NO==2,"repeat backfill does not reassign successes");
+   Fails(()=>service.Backfill(new CARGO_DStaffDto {UserId="unauthorized"}),"backfill requires dispatch role");
+  } finally { CARGO_D01DemoData.Records.Clear();foreach(var entry in saved) CARGO_D01DemoData.Records[entry.Key]=entry.Value; }
  }
  static void QueryReview(CARGO_D02Service d02,CARGO_D04Service d04) {
   var q=new CARGO_DWorkQueryDto {Keyword=" gu000007 ",Page=1,PageSize=20};

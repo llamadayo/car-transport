@@ -1,13 +1,12 @@
-@using CARGO.Web.ViewModels.CARGO_D05
+﻿@using CARGO.Web.ViewModels.CARGO_D05
 @model CARGO_D05DetailViewModel
 @{var app=Model.Application; var types=Model.Resources.Where(x=>x.Kind=="VEHICLE").Select(x=>x.Type).Distinct().OrderBy(x=>x).ToList();
-var drivers=Model.Resources.Where(x=>x.Kind=="DRIVER").Select(x=>new SelectListItem {Value=x.Id,Text=x.Name+"（"+x.Id+"）"}).ToList();
-var firstDrivers=drivers.ToList();if(app.Form.SelfDrive==true){firstDrivers.Insert(0,new SelectListItem {Value="SELF",Text="使用者自駕（"+app.Form.Applicant+"）"});}}
+var firstDrivers=Model.DriverOptions(true);var drivers=Model.DriverOptions(false);}
 <h1 class="section-h">車輛使用實登明細 · 派車單 @app.DispatchNo</h1>
 <section class="card"><h2 class="card-title">派車單資訊 <span class="badge b-green">@app.StatusLabel</span><span class="badge b-amber">@(Model.History.Count==0?"待實登":"已實登")</span></h2>
 @if(!String.IsNullOrEmpty(Model.Difference)){<div class="notice">實際使用的 @Model.Difference 與派車規劃不同。</div>}
 @using(Html.BeginForm("Save","CARGO_D05",FormMethod.Post,new {id="usage-form"})){
- @Html.AntiForgeryToken() @Html.HiddenFor(x=>x.Form.RequestId) @Html.HiddenFor(x=>x.Form.Version)
+ @Html.AntiForgeryToken() @Html.HiddenFor(x=>x.Form.RequestId) @Html.HiddenFor(x=>x.Form.Version) @Html.HiddenFor(x=>x.ReturnQuery.Keyword) @Html.HiddenFor(x=>x.ReturnQuery.Status)
  @Html.ValidationSummary(false,"",new {role="alert"})
  <div class="fields"><dl><dt>派車單號</dt><dd>@app.DispatchNo</dd></dl><dl><dt>派遣人</dt><dd>@app.DispatchedBy</dd></dl><dl><dt>派遣時間</dt><dd>@app.DispatchedAt</dd></dl>
  <div class="field"><label for="Form_VehicleType">車種類型</label>@Html.DropDownListFor(x=>x.Form.VehicleType,new SelectList(types),"請選擇")</div>
@@ -26,5 +25,5 @@ var firstDrivers=drivers.ToList();if(app.Form.SelfDrive==true){firstDrivers.Inse
 @foreach(var h in Model.History){<tr><td>@h.At.ToString("yyyy-MM-dd HH:mm")</td><td>@(h.Revision==1?"實登":"修改實登") #@h.Revision</td><td>@h.Actor</td><td>@h.Vehicle（@h.VehicleType）</td><td>@h.Driver1 @h.Driver2</td><td>@h.StartKm → @h.EndKm</td><td>@h.Distance km</td></tr>}
 </tbody></table></div></section>}
 @Html.Partial("_DApplication",app)
-<div class="back-bar"><a class="btn btn-ghost" href="@Url.Action("Index")">← 回清單</a></div>
+<div class="back-bar"><a class="btn btn-ghost" href="@Url.Action("Index",new {Keyword=Model.ReturnQuery.Keyword,Status=Model.ReturnQuery.Status})">← 回清單</a></div>
 @section scripts {<script src="@Url.Content("~/Scripts/cargo-usage.js")?v=20261011-validation"></script>}

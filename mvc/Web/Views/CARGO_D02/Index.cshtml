@@ -1,4 +1,4 @@
-﻿@using CARGO.Web.ViewModels.CARGO_D02
+@using CARGO.Web.ViewModels.CARGO_D02
 @using CARGO.Web.Models
 @using Kendo.Mvc.UI
 @model CARGO_D02IndexViewModel
@@ -34,7 +34,7 @@ function workBadge(value) { var cls = /退回/.test(value) ? 'b-red' : /審/.tes
  c.Bound(x => x.StartAt).Title("用車時段").ClientTemplate("#: kendo.toString(StartAt, 'yyyy-MM-dd HH:mm') #<br>～ #: kendo.toString(EndAt, 'yyyy-MM-dd HH:mm') #").Width(195);
  c.Bound(x => x.Passengers).Title("人數").Width(75);
  c.Bound(x => x.SelfDrive).Title("自駕").Width(75);
- c.Bound(x => x.Cargo).Title("隨行貨物").Width(160);
+ c.Bound(x => x.Cargo).Title("隨行貨物").ClientTemplate("#: Cargo ## if (HazardousCargo) { # <span class='badge b-red'>⚠ 危險品</span># } #").Width(160);
  c.Bound(x => x.Status).Title("狀態").ClientTemplate("#= workBadge(Status) #").Width(115);
 
 }).Pageable(p => p.PageSizes(new[] {20,50,100})).Scrollable(s => s.Height("auto")).Events(e => e.DataBound("workBound"))

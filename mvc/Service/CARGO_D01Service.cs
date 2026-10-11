@@ -50,7 +50,7 @@ namespace CARGO.Service
             {
                 var count = db.Query<int>("SELECT COUNT(*) FROM CARGO_D_REQUEST r" + where, CARGO_DDatabase.Params(args)).Single();
                 var sql = @"SELECT r.REQUEST_ID, r.REQUEST_NO, r.CATEGORY, r.APPLICANT, r.START_AT, r.END_AT, r.PAX, r.SELF_DRIVE,
-                    r.OUTCOME, r.CREATED_AT, (" + DisplayStatusSql + @") DISPLAY_STATUS,
+                    r.OUTCOME, r.CREATED_AT, r.SIGN_STATUS, r.PENDING_RETURN_AT, r.HAZARDOUS_CARGO, (" + DisplayStatusSql + @") DISPLAY_STATUS,
                     (SELECT COUNT(*) FROM CARGO_D_CARGO c WHERE c.REQUEST_ID = r.REQUEST_ID) CARGO_COUNT,
                     (SELECT NVL(SUM(c.QUANTITY),0) FROM CARGO_D_CARGO c WHERE c.REQUEST_ID = r.REQUEST_ID) CARGO_QUANTITY
                     FROM CARGO_D_REQUEST r" + where + " ORDER BY " + sort + (query.Descending ? " DESC" : " ASC") +
@@ -72,6 +72,7 @@ namespace CARGO.Service
                 if (r == null) return null;
                 var args = new { Id = id };
                 return new CARGO_D01DetailDto {
+                    ReviewApprover = r.STATUS == "submitted" ? String.Join("、", db.Query<string>("SELECT DISTINCT APPROVER_ID FROM CARGO_D_APPROVER WHERE OWNER_ID=:OwnerId AND ACTIVE=1 ORDER BY APPROVER_ID", CARGO_DDatabase.Params(new { OwnerId = r.OWNER_ID }))) : r.APPROVER_NAME,
                     Application = new CARGO_D01SaveDto {
                         Request = r,
                         Locations = db.Query<CARGO_D_LOCATION>("SELECT * FROM CARGO_D_LOCATION WHERE REQUEST_ID = :Id ORDER BY LINE_NO", CARGO_DDatabase.Params(args)).ToList(),

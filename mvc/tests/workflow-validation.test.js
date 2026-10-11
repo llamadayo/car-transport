@@ -67,3 +67,48 @@ test('D02 selected decision drives validation and posting without a submit-butto
  note.value='請補充行程';ui.submit();assert.equal(ui.confirms,1);ui.accept();assert.equal(ui.posts,1);
  reject.checked=false;approve.checked=true;note.value='';ui.submit();assert.equal(ui.confirms,2);
 });
+
+test('D03 resource refresh ignores stale replies, preserves current vehicle, clears conflicts and blocks failed/pending submit',async()=>{
+ const time=field('EffectiveAt','2026-10-12T10:00'),status=field('status'),button=field('button');
+ const selects=['Vehicle','Driver1','Driver2'].map((name,i)=>{
+  const s=field(name,i===0?'V1':i===1?'D1':'');s.options=[];s.getAttribute=()=>i===0?'V1':'';
+  Object.defineProperty(s,'textContent',{set(){s.options=[]}});s.appendChild=o=>s.options.push(o);return s;
+ });
+ const ui=setup([...selects,time],{'data-resource-url':'/CARGO_D03/Resources/5'}),pending=[];
+ ui.form.parentNode={querySelector:()=>status};ui.form.querySelectorAll=()=>[button];
+ ui.context.document.querySelectorAll=()=>[ui.form];ui.context.fetch=url=>new Promise((resolve,reject)=>pending.push({url,resolve,reject}));
+ ui.run('cargo-workflow.js');
+ const tick=()=>new Promise(resolve=>setImmediate(resolve));
+ time.listeners.change();ui.submit('reassign');assert.equal(ui.confirms,0);assert.equal(button.disabled,true);
+ time.value='2026-10-12T11:00';time.listeners.change();
+ pending[1].resolve({ok:true,json:()=>Promise.resolve([
+  {Id:'V1',Kind:'VEHICLE',Label:'original',Reason:'qualification changed'},
+  {Id:'V2',Kind:'VEHICLE',Label:'blocked',Reason:'busy'},
+  {Id:'D1',Kind:'DRIVER',Label:'driver',Reason:'busy'}])});await tick();
+ assert.equal(selects[0].value,'V1');assert.equal(selects[0].options[1].disabled,false);
+ assert.equal(selects[0].options[2].disabled,true);assert.equal(selects[1].value,'');assert.equal(button.disabled,false);
+ pending[0].resolve({ok:true,json:()=>Promise.resolve([])});await tick();assert.equal(selects[0].options.length,3);
+ assert.match(pending[1].url,/effectiveAt=2026-10-12T11%3A00/);
+ time.listeners.change();pending[2].resolve({ok:false});await tick();ui.submit('reassign');
+ assert.equal(ui.confirms,0);assert.equal(button.disabled,true);assert.match(status.textContent,/無法更新/);
+ time.listeners.change();pending[3].resolve({ok:true,json:()=>Promise.resolve([])});await tick();assert.equal(button.disabled,false);
+});
+
+test('D03 invalid live preview blocks dispatch but retains explicit no-vehicle action',()=>{
+ const ui=setup([field('Vehicle','V'),field('Driver1','D'),field('Driver2')]);ui.run('cargo-workflow.js');
+ ui.form.dispatchReady=false;ui.submit('dispatch');assert.equal(ui.confirms,0);
+ ui.submit('noVehicle');assert.equal(ui.confirms,1);
+});
+
+
+test('D03 supplement driver remains mandatory even without live-preview JavaScript',()=>{
+ const d1=field('Driver1'),mode=field('SupplementDriver','true','hidden');
+ const ui=setup([field('Vehicle','V2'),d1,field('Driver2'),field('EffectiveAt','2030-01-02T10:00'),mode],{'data-self-drive':'true'});
+ ui.run('cargo-workflow.js');ui.submit('reassign');assert.equal(ui.confirms,0);assert.match(ui.messages[0],/補派司機至少/);
+ d1.value='D1';ui.submit('reassign');assert.equal(ui.confirms,1);
+});
+test('D03 invalid change preview blocks submission and corrected state permits confirmation',()=>{
+ const ui=setup([field('Vehicle','V2'),field('Driver1','D1'),field('Driver2'),field('EffectiveAt','2030-01-02T10:00')]);
+ ui.run('cargo-workflow.js');ui.form.reassignReady=false;ui.submit('reassign');assert.equal(ui.confirms,0);
+ ui.form.reassignReady=true;ui.submit('reassign');assert.equal(ui.confirms,1);
+});

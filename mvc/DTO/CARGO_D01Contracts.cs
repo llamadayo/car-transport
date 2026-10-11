@@ -44,6 +44,9 @@ namespace CARGO.DTO
         public int PAX { get; set; }
         public int SELF_DRIVE { get; set; }
         public string DISPLAY_STATUS { get; set; }
+        public string SIGN_STATUS { get; set; }
+        public DateTime? PENDING_RETURN_AT { get; set; }
+        public int HAZARDOUS_CARGO { get; set; }
         public string OUTCOME { get; set; }
         public DateTime CREATED_AT { get; set; }
         public int CARGO_COUNT { get; set; }
@@ -56,6 +59,7 @@ namespace CARGO.DTO
     }
     public sealed class CARGO_D01DetailDto
     {
+        public string ReviewApprover { get; set; }
         public CARGO_D01SaveDto Application { get; set; }
         public List<CARGO_D_LOG> History { get; set; }
         public List<CARGO_D_ASSIGNMENT> Assignments { get; set; }

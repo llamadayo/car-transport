@@ -8,7 +8,7 @@ using CARGO.Web.ViewModels.CARGO_D01;
 using CARGO.Web.ViewModels.Shared;
 namespace CARGO.Web.Models {
     internal static class CARGO_DSharedMapper {
-        internal static string SignStatus(string value) { return value == "pending" ? "待簽審" : value == "approved" ? "已同意" : value == "rejected" ? "已退回" : "—"; }
+        internal static string SignStatus(string value) { return CARGO_D01Mapper.SignStatus(value); }
         internal static CARGO_D01DetailViewModel Application(CARGO_DWorkDetailDto d) {
             return Application(d.Detail);
         }

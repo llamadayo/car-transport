@@ -45,8 +45,8 @@ function d01GridError(e) {
         columns.Bound(x => x.StartAt).Title("用車時段").ClientTemplate("#: kendo.toString(StartAt, 'yyyy-MM-dd HH:mm') #<br/>～ #: kendo.toString(EndAt, 'yyyy-MM-dd HH:mm') #").Width(190);
         columns.Bound(x => x.Passengers).Title("人數").Width(85);
         columns.Bound(x => x.SelfDrive).Title("自駕").Sortable(false).Width(80);
-        columns.Bound(x => x.Cargo).Title("隨行貨物").Sortable(false).Width(130);
-        columns.Bound(x => x.Status).Title("狀態").ClientTemplate("#= d01StatusBadge(Status) #").Sortable(false).Width(110);
+        columns.Bound(x => x.Cargo).Title("隨行貨物").ClientTemplate("#: Cargo ## if (HazardousCargo) { # <span class='badge b-red'>⚠ 危險品</span># } #").Sortable(false).Width(130);
+        columns.Bound(x => x.Status).Title("狀態").ClientTemplate("#= d01StatusBadge(Status) ## if (SignStatus !== '—') { # <span class='badge #= SignStatus === '已退回' ? 'b-red' : SignStatus === '已同意' ? 'b-green' : 'b-amber' #'>運輸主管#: SignStatus #</span># } ## if (PendingReturn) { # <span class='badge b-amber'>提前歸還待確認</span># } #").Sortable(false).Width(200);
         columns.Bound(x => x.Outcome).Title("派車結果").Sortable(false).Width(145);
         columns.Bound(x => x.CreatedAt).Title("建立時間").Format("{0:yyyy-MM-dd HH:mm}").Width(165);
     })

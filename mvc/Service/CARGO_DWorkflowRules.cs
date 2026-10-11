@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using CARGO.DTO;
@@ -75,11 +75,12 @@ namespace CARGO.Service {
         }
         private static void Live(CARGO_D_REQUEST r) { if (r.STATUS != "dispatched" || r.SIGN_STATUS != "approved") throw new InvalidOperationException("僅簽審生效的派車可異動"); }
         private static string[] Drivers(CARGO_DWorkActionDto a) { return new[] { a.Driver1, a.Driver2 }.Where(x => !String.IsNullOrEmpty(x)).ToArray(); }
-        private static void CheckResources(CARGO_DWorkState state, CARGO_D_REQUEST r, CARGO_DWorkActionDto a, DateTime from, DateTime to) {
+        private static void CheckResources(CARGO_DWorkState state, CARGO_D_REQUEST r, CARGO_DWorkActionDto a, DateTime from, DateTime to, bool checkVehicle = true) {
             if (String.IsNullOrEmpty(a.Driver1) && !String.IsNullOrEmpty(a.Driver2)) throw new InvalidOperationException("請先選第一位司機");
             if (Drivers(a).Distinct().Count() != Drivers(a).Length) throw new InvalidOperationException("司機不可重複指派");
             var candidates = Candidates(state, r, from, to);
             foreach (var pair in new[] { new { Id = a.Vehicle, Kind = "VEHICLE" }, new { Id = a.Driver1, Kind = "DRIVER" }, new { Id = a.Driver2, Kind = "DRIVER" } }) {
+                if (pair.Kind == "VEHICLE" && !checkVehicle) continue;
                 if (pair.Kind == "DRIVER" && String.IsNullOrEmpty(pair.Id)) continue;
                 var found = candidates.FirstOrDefault(x => x.Resource.RESOURCE_ID == pair.Id && x.Resource.KIND == pair.Kind);
                 if (found == null || found.UnavailableReason != null) throw new InvalidOperationException("資源不可用：" + pair.Id + " " + (found == null ? "不在商務資源池" : found.UnavailableReason));
@@ -142,19 +143,30 @@ namespace CARGO.Service {
             var last = d.Assignments.OrderBy(x => x.LINE_NO).LastOrDefault();
             if (last == null) throw new InvalidOperationException("缺少有效指派區間");
             if (a.Command == "reassign") {
+                if (a.SupplementDriver && (!String.IsNullOrEmpty(last.DRIVER1) || !String.IsNullOrEmpty(last.DRIVER2) || r.CONTINUE_MATCHING != 1)) throw new InvalidOperationException("此案件不適用補派司機");
+                if (a.SupplementDriver && String.IsNullOrEmpty(a.Driver1)) throw new InvalidOperationException("補派司機至少需選擇司機 1");
                 if (!a.EffectiveAt.HasValue || a.EffectiveAt < last.FROM_AT || a.EffectiveAt >= end) throw new InvalidOperationException("生效時間須介於目前指派區間起點與用車結束之間");
                 if (a.Vehicle == last.VEHICLE && a.Driver1 == last.DRIVER1 && a.Driver2 == last.DRIVER2) throw new InvalidOperationException("車輛與司機皆未變更");
                 if (Drivers(a).Length == 0 && r.SELF_DRIVE != 1) throw new InvalidOperationException("未勾選自駕，至少需一位司機");
                 if (String.IsNullOrEmpty(last.DRIVER1) && Drivers(a).Length > 0 && r.CONTINUE_MATCHING != 1) throw new InvalidOperationException("未同意等待駕駛媒合，不可補派司機");
-                CheckResources(state, r, a, a.EffectiveAt.Value, end);
+                CheckResources(state, r, a, a.EffectiveAt.Value, end, a.Vehicle != last.VEHICLE);
+                var kinds = new List<string>();
+                if (a.Vehicle != last.VEHICLE) kinds.Add("換車");
+                var previousDrivers = new[] { last.DRIVER1, last.DRIVER2 }.Where(x => !String.IsNullOrEmpty(x)).ToArray();
+                if (previousDrivers.Length == 0 && Drivers(a).Length > 0) kinds.Add("補派司機");
+                else if (a.Driver1 != last.DRIVER1 || a.Driver2 != last.DRIVER2) kinds.Add(Drivers(a).Length > previousDrivers.Length && previousDrivers.All(x => Drivers(a).Contains(x)) ? "加派司機" : "換司機");
+                var kind = String.Join("＋", kinds);
                 last.TO_AT = a.EffectiveAt.Value;
-                Assign(d, a, a.EffectiveAt.Value, end, actor.UserId, "換車／換司機");
-                Notice(d, "派車異動", a.EffectiveAt.Value.ToString("yyyy-MM-dd HH:mm") + " 起：" + a.Vehicle + "／" + a.Driver1 + " " + a.Driver2); return "換車／換司機";
+                Assign(d, a, a.EffectiveAt.Value, end, actor.UserId, kind);
+                Notice(d, kind, a.EffectiveAt.Value.ToString("yyyy-MM-dd HH:mm") + " 起：" + a.Vehicle + "／" + (Drivers(a).Length == 0 ? "使用者自駕" : String.Join("、", Drivers(a))) + (String.IsNullOrEmpty(a.Note) ? "" : "（" + a.Note + "）")); return kind;
             }
             if (a.Command == "extend") {
                 if (!a.EndAt.HasValue || a.EndAt <= end) throw new InvalidOperationException("展延時間須晚於目前結束時間");
                 var selected = new CARGO_DWorkActionDto { Vehicle = last.VEHICLE, Driver1 = last.DRIVER1, Driver2 = last.DRIVER2 };
-                CheckResources(state, r, selected, end, a.EndAt.Value);
+                foreach (var id in new[] { selected.Vehicle, selected.Driver1, selected.Driver2 }.Where(x => !String.IsNullOrEmpty(x))) {
+                    var busy = Busy(state, id, end, a.EndAt.Value, r.REQUEST_ID);
+                    if (busy != null) throw new InvalidOperationException("展延期間資源不可用：" + id + " " + busy);
+                }
                 last.TO_AT = a.EndAt.Value; r.END_AT = a.EndAt;
                 if (r.PENDING_RETURN_AT.HasValue) Log(d, "撤銷提前歸還申請", actor.UserId, "因展延一併撤銷");
                 r.PENDING_RETURN_AT = r.RETURN_REQUESTED_AT = null; r.RETURN_REASON = null;

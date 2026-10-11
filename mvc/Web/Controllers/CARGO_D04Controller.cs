@@ -18,7 +18,7 @@ namespace CARGO.Web.Controllers {
         public ActionResult Read([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "")] CARGO_D04IndexViewModel criteria) {
             if (!ModelState.IsValid || (request.Filters != null && request.Filters.Count > 0) || (request.Groups != null && request.Groups.Count > 0) || (request.Sorts != null && request.Sorts.Count > 0)) return Json(new DataSourceResult { Errors = "請使用上方查詢條件" });
             var page = service.Query(new CARGO_DWorkQueryDto { Keyword = criteria.Keyword, Status = criteria.Status, UseDate = criteria.UseDate, Page = request.Page, PageSize = request.PageSize }, Actor());
-            return Json(new DataSourceResult { Data = page.Items.Select(x => CARGO_D04Mapper.Row(x)), Total = page.Total });
+            return Json(new DataSourceResult { Data = page.Items.Select(x => CARGO_D04Mapper.Row(x, page.SignInfo.ContainsKey(x.REQUEST_ID) ? page.SignInfo[x.REQUEST_ID] : null)), Total = page.Total });
         }
         [HttpGet] public ActionResult Detail(long id) {
             var data = service.Detail(id, Actor()); if (data == null) return HttpNotFound();

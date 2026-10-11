@@ -1,0 +1,28 @@
+@model CARGO.Web.ViewModels.CARGO_D06.CARGO_D06TaskViewModel
+<h1 class="section-h">司機任務單細節：@Model.DriverName｜@Model.From.ToString("yyyy-MM-dd HH:mm")</h1>
+<section class="card"><h2 class="card-title">任務資訊</h2>
+@if(Model.HazardousCargo){<div class="notice"><strong>⚠ 危險品（整單）</strong> 本申請單為危險品案件。</div>}
+<div class="fields d06-task-info">
+<dl><dt>日期</dt><dd>@Model.From.ToString("yyyy-MM-dd")</dd></dl>
+<dl><dt>出發時間</dt><dd>@Model.From.ToString("HH:mm")</dd></dl>
+<dl><dt>司機名稱</dt><dd>@Model.DriverName</dd></dl>
+<dl><dt>車輛</dt><dd>@Model.Vehicle</dd></dl>
+<dl><dt>申請單號</dt><dd>@Model.RequestNo</dd></dl>
+<dl><dt>用車類別</dt><dd><span class="badge b-navy">@Model.Category</span></dd></dl>
+<dl class="wide"><dt>指派區間</dt><dd>@Model.From.ToString("yyyy-MM-dd HH:mm") 至 @Model.To.ToString("yyyy-MM-dd HH:mm")</dd></dl>
+<dl><dt>使用人</dt><dd>@Model.Applicant（分機 @Model.Extension）</dd></dl>
+<dl><dt>人數</dt><dd>@Model.Passengers 人</dd></dl>
+@if(!String.IsNullOrEmpty(Model.Partner)){<dl><dt>搭檔司機</dt><dd>@Model.Partner</dd></dl>}
+<dl class="wide"><dt>用車事由／行程</dt><dd>@Model.Purpose @if(Model.Locations.Count>0){<span>（@String.Join("、",Model.Locations)）</span>}</dd></dl>
+@if(!String.IsNullOrEmpty(Model.Campus)){<dl><dt>車屬院區</dt><dd>@Model.Campus</dd></dl>}
+@if(!String.IsNullOrEmpty(Model.Pickup)){<dl><dt>上車地點</dt><dd>@Model.Pickup</dd></dl>}
+@if(!String.IsNullOrEmpty(Model.PlanCode)){<dl><dt>計畫</dt><dd>@Model.PlanCode</dd></dl>}
+@if(!String.IsNullOrEmpty(Model.Contact)){<dl><dt>車長</dt><dd>@Model.Contact</dd></dl>}
+<dl class="wide"><dt>狀態</dt><dd><span class="badge b-green">@Model.Status</span></dd></dl>
+@if(Model.DriverId=="SELF" && Model.Waiting){<dl><dt>駕駛媒合</dt><dd>等待駕駛媒合</dd></dl>}
+</div></section>
+<section class="card"><h2 class="card-title">隨行貨物</h2>
+@if(Model.Cargo.Count==0){<p class="intro">無隨行貨物</p>}
+@foreach(var c in Model.Cargo){<p class="intro">@c.Name × @c.Quantity（@c.Length × @c.Width × @c.Height cm｜@c.Weight kg）</p>}
+</section>
+<div class="back-bar"><a class="btn btn-ghost" href="@Url.Action("Index",new {FromDate=Model.ReturnQuery.FromDate.HasValue?Model.ReturnQuery.FromDate.Value.ToString("yyyy-MM-dd"):"",ToDate=Model.ReturnQuery.ToDate.HasValue?Model.ReturnQuery.ToDate.Value.ToString("yyyy-MM-dd"):"",DriverId=Model.ReturnQuery.DriverId})">← 回上一頁</a></div>

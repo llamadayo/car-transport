@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using CARGO.DTO;
@@ -75,6 +75,22 @@ internal static class DisplayTests
             var roundTrip = CARGO_D01Mapper.ToDto(CARGO_D01Mapper.Form(data.Application));
             Check(roundTrip.Request.HAZARDOUS_CARGO == hazard && roundTrip.Cargo[0].HAZARDOUS == 0, "D01 stores request flag without legacy line flag: " + hazard);
         }
-        Console.WriteLine("PASS " + passed + " display checks");
+        var tonResource = new CARGO_D_RESOURCE { RESOURCE_ID="ton-test", NAME="ton-test", KIND="VEHICLE", TONS=6.5m, PERMIT_K=1, PERMIT_P=1 };
+        var tonDetail = new CARGO_DWorkDetailDto { Detail=data, Signs=new List<CARGO_D_SIGN>(), PriorityRequests=new List<string>(), Candidates=new List<CARGO_DCandidateDto>{new CARGO_DCandidateDto{Resource=tonResource}} };
+        data.Application.Request.ENTER_TAIPEI=1;
+        Check(CARGO_D03Mapper.Detail(tonDetail).Resources[0].Label.Contains("6.5 噸 ⚠"), "D03 Taipei warning includes 6.5 ton boundary");
+        tonResource.TONS=6.499m;
+        Check(!CARGO_D03Mapper.Detail(tonDetail).Resources[0].Label.Contains("⚠"), "D03 below tonnage threshold has no warning");
+        tonResource.TONS=7m;data.Application.Request.ENTER_TAIPEI=0;
+        Check(!CARGO_D03Mapper.Detail(tonDetail).Resources[0].Label.Contains("⚠"), "D03 non-Taipei vehicle has tonnage without warning");
+        tonResource.TONS=null;
+        Check(CARGO_D03Mapper.Detail(tonDetail).Resources[0].Label.Contains("噸位未提供"), "D03 missing tonnage never invents a value");
+        var request=tonDetail.Detail.Application.Request;
+  request.STATUS="dispatched";request.SIGN_STATUS="approved";request.CONTINUE_MATCHING=1;request.DRIVER1=null;request.DRIVER2=null;
+  Check(CARGO_D03Mapper.Detail(tonDetail).CanSupplement,"D03 signed waiting self-drive has supplement entry");
+  request.DRIVER2="D2";Check(!CARGO_D03Mapper.Detail(tonDetail).CanSupplement,"D03 assigned second driver suppresses supplement entry");
+  request.DRIVER2=null;request.SIGN_STATUS="pending";Check(!CARGO_D03Mapper.Detail(tonDetail).CanSupplement && CARGO_D03Mapper.Detail(tonDetail).Signing,"D03 unsigned dispatch shows signing hint, not supplement");
+  request.SIGN_STATUS="approved";request.CONTINUE_MATCHING=0;Check(!CARGO_D03Mapper.Detail(tonDetail).CanSupplement,"D03 opt-out suppresses supplement entry");
+  Console.WriteLine("PASS " + passed + " display checks");
     }
 }

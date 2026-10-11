@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Globalization;
@@ -16,9 +17,10 @@ using Kendo.Mvc.UI;
 
 class QueryTests {
  class Context : HttpContextBase {
+  public IPrincipal Principal=new GenericPrincipal(new GenericIdentity("示範申請人"),new[]{"單位主管","運輸主管","業務"});
   readonly IDictionary items=new Hashtable();
   public override IDictionary Items {get{return items;}}
-  public override IPrincipal User {get{return new GenericPrincipal(new GenericIdentity("示範申請人"),new[]{"單位主管","運輸主管","業務"});} set{}}
+  public override IPrincipal User {get{return Principal;} set{Principal=value;}}
  }
  static T Controller<T>() where T:Controller,new() {
   var c=new T();c.ControllerContext=new ControllerContext(new Context(),new RouteData(),c);return c;
@@ -42,6 +44,14 @@ class QueryTests {
   Check(criteria.FromDate==DateTime.Today && criteria.ToDate==DateTime.Today.AddDays(14),"D06 GET binding retains initial date defaults");
   var tasks=(CARGO_D06IndexViewModel)((ViewResult)c.Index(criteria)).Model;
   Check(tasks.Tasks.Count==1 && tasks.Drivers.Count==1,"D06 initial GET populates tasks and choices");
+  var task=tasks.Tasks.Single();
+  var detail=(CARGO_D06TaskViewModel)((ViewResult)c.Detail(task.RequestId,task.From.Ticks,task.DriverId,criteria)).Model;
+  Check(detail.RequestNo==task.RequestNo && detail.From==task.From && detail.DriverId==task.DriverId && detail.ReturnQuery==criteria,"D06 detail resolves exact task and retains filters");
+  Check(c.Detail(task.RequestId,task.From.Ticks+1,task.DriverId) is HttpNotFoundResult,"D06 unknown segment returns 404");
+  Check(c.Detail(task.RequestId,task.From.Ticks,"other-driver") is HttpNotFoundResult,"D06 wrong driver cannot select another task");
+  var restricted=Controller<CARGO_D06Controller>();
+  restricted.ControllerContext.HttpContext.User=new GenericPrincipal(new GenericIdentity("unmapped-driver"),new[]{"駕駛"});
+  Check(restricted.Detail(task.RequestId,task.From.Ticks,task.DriverId) is HttpNotFoundResult,"D06 direct detail URL respects driver authorization");
   c=Controller<CARGO_D06Controller>();
   criteria=Bind(c,new NameValueCollection { {"FromDate",""},{"ToDate",""},{"DriverId","示範駕駛"} });
   tasks=(CARGO_D06IndexViewModel)((ViewResult)c.Index(criteria)).Model;
@@ -54,18 +64,25 @@ class QueryTests {
   criteria=Bind(c,new NameValueCollection { {"FromDate","invalid"},{"ToDate",""} });
   tasks=(CARGO_D06IndexViewModel)((ViewResult)c.Index(criteria)).Model;
   Check(!c.ModelState.IsValid && tasks.Tasks.Count==0,"D06 invalid date does not fall back to unfiltered results");
-  // Generate only the changed Razor views without loading application configuration or a web server.
-  foreach(var module in new[]{"CARGO_D02","CARGO_D04","CARGO_D06"}) {
-   var path=Path.Combine(args[0],"Web","Views",module,"Index.cshtml");
-   var host=new System.Web.Mvc.Razor.MvcWebPageRazorHost("~/Views/"+module+"/Index.cshtml",path);
-   foreach(var ns in new[]{"System","System.Linq","System.Collections.Generic","System.Web.Mvc","System.Web.Mvc.Html","Kendo.Mvc.UI"}) host.NamespaceImports.Add(ns);
-   using(var reader=File.OpenText(path)) {
-    var result=new System.Web.Razor.RazorTemplateEngine(host).GenerateCode(reader,module+"Index","QueryViews",path);
-    if(!result.Success) throw new Exception(String.Join("; ",result.ParserErrors.Select(x=>x.Message)));
-    using(var writer=File.CreateText(Path.Combine(args[1],module+"Index.cs")))
-    using(var provider=new Microsoft.CSharp.CSharpCodeProvider()) provider.GenerateCodeFromCompileUnit(result.GeneratedCode,writer,new System.CodeDom.Compiler.CodeGeneratorOptions());
+  // Compile all D01-D06 views and shared details without loading app configuration.
+  var files=new List<string>();
+  foreach(var module in new[]{"CARGO_D01","CARGO_D02","CARGO_D03","CARGO_D04","CARGO_D05","CARGO_D06","Shared"}) {
+   var views=module=="Shared" ? new[]{"_DApplication.cshtml","_DSignHistory.cshtml"} : Directory.GetFiles(Path.Combine(args[0],"Web","Views",module),"*.cshtml").Select(Path.GetFileName).ToArray();
+   foreach(var view in views) {
+    var path=Path.Combine(args[0],"Web","Views",module,view);
+    var name=module+Path.GetFileNameWithoutExtension(view);
+    var host=new System.Web.Mvc.Razor.MvcWebPageRazorHost("~/Views/"+module+"/"+view,path);
+    foreach(var ns in new[]{"System","System.Linq","System.Collections.Generic","System.Web.Mvc","System.Web.Mvc.Html","Kendo.Mvc.UI"}) host.NamespaceImports.Add(ns);
+    using(var reader=File.OpenText(path)) {
+     var result=new System.Web.Razor.RazorTemplateEngine(host).GenerateCode(reader,name,"QueryViews",path);
+     if(!result.Success) { Console.WriteLine(path+": "+String.Join("; ",result.ParserErrors.Select(x=>x.Location.LineIndex + ": " + x.Message))); Environment.Exit(1); }
+     var output=Path.Combine(args[1],name+".cs");files.Add(output);
+     using(var writer=File.CreateText(output))
+     using(var provider=new Microsoft.CSharp.CSharpCodeProvider()) provider.GenerateCodeFromCompileUnit(result.GeneratedCode,writer,new System.CodeDom.Compiler.CodeGeneratorOptions());
+    }
+    Console.WriteLine("PASS "+module+"/"+view+" Razor syntax");
    }
-   Console.WriteLine("PASS "+module+" Razor syntax");
   }
+  File.WriteAllLines(Path.Combine(args[1],"views.txt"),files);
  }
 }

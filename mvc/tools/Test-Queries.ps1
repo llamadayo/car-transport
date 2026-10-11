@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 $root = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $output = Join-Path $root 'TestResults\Queries'
 New-Item -ItemType Directory -Path $output -Force | Out-Null
@@ -29,10 +29,10 @@ if ($LASTEXITCODE -ne 0) { throw 'Query test compilation failed.' }
 $libraries | ForEach-Object { Copy-Item -LiteralPath $_ -Destination $output -Force }
 & $program $root $output
 if ($LASTEXITCODE -ne 0) { throw 'Query tests failed.' }
-$views = @('CARGO_D02Index.cs','CARGO_D04Index.cs','CARGO_D06Index.cs') | ForEach-Object { Join-Path $output $_ }
+$views = Get-Content -LiteralPath (Join-Path $output 'views.txt')
 & $csc /nologo /utf8output /langversion:5 /target:library "/out:$output\QueryViews.dll" "/r:$program" $references $views
 if ($LASTEXITCODE -ne 0) { throw 'Query Razor view compilation failed.' }
-Write-Output 'PASS D02/D04/D06 Razor generated-code compilation'
+Write-Output 'PASS all D01-D06 and shared detail Razor generated-code compilation'
 $serviceSources = @('DTO','Service') | ForEach-Object {
     Get-ChildItem -LiteralPath (Join-Path $root $_) -Filter '*.cs' -Recurse |
         Where-Object { $_.FullName -notmatch '\\(bin|obj)\\' } | ForEach-Object { $_.FullName }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using CARGO.DTO;
@@ -24,8 +24,9 @@ namespace CARGO.Service {
                 if (!String.IsNullOrEmpty(q.Status)) rows = rows.Where(r => module == 4 ? Latest(state, r.REQUEST_ID).STATUS == q.Status : module == 2 ?
                     (q.Status == "passed" ? r.STATUS != "submitted" && r.STATUS != "rejected" : r.STATUS == q.Status) : q.Status == "work" ?
                     r.STATUS == "approved" || r.PENDING_RETURN_AT.HasValue : CARGO_D01Rules.DisplayStatus(r, DateTime.Now) == q.Status);
-                var ordered = rows.OrderByDescending(r => module == 3 && r.CATEGORY == "routine").ThenByDescending(r => r.CREATED_AT).ThenByDescending(r => r.REQUEST_ID).ToList();
+                var ordered = rows.OrderByDescending(r => module == 3 && r.STATUS == "approved" && r.CATEGORY == "routine").ThenBy(r => module == 3 ? r.START_AT : null).ThenByDescending(r => module == 3 ? DateTime.MinValue : r.CREATED_AT).ThenByDescending(r => r.REQUEST_ID).ToList();
                 var size = Math.Max(1, Math.Min(100, q.PageSize)); var page = Math.Max(1, Math.Min(1000000, q.Page));
+                if (module == 4) ordered = rows.OrderByDescending(r => Latest(state, r.REQUEST_ID).STATUS == "pending").ThenByDescending(r => Latest(state, r.REQUEST_ID).SUBMITTED_AT).ThenByDescending(r => r.REQUEST_ID).ToList();
                 var items = ordered.Skip((page - 1) * size).Take(size).ToList();
                 var info = new Dictionary<long, CARGO_D02ListInfoDto>();
                 if (module == 2) foreach (var r in items) {
@@ -33,7 +34,7 @@ namespace CARGO.Service {
                     info.Add(r.REQUEST_ID, new CARGO_D02ListInfoDto { REQUEST_ID = r.REQUEST_ID,
                         Approver = ReviewApprover(r, state.Approvers), CargoCount = cargo.Count, CargoQuantity = cargo.Sum(x => (long)x.QUANTITY) });
                 }
-                return new CARGO_DWorkPageDto { Total = ordered.Count, Items = items, ReviewInfo = info };
+                return new CARGO_DWorkPageDto { Total = ordered.Count, Items = items, ReviewInfo = info, SignInfo = module == 4 ? items.ToDictionary(r => r.REQUEST_ID, r => Latest(state, r.REQUEST_ID)) : new Dictionary<long, CARGO_D_SIGN>() };
             });
 #endif
         }
@@ -43,14 +44,19 @@ namespace CARGO.Service {
                 .Select(x => x.APPROVER_ID).Distinct().OrderBy(x => x));
         }
         private static CARGO_D_SIGN Latest(CARGO_DWorkState state, long id) { return state.Signs.Where(x => x.REQUEST_ID == id).OrderByDescending(x => x.ROUND_NO).First(); }
-        internal CARGO_DWorkDetailDto Detail(long id, CARGO_DStaffDto actor, int module) {
+        internal CARGO_DWorkDetailDto Detail(long id, CARGO_DStaffDto actor, int module, DateTime? effectiveAt = null) {
             CARGO_DWorkflowRules.Demand(actor, module);
             return Read(state => {
                 var d = state.Records.FirstOrDefault(x => x.Application.Request.REQUEST_ID == id);
                 if (d == null || !CARGO_DWorkflowRules.InScope(d.Application.Request, state, actor, module)) return null;
                 var r = d.Application.Request;
+                d.ReviewApprover = ReviewApprover(r, state.Approvers);
+                var canChange = module == 3 && r.STATUS == "dispatched" && r.SIGN_STATUS == "approved";
+                var from = canChange ? (effectiveAt ?? CARGO_DWorkflowRules.DefaultEffectiveAt(d, DateTime.Now) ?? r.START_AT.Value) : r.START_AT.Value;
+                if (effectiveAt.HasValue && (!canChange || !d.Assignments.Any() || from < d.Assignments.OrderBy(x => x.LINE_NO).Last().FROM_AT || from >= r.END_AT.Value))
+                    throw new InvalidOperationException("生效時間須介於目前指派區間起點與用車結束之間");
                 return new CARGO_DWorkDetailDto { Detail = d, Signs = state.Signs.Where(x => x.REQUEST_ID == id).OrderBy(x => x.ROUND_NO).ToList(),
-                    Candidates = module == 3 ? CARGO_DWorkflowRules.Candidates(state, r, r.START_AT.Value, r.END_AT.Value) : new List<CARGO_DCandidateDto>(),
+                    Candidates = module == 3 ? CARGO_DWorkflowRules.Candidates(state, r, from, r.END_AT.Value) : new List<CARGO_DCandidateDto>(),
                     EffectiveAt = module == 3 ? CARGO_DWorkflowRules.DefaultEffectiveAt(d, DateTime.Now) : (DateTime?)null,
                     PriorityRequests = state.Records.Select(x => x.Application.Request).Where(x => x.REQUEST_ID != id && x.CATEGORY == "routine" && x.STATUS == "approved" &&
                         CARGO_DWorkflowRules.Overlap(r.START_AT.Value, r.END_AT.Value, x.START_AT.Value, x.END_AT.Value)).Select(x => x.REQUEST_NO).ToList() };
@@ -66,26 +72,49 @@ namespace CARGO.Service {
                 CARGO_DWorkflowRules.Apply(state, d, a, actor, module);
             } return actions.Select(x => x.RequestId).ToList(); });
         }
+        private static bool NeedsBackfill(CARGO_D_REQUEST r) {
+            return r.STATUS == "dispatched" && r.SIGN_STATUS == "approved" && r.OUTCOME == "selfDrive" && r.CONTINUE_MATCHING == 1;
+        }
         internal List<string> Backfill(CARGO_DStaffDto actor) {
-            CARGO_DWorkflowRules.Demand(actor, 3); var report = new List<string>();
-            Write(state => {
-                var changed = new List<long>(); var now = DateTime.Now;
-                foreach (var d in state.Records.Where(x => x.Application.Request.STATUS == "dispatched" && x.Application.Request.SIGN_STATUS == "approved" && x.Application.Request.OUTCOME == "selfDrive" && x.Application.Request.CONTINUE_MATCHING == 1 && x.Application.Request.END_AT > now)
-                    .OrderByDescending(x => x.Application.Request.CATEGORY == "routine").ThenBy(x => x.Application.Request.START_AT)) {
-                    var r = d.Application.Request; var last = d.Assignments.LastOrDefault();
-                    if (last == null) { report.Add(r.REQUEST_NO + "：缺少指派區間"); continue; }
-                    var from = now > last.FROM_AT ? now : last.FROM_AT;
-                    var vehicle = state.Resources.FirstOrDefault(x => x.RESOURCE_ID == last.VEHICLE);
-                    var driver = CARGO_DWorkflowRules.Candidates(state, r, from, r.END_AT.Value).Where(x => x.Resource.KIND == "DRIVER" && x.UnavailableReason == null)
-                        .OrderByDescending(x => vehicle != null && x.Resource.SITE == vehicle.SITE).ThenBy(x => x.Resource.RESOURCE_ID).FirstOrDefault();
-                    if (driver == null) { report.Add(r.REQUEST_NO + "：仍無可用司機"); continue; }
-                    // Validate before mutating; a failed assignment rolls back the whole transaction.
-                    CARGO_DWorkflowRules.Apply(state, d, new CARGO_DWorkActionDto { RequestId = r.REQUEST_ID, Version = r.VERSION_NO, Command = "reassign", Vehicle = last.VEHICLE, Driver1 = driver.Resource.RESOURCE_ID, EffectiveAt = from, Note = "自駕案件補派司機" }, actor, 3);
-                    changed.Add(r.REQUEST_ID); report.Add(r.REQUEST_NO + "：已補派 " + driver.Resource.NAME + (vehicle != null && driver.Resource.SITE != vehicle.SITE ? "（跨據點）" : ""));
-                }
-                return changed;
-            });
-            if (report.Count == 0) report.Add("目前沒有可補派的自駕案件"); return report;
+            CARGO_DWorkflowRules.Demand(actor, 3);
+            var report = new List<string>();
+            var targets = Read(state => state.Records.Select(x => x.Application.Request).Where(NeedsBackfill)
+                .OrderByDescending(r => r.CATEGORY == "routine").ThenBy(r => r.START_AT).ThenBy(r => r.REQUEST_ID)
+                .Select(r => new { Id = r.REQUEST_ID, No = r.REQUEST_NO }).ToList());
+            foreach (var target in targets) {
+                string result = null;
+                try {
+                    // Each request commits independently; reload availability after previous successes.
+                    Write(state => {
+                        var changed = new List<long>();
+                        var d = state.Records.FirstOrDefault(x => x.Application.Request.REQUEST_ID == target.Id);
+                        if (d == null || !NeedsBackfill(d.Application.Request)) { result = "案件已異動，不再需要補派"; return changed; }
+                        var r = d.Application.Request; var now = DateTime.Now;
+                        if (!r.END_AT.HasValue) { result = "缺少用車結束時間"; return changed; }
+                        if (r.END_AT <= now) { result = "用車時段已結束"; return changed; }
+                        var last = d.Assignments.OrderBy(x => x.LINE_NO).LastOrDefault();
+                        if (last == null) { result = "缺少指派區間"; return changed; }
+                        if (!String.IsNullOrEmpty(last.DRIVER1) || !String.IsNullOrEmpty(last.DRIVER2)) { result = "目前區間已有司機"; return changed; }
+                        var from = now > last.FROM_AT ? now : last.FROM_AT;
+                        if (from >= r.END_AT.Value) { result = "沒有可補派的剩餘用車時段"; return changed; }
+                        var vehicle = state.Resources.FirstOrDefault(x => x.RESOURCE_ID == last.VEHICLE);
+                        var driver = CARGO_DWorkflowRules.Candidates(state, r, from, r.END_AT.Value).Where(x => x.Resource.KIND == "DRIVER" && x.UnavailableReason == null)
+                            .OrderByDescending(x => vehicle != null && x.Resource.SITE == vehicle.SITE).ThenBy(x => x.Resource.RESOURCE_ID).FirstOrDefault();
+                        if (driver == null) { result = "剩餘用車時段內沒有閒置駕駛"; return changed; }
+                        CARGO_DWorkflowRules.Apply(state, d, new CARGO_DWorkActionDto { RequestId = r.REQUEST_ID, Version = r.VERSION_NO, Command = "reassign", Vehicle = last.VEHICLE, Driver1 = driver.Resource.RESOURCE_ID, EffectiveAt = from, Note = "自駕案件補派司機" }, actor, 3);
+                        changed.Add(r.REQUEST_ID);
+                        result = "已補派 " + driver.Resource.NAME + (vehicle != null && driver.Resource.SITE != vehicle.SITE ? "（跨據點）" : "");
+                        return changed;
+                    });
+                    // Do not announce success before the individual transaction has committed.
+                    report.Add(target.No + "：" + result);
+                } catch (InvalidOperationException ex) { report.Add(target.No + "：未補派，" + ex.Message); }
+#if !LOCAL_DEMO
+                catch (System.Data.Common.DbException) { report.Add(target.No + "：未補派，資料庫儲存失敗，請稍後重試"); }
+#endif
+            }
+            if (report.Count == 0) report.Add("目前沒有可補派的自駕案件");
+            return report;
         }
 #if LOCAL_DEMO
         private static T Read<T>(Func<CARGO_DWorkState, T> run) { lock (CARGO_D01DemoData.Sync) return run(CARGO_DWorkflowDemoData.Load()); }
@@ -112,7 +141,7 @@ namespace CARGO.Service {
             var size = Math.Max(1,Math.Min(100,q.PageSize)); var page = Math.Max(1,Math.Min(1000000,q.Page));
             var parameters = CARGO_DDatabase.Params(new { Actor=actor.UserId, Applicant=(q.Applicant ?? "").Trim(), Keyword=(q.Keyword ?? "").Trim(), Status=q.Status,
                 UseDay=q.UseDate.HasValue ? q.UseDate.Value.Date : DateTime.Today, NextDay=q.UseDate.HasValue ? q.UseDate.Value.Date.AddDays(1) : DateTime.Today.AddDays(1), NowAt=DateTime.Now, Offset=(page-1)*size, PageSize=size });
-            var order = module == 3 ? "CASE WHEN r.CATEGORY='routine' THEN 0 ELSE 1 END, " : "";
+            var order = module == 3 ? "CASE WHEN r.STATUS='approved' AND r.CATEGORY='routine' THEN 0 ELSE 1 END, r.START_AT, " : module == 4 ? "CASE WHEN (SELECT s.STATUS FROM CARGO_D_SIGN s WHERE s.REQUEST_ID=r.REQUEST_ID AND s.ROUND_NO=(SELECT MAX(t.ROUND_NO) FROM CARGO_D_SIGN t WHERE t.REQUEST_ID=r.REQUEST_ID))='pending' THEN 0 ELSE 1 END, (SELECT s.SUBMITTED_AT FROM CARGO_D_SIGN s WHERE s.REQUEST_ID=r.REQUEST_ID AND s.ROUND_NO=(SELECT MAX(t.ROUND_NO) FROM CARGO_D_SIGN t WHERE t.REQUEST_ID=r.REQUEST_ID)) DESC, " : "";
             using (var db=CARGO_DDatabase.Open()) using (var tx=db.BeginTransaction()) {
                 var total=db.Query<int>("SELECT COUNT(*) FROM CARGO_D_REQUEST r WHERE "+where, parameters,tx).Single();
                 var items=db.Query<CARGO_D_REQUEST>("SELECT r.* FROM CARGO_D_REQUEST r WHERE "+where+" ORDER BY "+order+"r.CREATED_AT DESC, r.REQUEST_ID DESC OFFSET :Offset ROWS FETCH NEXT :PageSize ROWS ONLY",parameters,tx).ToList();
@@ -131,7 +160,13 @@ namespace CARGO.Service {
                         (SELECT 1 FROM CARGO_D_REQUEST r WHERE r.OWNER_ID=a.OWNER_ID AND r.REQUEST_ID IN " + selected + ")", pageKeys, tx).ToList();
                     foreach (var r in items) info[r.REQUEST_ID].Approver = ReviewApprover(r, approvers);
                 }
-                tx.Commit(); return new CARGO_DWorkPageDto {Total=total,Items=items,ReviewInfo=info};
+                var signInfo = new Dictionary<long, CARGO_D_SIGN>();
+                if (module == 4 && items.Count > 0) {
+                    var signKeys = new DynamicParameters();
+                    var names = items.Select((r, i) => { var key = "SignRequest" + i; signKeys.Add(key, r.REQUEST_ID); return ":" + key; }).ToArray();
+                    signInfo = db.Query<CARGO_D_SIGN>("SELECT s.* FROM CARGO_D_SIGN s WHERE s.REQUEST_ID IN (" + String.Join(",", names) + ") AND s.ROUND_NO=(SELECT MAX(t.ROUND_NO) FROM CARGO_D_SIGN t WHERE t.REQUEST_ID=s.REQUEST_ID)", CARGO_DDatabase.Params(signKeys), tx).ToDictionary(x => x.REQUEST_ID);
+                }
+                tx.Commit(); return new CARGO_DWorkPageDto {Total=total,Items=items,ReviewInfo=info,SignInfo=signInfo};
             }
         }
         private static T Read<T>(Func<CARGO_DWorkState, T> run) { using (var db = CARGO_DDatabase.Open()) using (var tx = db.BeginTransaction()) {

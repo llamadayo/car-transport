@@ -1,4 +1,4 @@
-﻿-- D02-D04 draft schema; review before running against Oracle 19c.
+-- D02-D04 draft schema; review before running against Oracle 19c.
 
 -- C module/maintenance/leave integration supplies resource blocks.
 
@@ -17,6 +17,7 @@ CREATE TABLE CARGO_D_RESOURCE (
     SITE NVARCHAR2(50),
     VEHICLE_TYPE NVARCHAR2(50),
     SEATS NUMBER(6),
+    TONS NUMBER(9,3),
     PERMIT_K NUMBER(1),
     PERMIT_P NUMBER(1),
     ACTIVE NUMBER(1),

@@ -8,6 +8,7 @@ namespace CARGO.Web.ViewModels.CARGO_D03 {
         public long RequestId { get; set; }
         public int Version { get; set; }
         public string Command { get; set; }
+        public bool SupplementDriver { get; set; }
         [StringLength(1000)] public string Note { get; set; }
         public string Vehicle { get; set; }
         public string Driver1 { get; set; }

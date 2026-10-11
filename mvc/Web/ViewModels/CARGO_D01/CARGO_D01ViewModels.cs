@@ -196,6 +196,9 @@ namespace CARGO.Web.ViewModels.CARGO_D01
         public int Passengers { get; set; }
         public string SelfDrive { get; set; }
         public string Cargo { get; set; }
+        public bool HazardousCargo { get; set; }
+        public bool PendingReturn { get; set; }
+        public string SignStatus { get; set; }
         public string Status { get; set; }
         public string Outcome { get; set; }
         public DateTime CreatedAt { get; set; }
@@ -209,6 +212,9 @@ namespace CARGO.Web.ViewModels.CARGO_D01
     }
     public sealed class CARGO_D01AssignmentViewModel
     {
+        public string Actor { get; set; }
+        public bool IsSelfDrive { get; set; }
+        public bool IsEmpty { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }
         public string Vehicle { get; set; }
@@ -238,6 +244,7 @@ namespace CARGO.Web.ViewModels.CARGO_D01
         public DateTime? DispatchedAt { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? PendingReturnAt { get; set; }
+        public DateTime? ReturnRequestedAt { get; set; }
         public string ReturnReason { get; set; }
         public bool CanEdit { get; set; }
         public bool CanWithdraw { get; set; }
