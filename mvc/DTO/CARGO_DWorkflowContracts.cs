@@ -9,6 +9,7 @@ namespace CARGO.DTO {
         public bool CanSign { get; set; }
     }
     public sealed class CARGO_DWorkQueryDto {
+        public string Keyword { get; set; }
         public string Applicant { get; set; }
         public string Status { get; set; }
         public DateTime? UseDate { get; set; }
@@ -18,6 +19,13 @@ namespace CARGO.DTO {
     public sealed class CARGO_DWorkPageDto {
         public List<CARGO_D_REQUEST> Items { get; set; }
         public int Total { get; set; }
+        public Dictionary<long, CARGO_D02ListInfoDto> ReviewInfo { get; set; }
+    }
+    public sealed class CARGO_D02ListInfoDto {
+        public long REQUEST_ID { get; set; }
+        public string Approver { get; set; }
+        public int CargoCount { get; set; }
+        public long CargoQuantity { get; set; }
     }
     public sealed class CARGO_DWorkActionDto {
         public long RequestId { get; set; }

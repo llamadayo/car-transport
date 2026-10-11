@@ -164,6 +164,7 @@ namespace CARGO.Web.ViewModels.CARGO_D01
         [Display(Name = "重量 kg")]
         public decimal Weight { get; set; }
         [Display(Name = "件數")]
+        [Range(1, 5000, ErrorMessage = "每筆貨物件數需為 1 至 5000 的整數")]
         public int Quantity { get; set; }
         [Display(Name = "品類")]
         [StringLength(50)]
@@ -171,8 +172,6 @@ namespace CARGO.Web.ViewModels.CARGO_D01
         [Display(Name = "外包裝")]
         [StringLength(200)]
         public string Packaging { get; set; }
-        [Display(Name = "危險品")]
-        public bool Hazardous { get; set; }
     }
     public sealed class CARGO_DOptionViewModel
     {

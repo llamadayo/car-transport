@@ -105,6 +105,7 @@ internal static class WorkflowTests {
  }
  static void Main() {
   var d02=new CARGO_D02Service(); var d03=new CARGO_D03Service(); var d04=new CARGO_D04Service();
+  QueryReview(d02,d04);
   QueryWork(d03);DefaultEffectiveTime(d03);EmptyAssignmentOccupancy();EffectiveTimeRoundTrip();ShortEffectiveTimeRoundTrip();
   var q=new CARGO_DWorkQueryDto { Page=1,PageSize=100 };
   Check(d02.Query(q,Actor).Total==6,"supervisor scope excludes drafts");
@@ -153,5 +154,30 @@ internal static class WorkflowTests {
   s=CARGO_DWorkflowDemoData.Load();d=Record(s,2);Apply(s,d,"approve",2);Apply(s,d,"noVehicle",3);
   Check(d.Application.Request.STATUS=="noVehicle" && d.Assignments.Count==0 && d.Application.Request.SIGN_STATUS==null,"no vehicle closes without sign or occupancy");
   Console.WriteLine("PASS " + count + " workflow checks");
+ }
+ static void QueryReview(CARGO_D02Service d02,CARGO_D04Service d04) {
+  var q=new CARGO_DWorkQueryDto {Keyword=" gu000007 ",Page=1,PageSize=20};
+  Check(d04.Query(q,Actor).Items.Single().REQUEST_ID==7,"D04 trims case-insensitive request number keyword");
+  q.Keyword="gd000005";Check(d04.Query(q,Actor).Items.Single().REQUEST_ID==5,"D04 searches dispatch number");
+  q.Keyword="示範申請";Check(d04.Query(q,Actor).Total==2,"D04 retains applicant keyword search");
+  q.Keyword="GU000001";Check(d04.Query(q,Actor).Total==0,"D04 keyword cannot expose unsigned requests");
+  q.Keyword="GU000007";q.Status="approved";Check(d04.Query(q,Actor).Total==0,"D04 combines keyword with sign status");
+  q.Status="pending";q.UseDate=DateTime.Today;Check(d04.Query(q,Actor).Total==0,"D04 combines keyword with date");
+  q.UseDate=DateTime.Today.AddDays(1);Check(d04.Query(q,Actor).Total==1,"D04 combined filters find matching request");
+  q.Keyword="' OR 1=1 --";Check(d04.Query(q,Actor).Total==0,"D04 treats punctuation as literal keyword");
+  var original=CARGO_D01DemoData.Copy(CARGO_D01DemoData.Records[2]);
+  try {
+   var record=CARGO_D01DemoData.Records[2];record.Application.Request.SELF_DRIVE=1;record.Application.Request.APPROVER_NAME="previous reviewer";
+   for(var i=0;i<3;i++) record.Application.Cargo.Add(new CARGO_D_CARGO {QUANTITY=999999999});
+   var page=d02.Query(new CARGO_DWorkQueryDto {Status="submitted",Page=1,PageSize=20},Actor);
+   Check(page.Items.Single().SELF_DRIVE==1 && page.ReviewInfo[2].CargoCount==3 && page.ReviewInfo[2].CargoQuantity==2999999997L,"D02 includes self drive and large cargo totals");
+   Check(page.ReviewInfo[2].Approver==Actor.UserId,"pending review shows active supervisor rather than old reviewer");
+   page=d02.Query(new CARGO_DWorkQueryDto {Status="rejected",Page=1,PageSize=20},Actor);
+   Check(page.ReviewInfo[3].Approver=="示範主管" && page.ReviewInfo[3].CargoCount==0,"review history keeps deciding supervisor and empty cargo");
+   page=d02.Query(new CARGO_DWorkQueryDto {Page=1,PageSize=1},Actor);
+   Check(page.ReviewInfo.Count==1 && page.ReviewInfo.ContainsKey(page.Items.Single().REQUEST_ID),"D02 aggregates only the requested page");
+   page=d02.Query(new CARGO_DWorkQueryDto {Page=1,PageSize=20},new CARGO_DStaffDto {UserId="unmapped",CanApprove=true});
+   Check(page.ReviewInfo.Count==0,"D02 does not return cargo or supervisor data outside scope");
+  } finally {CARGO_D01DemoData.Records[2]=original;}
  }
 }

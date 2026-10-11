@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using CARGO.DTO;
+using CARGO.DTO.Tables;
 using CARGO.Service;
 class D01DemoTests
 {
@@ -33,5 +35,29 @@ class D01DemoTests
         Denied(() => service.RequestEarlyReturn(new CARGO_D01ActionDto { RequestId = 5, Version = pending.VERSION_NO, ReturnAt = assigned.END_AT.Value.AddHours(-2) }, actor), "duplicate return blocked");
         service.Save(service.Detail(3, actor).Application, actor, true);
         Check(service.Detail(3, actor).Application.Request.STATUS == "submitted", "rejected resubmit");
+        var large = service.Detail(1, actor).Application;
+        large.Request.REQUEST_ID = 0;
+        for (var i = 0; i < 3; i++) large.Cargo.Add(new CARGO_D_CARGO {
+            NAME = "大量貨物", LENGTH_CM = 1, WIDTH_CM = 1, HEIGHT_CM = 1, QUANTITY = 5000, CATEGORY = "BOX"
+        });
+        var largeId = service.Save(large, actor, false);
+        var largeRow = service.Query(new CARGO_D01QueryDto { PageSize = 100 }, actor).Items.Single(x => x.REQUEST_ID == largeId);
+        Check(largeRow.CARGO_COUNT == 3 && largeRow.CARGO_QUANTITY == 15000, "three maximum cargo quantities save and sum correctly");
+        var invalid = service.Detail(largeId, actor).Application;
+        invalid.Cargo[0].QUANTITY = 5001;
+        Denied(() => service.Save(invalid, actor, false), "draft quantity above 5000 rejected");
+        Denied(() => service.Save(invalid, actor, true), "submit quantity above 5000 rejected");
+        Check(service.Detail(largeId, actor).Application.Cargo[0].QUANTITY == 5000, "invalid saves preserve stored quantity");
+        var hazardApplication = service.Detail(1, actor).Application;
+        hazardApplication.Request.REQUEST_ID = 0;
+        hazardApplication.Request.HAZARDOUS_CARGO = 1;
+        hazardApplication.Cargo.Clear();
+        var hazardId = service.Save(hazardApplication, actor, false);
+        var hazardSaved = service.Detail(hazardId, actor).Application;
+        Check(hazardSaved.Request.HAZARDOUS_CARGO == 1 && hazardSaved.Cargo.Count == 0, "whole-request hazard saves without cargo");
+        hazardSaved.Request.HAZARDOUS_CARGO = 0;
+        service.Save(hazardSaved, actor, true);
+        Check(service.Detail(hazardId, actor).Application.Request.HAZARDOUS_CARGO == 0, "changing whole-request hazard to no persists on submit");
+
     }
 }

@@ -14,6 +14,7 @@ namespace CARGO.DTO.Tables
         public int QUANTITY { get; set; }
         public string CATEGORY { get; set; }
         public string PACKAGING { get; set; }
+        // Legacy storage only; D01-D06 use CARGO_D_REQUEST.HAZARDOUS_CARGO exclusively.
         public int HAZARDOUS { get; set; }
     }
 }

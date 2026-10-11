@@ -30,8 +30,11 @@ function workBadge(value) { var cls = /退回/.test(value) ? 'b-red' : /審/.tes
  c.Bound(x => x.RequestNo).Title("申請單號").ClientTemplate("<strong class='request-no'>#: RequestNo #</strong>").Width(125);
  c.Bound(x => x.Category).Title("類別").ClientTemplate("<span class='badge b-navy'>#: Category #</span>").Width(110);
  c.Bound(x => x.Applicant).Title("申請人").Width(120);
+ c.Bound(x => x.Approver).Title("簽核主管").Width(140);
  c.Bound(x => x.StartAt).Title("用車時段").ClientTemplate("#: kendo.toString(StartAt, 'yyyy-MM-dd HH:mm') #<br>～ #: kendo.toString(EndAt, 'yyyy-MM-dd HH:mm') #").Width(195);
  c.Bound(x => x.Passengers).Title("人數").Width(75);
+ c.Bound(x => x.SelfDrive).Title("自駕").Width(75);
+ c.Bound(x => x.Cargo).Title("隨行貨物").Width(160);
  c.Bound(x => x.Status).Title("狀態").ClientTemplate("#= workBadge(Status) #").Width(115);
 
 }).Pageable(p => p.PageSizes(new[] {20,50,100})).Scrollable(s => s.Height("auto")).Events(e => e.DataBound("workBound"))

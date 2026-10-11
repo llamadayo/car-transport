@@ -66,7 +66,7 @@
 @Choice("HazardousCargo", Html.DisplayNameFor(m => m.HazardousCargo).ToString(), Model.HazardousCargo)
 @Choice("PyrotechnicCargo", Html.DisplayNameFor(m => m.PyrotechnicCargo).ToString(), Model.PyrotechnicCargo)
 @Choice("NeedsHoisting", Html.DisplayNameFor(m => m.NeedsHoisting).ToString(), Model.NeedsHoisting)
-</div><p class="card-desc">駕駛證照、危險品、加班及進入台北市為申請資訊或提示，不會自動判定能否派車。</p>
+</div><p class="card-desc">危險品選「是」即表示整張申請單為危險品，不需逐項勾選貨物。駕駛證照、危險品、加班及進入台北市為申請資訊或提示，不會自動判定能否派車。</p>
 <div class="group-heading"><span class="field-label">行程地點</span><button type="button" class="btn btn-accent btn-sm" data-add="Locations">＋ 新增地點</button></div>
 @Html.Partial("_Locations", Model)<div class="fields">
 <div class="field">@Html.LabelFor(m => m.TriplicateNo) @Html.TextBoxFor(m => m.TriplicateNo, new { maxlength = "100" }) @Html.ValidationMessageFor(m => m.TriplicateNo)</div>

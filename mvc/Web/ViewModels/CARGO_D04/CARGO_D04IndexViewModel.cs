@@ -5,7 +5,7 @@ using CARGO.Web.ViewModels.CARGO_D01;
 using CARGO.Web.ViewModels.Shared;
 namespace CARGO.Web.ViewModels.CARGO_D04 {
     public sealed class CARGO_D04IndexViewModel {
-        public string Applicant { get; set; }
+        public string Keyword { get; set; }
         public string Status { get; set; }
         public DateTime? UseDate { get; set; }
     }

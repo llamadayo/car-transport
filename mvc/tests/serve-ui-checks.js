@@ -35,7 +35,7 @@ const d01 = page('D01 數量與行程排序回歸', `<form id="application-form"
 <button type="button" data-add="Locations">新增地點</button><table><thead><tr><th>地點</th><th>排序</th><th>操作</th></tr></thead>
 <tbody id="rows-Locations"></tbody></table>${template('Locations')}
 <button type="button" data-add="Cargo">新增貨物</button><table><thead><tr><th>品名</th><th>長</th><th>寬</th><th>高</th>
-<th>重量</th><th>件數</th><th>品類</th><th>外包裝</th><th>危險品</th><th>操作</th></tr></thead>
+<th>重量</th><th>件數</th><th>品類</th><th>外包裝</th><th>操作</th></tr></thead>
 <tbody id="rows-Cargo"></tbody></table>${template('Cargo')}
 <button type="button" id="quantity-check">檢查件數</button><output id="quantity-validity" aria-live="polite"></output>
 <button type="submit" id="submit-request" name="command" value="submit">送出測試申請</button></form>`, 'cargo-d01.js', `

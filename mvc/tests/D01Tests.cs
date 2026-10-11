@@ -53,6 +53,23 @@ internal static class D01Tests
             Check("exercise field only for general exercise", () => { var d = Input(); d.Request.EXERCISE_PLAN = "plan"; Validate(d); Assert(d.Request.EXERCISE_PLAN == null); d.Request.TRANSPORT_TYPE = "演訓"; d.Request.EXERCISE_PLAN = "plan"; Validate(d); Assert(d.Request.EXERCISE_PLAN == "plan"); });
             Check("submit denied when request review unchecked", () => { var d = Input(); d.Request.REQUEST_REVIEW = 0; Reject(() => Validate(d)); Validate(d, false); });
             Check("cargo independent of passengers and hazard is a hint", () => { var d = Input(); d.Cargo.Add(new CARGO_D_CARGO { NAME = "sample", LENGTH_CM = 10, WIDTH_CM = 10, HEIGHT_CM = 10, QUANTITY = 1, CATEGORY = "BOX", HAZARDOUS = 1 }); Validate(d); d.Cargo[0].QUANTITY = 0; Reject(() => Validate(d)); });
+            Check("cargo quantity boundaries apply to drafts and submissions", () => {
+                foreach (var submit in new[] { false, true }) {
+                    var d = Input();
+                    var cargo = new CARGO_D_CARGO { NAME = "sample", LENGTH_CM = 1, WIDTH_CM = 1, HEIGHT_CM = 1, CATEGORY = "BOX" };
+                    d.Cargo.Add(cargo);
+                    foreach (var quantity in new[] { 1, 5000 }) { cargo.QUANTITY = quantity; Validate(d, submit); }
+                    foreach (var quantity in new[] { -1, 0, 5001, Int32.MaxValue }) { cargo.QUANTITY = quantity; Reject(() => Validate(d, submit)); }
+                }
+            });
+            Check("cargo quantity model validation accepts only 1 through 5000", () => {
+                var cargo = new CARGO_D01CargoViewModel();
+                var context = new System.ComponentModel.DataAnnotations.ValidationContext(cargo) { MemberName = "Quantity" };
+                foreach (var quantity in new[] { -1, 0, 1, 5000, 5001, Int32.MaxValue }) {
+                    var valid = System.ComponentModel.DataAnnotations.Validator.TryValidateProperty(quantity, context, null);
+                    Assert(valid == (quantity == 1 || quantity == 5000));
+                }
+            });
             Check("no license qualification blocking", () => { var d = Input(); d.Request.SELF_DRIVE = 1; d.Request.QUALIFIED_LICENSE = 0; Validate(d); });
             Check("editable states", () => { var r = Input().Request; foreach (var state in new[] { "draft", "rejected", "submitted", "approved", "noVehicle", "dispatched" }) { r.STATUS = state; Assert(CARGO_D01Rules.CanEdit(r) == (state == "draft" || state == "rejected")); } });
             Check("withdraw only before dispatch confirmation", () => { var r = Input().Request; r.STATUS = "approved"; Assert(CARGO_D01Rules.CanWithdraw(r)); r.DISPATCHED_AT = DateTime.Now; Assert(!CARGO_D01Rules.CanWithdraw(r)); });
@@ -60,7 +77,7 @@ internal static class D01Tests
             Check("early return excludes both boundaries", () => { var r = Input().Request; r.STATUS = "dispatched"; r.SIGN_STATUS = "approved"; Reject(() => CARGO_D01Rules.ValidateReturn(r, r.START_AT)); Reject(() => CARGO_D01Rules.ValidateReturn(r, r.END_AT)); });
             Check("pending return cannot be duplicated", () => { var r = Input().Request; r.STATUS = "dispatched"; r.SIGN_STATUS = "approved"; r.PENDING_RETURN_AT = r.START_AT.Value.AddHours(1); Reject(() => CARGO_D01Rules.ValidateReturn(r, r.START_AT.Value.AddHours(2))); });
             Check("effective dispatch display transitions", () => { var r = Input().Request; r.STATUS = "dispatched"; Assert(CARGO_D01Rules.DisplayStatus(r, r.START_AT.Value) == "signing"); r.SIGN_STATUS = "approved"; Assert(CARGO_D01Rules.DisplayStatus(r, r.START_AT.Value.AddMinutes(-1)) == "ready"); Assert(CARGO_D01Rules.DisplayStatus(r, r.START_AT.Value) == "departed"); r.USAGE_AT = r.END_AT; Assert(CARGO_D01Rules.DisplayStatus(r, r.END_AT.Value) == "logged"); });
-            Check("viewmodel round trip retains false and independent fields", () => { var m = new CARGO_D01FormViewModel { Applicant = "test", Preference1 = "CAR", NeedK = true, SelfDrive = false, ContinueMatching = true, ChangeReason = "reason", Remarks = "notes", StartAt = DateTime.Today, EndAt = DateTime.Today.AddDays(1) }; m.Locations.Add(new CARGO_D01LocationViewModel { Name = "place" }); m.SelfDrivers.Add(new CARGO_D01SelfDriverViewModel { Name = "driver", Phone = "phone" }); m.Cargo.Add(new CARGO_D01CargoViewModel { Name = "cargo", Packaging = "box", Hazardous = true }); var dto = CARGO_D01Mapper.ToDto(m); var copy = CARGO_D01Mapper.Form(dto); Assert(copy.SelfDrive == false && copy.ContinueMatching && copy.NeedK && !copy.NeedP && copy.ChangeReason == "reason" && copy.Remarks == "notes" && copy.Cargo[0].Packaging == "box" && copy.Cargo[0].Hazardous && copy.SelfDrivers[0].Phone == "phone"); copy.Locations[0].Name = "changed"; Assert(dto.Locations[0].NAME == "place"); });
+            Check("viewmodel round trip retains false and independent fields", () => { var m = new CARGO_D01FormViewModel { Applicant = "test", Preference1 = "CAR", NeedK = true, HazardousCargo = true, SelfDrive = false, ContinueMatching = true, ChangeReason = "reason", Remarks = "notes", StartAt = DateTime.Today, EndAt = DateTime.Today.AddDays(1) }; m.Locations.Add(new CARGO_D01LocationViewModel { Name = "place" }); m.SelfDrivers.Add(new CARGO_D01SelfDriverViewModel { Name = "driver", Phone = "phone" }); m.Cargo.Add(new CARGO_D01CargoViewModel { Name = "cargo", Packaging = "box" }); var dto = CARGO_D01Mapper.ToDto(m); var copy = CARGO_D01Mapper.Form(dto); Assert(copy.SelfDrive == false && copy.ContinueMatching && copy.NeedK && !copy.NeedP && copy.ChangeReason == "reason" && copy.Remarks == "notes" && copy.Cargo[0].Packaging == "box" && copy.HazardousCargo && copy.SelfDrivers[0].Phone == "phone"); copy.Locations[0].Name = "changed"; Assert(dto.Locations[0].NAME == "place"); });
             Check("oversized fields rejected before Oracle write", () => { var d = Input(); d.Request.REMARKS = new string('x', 1001); Reject(() => Validate(d)); d.Request.REMARKS = new string('x', 1000); Validate(d); });
             Console.WriteLine("Passed " + passed + " D01 tests."); return 0;
         } catch (Exception ex) { Console.Error.WriteLine(ex); return 1; }

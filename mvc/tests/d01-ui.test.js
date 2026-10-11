@@ -183,18 +183,19 @@ function postedFields(row) {
     .map(control => [control.name, control.value]);
 }
 
-test('existing and new cargo quantity controls accept positive integer counts', () => {
+test('existing and new cargo quantity controls accept only integers from 1 to 5000', () => {
   const existing = /\.Quantity",[^\n]*?new \{([^}]+)\}/.exec(views.Cargo)[1];
   const attributes = Object.fromEntries(Array.from(existing.matchAll(/(\w+) = "([^"]*)"/g), match => [match[1], match[2]]));
   const added = parseTemplate('Cargo').querySelector('[name="Cargo[__index__].Quantity"]').attributes;
   for (const control of [attributes, added]) {
     assert.equal(control.type, 'number');
     assert.equal(control.min, '1');
+    assert.equal(control.max, '5000');
     assert.equal(control.step, '1');
-    const accepts = value => value >= Number(control.min) &&
+    const accepts = value => value >= Number(control.min) && value <= Number(control.max) &&
       Number.isInteger((value - Number(control.min)) / Number(control.step));
-    for (const value of [1, 2, 10]) assert.equal(accepts(value), true);
-    for (const value of [0, -1, 0.001, 1.5]) assert.equal(accepts(value), false);
+    for (const value of [1, 2, 10, 5000]) assert.equal(accepts(value), true);
+    for (const value of [0, -1, 0.001, 1.5, 5001, 999999999]) assert.equal(accepts(value), false);
   }
 });
 
@@ -247,11 +248,11 @@ test('add, reorder, and delete keep contiguous binding names and update boundari
   assertLocationOrder(ui, ['']);
 });
 
-test('cargo add and delete preserve values and reindex both checkbox binding inputs', () => {
+test('cargo add and delete preserve values without per-item hazard inputs', () => {
   const ui = fixture({ Cargo: [
     { Name: 'remove', Quantity: '1' },
     { Name: 'keep', Length: '12.5', Width: '8', Height: '9', Weight: '0', Quantity: '2',
-      Category: 'BOX', Packaging: 'edited package', Hazardous: true }
+      Category: 'BOX', Packaging: 'edited package' }
   ] });
   const kept = ui.rows('Cargo')[1];
   const originalValues = postedFields(kept).map(([, value]) => value);
@@ -259,15 +260,11 @@ test('cargo add and delete preserve values and reindex both checkbox binding inp
   assert.equal(ui.rows('Cargo')[0], kept);
   assert.deepEqual(postedFields(kept).map(([, value]) => value), originalValues);
   assert.ok(kept.querySelectorAll('[name]').every(control => control.name.startsWith('Cargo[0].')));
-  assert.deepEqual(postedFields(kept).filter(([name]) => name.endsWith('.Hazardous')), [
-    ['Cargo[0].Hazardous', 'true'], ['Cargo[0].Hazardous', 'false']
-  ]);
+  assert.deepEqual(postedFields(kept).filter(([name]) => name.endsWith('.Hazardous')), []);
   ui.add('Cargo');
   const added = ui.rows('Cargo')[1];
   assert.equal(added.querySelector('[name="Cargo[1].Quantity"]').value, '1');
-  assert.deepEqual(postedFields(added).filter(([name]) => name.endsWith('.Hazardous')), [
-    ['Cargo[1].Hazardous', 'false']
-  ]);
+  assert.deepEqual(postedFields(added).filter(([name]) => name.endsWith('.Hazardous')), []);
 });
 
 test('self-driver add/delete retains all fields and the existing eight-row limit', () => {

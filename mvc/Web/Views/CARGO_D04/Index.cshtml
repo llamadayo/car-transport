@@ -10,7 +10,7 @@
 <p class="intro">審核業務送出的派車結果。同意後派車生效；不同意時釋放資源，退回調度重新安排。</p>
 <section class="card"><div class="card-title"><span>查詢條件</span><button type="button" class="btn btn-primary btn-sm" id="search">🔍 查詢</button></div>
 <form id="query-form">@Html.AntiForgeryToken()<div class="fields">
-<label class="query-field"><span>申請人（模糊）</span>@Html.TextBoxFor(x => x.Applicant, new { placeholder="輸入姓名關鍵字" })</label>
+<label class="query-field"><span>單號／申請人（模糊）</span>@Html.TextBoxFor(x => x.Keyword, new { placeholder="申請單號、派車單號或姓名" })</label>
 <label class="query-field"><span>用車日期</span> @Html.TextBoxFor(x => x.UseDate, "{0:yyyy-MM-dd}", new { type="date" })</label>
 <label class="query-field"><span>狀態</span> @Html.DropDownListFor(x => x.Status, new SelectList(statuses,"Key","Value"), "全部狀態")</label>
 </div></form></section>
@@ -20,7 +20,7 @@
 </div>
 <p id="grid-error" role="alert" hidden></p>
 <script>
-function workQuery() { return { __RequestVerificationToken: jQuery('#query-form input[name=__RequestVerificationToken]').val(), Applicant: jQuery('#Applicant').val(), UseDate: jQuery('#UseDate').val(), Status: jQuery('#Status').val() }; }
+function workQuery() { return { __RequestVerificationToken: jQuery('#query-form input[name=__RequestVerificationToken]').val(), Keyword: jQuery('#Keyword').val(), UseDate: jQuery('#UseDate').val(), Status: jQuery('#Status').val() }; }
 function workBound(e) { jQuery('#result-count').text(e.sender.dataSource.total() + ' 筆'); }
 function workError(e) { jQuery('#grid-error').text(e.errors || '查詢失敗，請確認登入狀態與資料庫設定。').prop('hidden',false).show(); }
 function workBadge(value) { var cls = /退回/.test(value) ? 'b-red' : /審/.test(value) ? 'b-amber' : /同意|出車/.test(value) ? 'b-green' : 'b-navy'; return '<span class="badge ' + cls + '">' + kendo.htmlEncode(value) + '</span>'; }

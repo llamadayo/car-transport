@@ -13,6 +13,13 @@ namespace CARGO.DTO {
  public sealed class CARGO_D05DetailDto {
   public CARGO_D01DetailDto Application {get;set;} public List<CARGO_D_USAGE> History {get;set;} public List<CARGO_D_RESOURCE> Resources {get;set;}
  }
+ public sealed class CARGO_D06QueryDto {
+  public DateTime? FromDate {get;set;} public DateTime? ToDate {get;set;} public string DriverId {get;set;}
+ }
+ public sealed class CARGO_D06DriverDto { public string Id {get;set;} public string Name {get;set;} }
+ public sealed class CARGO_D06PageDto {
+  public List<CARGO_D06TaskDto> Items {get;set;} public List<CARGO_D06DriverDto> Drivers {get;set;}
+ }
  public sealed class CARGO_D06TaskDto {
   public CARGO_D_REQUEST Request {get;set;} public CARGO_D_ASSIGNMENT Assignment {get;set;} public string DriverId {get;set;} public string DriverName {get;set;}
   public string Partner {get;set;} public string VehicleName {get;set;} public List<CARGO_D_LOCATION> Locations {get;set;} public List<CARGO_D_CARGO> Cargo {get;set;}

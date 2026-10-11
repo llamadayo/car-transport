@@ -8,8 +8,9 @@
             event.preventDefault();
             var button = event.submitter || clicked;
             var command = button && button.name === 'Command' ? button.value : '';
-            var hiddenCommand = form.querySelector('input[name=Command]');
-            command = command || (hiddenCommand ? hiddenCommand.value : '');
+            var hiddenCommand = form.querySelector('input[type=hidden][name=Command]');
+            var selectedCommand = form.querySelector('input[type=radio][name=Command]:checked');
+            command = command || (selectedCommand ? selectedCommand.value : '') || (hiddenCommand ? hiddenCommand.value : '');
             var required = {};
             if (command === 'reject') required.Note = '退回時請填寫審核意見';
             if (command === 'dispatch' || command === 'reassign') {
@@ -22,7 +23,7 @@
             if (!window.cargoValidateForm(form, required)) return;
             var message = command === 'noVehicle' ? '確認無車退回？此操作不送運輸主管簽審。' : form.getAttribute('data-confirm');
             window.cargoConfirm(message, function () {
-                if (command && !hiddenCommand) { var hidden = document.createElement('input'); hidden.type = 'hidden'; hidden.name = 'Command'; hidden.value = command; form.appendChild(hidden); }
+                if (command && !hiddenCommand && !selectedCommand) { var hidden = document.createElement('input'); hidden.type = 'hidden'; hidden.name = 'Command'; hidden.value = command; form.appendChild(hidden); }
                 HTMLFormElement.prototype.submit.call(form);
             });
         });

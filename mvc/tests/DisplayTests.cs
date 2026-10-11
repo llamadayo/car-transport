@@ -52,6 +52,29 @@ internal static class DisplayTests
             "D03 short segment input preserves the exact millisecond default");
         dispatch.EffectiveAt = null;
         Check(dispatch.EffectiveAtInputValue == "" && dispatch.EffectiveAtStep == "0.001", "D03 unrepresentable interval leaves the existing input empty");
+        var review = CARGO_D02Mapper.Row(data.Application.Request, new CARGO_D02ListInfoDto { Approver = "主管甲、主管乙", CargoCount = 3, CargoQuantity = 2999999997L });
+        Check(review.Approver == "主管甲、主管乙" && review.SelfDrive == "否" && review.Cargo == "3 項／2999999997 件", "D02 displays supervisor, self-drive and 64-bit cargo total");
+        var index = new CARGO.Web.ViewModels.CARGO_D06.CARGO_D06IndexViewModel();
+        Check(index.FromDate == DateTime.Today && index.ToDate == DateTime.Today.AddDays(14), "D06 defaults to today through two weeks ahead");
+        index.FromDate = DateTime.Today.AddDays(1); index.ToDate = DateTime.Today;
+        Check(index.Validate(new System.ComponentModel.DataAnnotations.ValidationContext(index)).Any(), "D06 model rejects reversed date range");
+        index.FromDate = null; index.ToDate = null;
+        Check(!index.Validate(new System.ComponentModel.DataAnnotations.ValidationContext(index)).Any(), "D06 model permits unrestricted dates");
+        // Whole-request hazard remains visible even with no cargo, and legacy line flags never override it.
+        var task = new CARGO_D06TaskDto { Request = data.Application.Request, Assignment = data.Assignments[0],
+            Locations = data.Application.Locations, Cargo = data.Application.Cargo };
+        foreach (var hazard in new[] { 1, 0 }) {
+            data.Application.Request.HAZARDOUS_CARGO = hazard;
+            data.Application.Cargo.Clear();
+            Check(CARGO_D06Mapper.Tasks(new List<CARGO_D06TaskDto> { task })[0].HazardousCargo == (hazard == 1), "D06 whole-request hazard with no cargo: " + hazard);
+            data.Application.Cargo.Add(new CARGO_D_CARGO { NAME = "legacy", HAZARDOUS = 1 - hazard });
+            Check(CARGO_D06Mapper.Tasks(new List<CARGO_D06TaskDto> { task })[0].HazardousCargo == (hazard == 1), "D06 ignores conflicting legacy cargo flag: " + hazard);
+            var shared = CARGO_DSharedMapper.Application(data, resources);
+            Check(shared.Form.HazardousCargo == (hazard == 1), "D02-D05 shared detail uses request flag: " + hazard);
+            Check(CARGO_D01Mapper.Form(data.Application).HazardousCargo == (hazard == 1), "D01 editing uses request flag: " + hazard);
+            var roundTrip = CARGO_D01Mapper.ToDto(CARGO_D01Mapper.Form(data.Application));
+            Check(roundTrip.Request.HAZARDOUS_CARGO == hazard && roundTrip.Cargo[0].HAZARDOUS == 0, "D01 stores request flag without legacy line flag: " + hazard);
+        }
         Console.WriteLine("PASS " + passed + " display checks");
     }
 }

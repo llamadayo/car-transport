@@ -10,6 +10,9 @@ namespace CARGO.Web.ViewModels.CARGO_D02 {
         public string RequestNo { get; set; }
         public string Category { get; set; }
         public string Applicant { get; set; }
+        public string Approver { get; set; }
+        public string SelfDrive { get; set; }
+        public string Cargo { get; set; }
         public DateTime? StartAt { get; set; }
         public DateTime? EndAt { get; set; }
         public int Passengers { get; set; }

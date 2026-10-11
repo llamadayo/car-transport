@@ -65,7 +65,7 @@ namespace CARGO.Web.Models
                 },
                 Locations = (m.Locations ?? new List<CARGO_D01LocationViewModel>()).Select(x => new CARGO_D_LOCATION { NAME = x.Name }).ToList(),
                 SelfDrivers = (m.SelfDrivers ?? new List<CARGO_D01SelfDriverViewModel>()).Select(x => new CARGO_D_SELF_DRIVER { NAME = x.Name, EXT = x.Extension, PHONE = x.Phone }).ToList(),
-                Cargo = (m.Cargo ?? new List<CARGO_D01CargoViewModel>()).Select(x => new CARGO_D_CARGO { NAME = x.Name, LENGTH_CM = x.Length, WIDTH_CM = x.Width, HEIGHT_CM = x.Height, WEIGHT_KG = x.Weight, QUANTITY = x.Quantity, CATEGORY = x.Category, PACKAGING = x.Packaging, HAZARDOUS = x.Hazardous ? 1 : 0 }).ToList(),
+                Cargo = (m.Cargo ?? new List<CARGO_D01CargoViewModel>()).Select(x => new CARGO_D_CARGO { NAME = x.Name, LENGTH_CM = x.Length, WIDTH_CM = x.Width, HEIGHT_CM = x.Height, WEIGHT_KG = x.Weight, QUANTITY = x.Quantity, CATEGORY = x.Category, PACKAGING = x.Packaging }).ToList(),
             };
         }
         public static CARGO_D01FormViewModel Form(CARGO_D01SaveDto data)
@@ -115,7 +115,7 @@ namespace CARGO.Web.Models
                 RequestReview = r.REQUEST_REVIEW == 1,
                 Locations = data.Locations.Select(x => new CARGO_D01LocationViewModel { Name = x.NAME }).ToList(),
                 SelfDrivers = data.SelfDrivers.Select(x => new CARGO_D01SelfDriverViewModel { Name = x.NAME, Extension = x.EXT, Phone = x.PHONE }).ToList(),
-                Cargo = data.Cargo.Select(x => new CARGO_D01CargoViewModel { Name = x.NAME, Length = x.LENGTH_CM, Width = x.WIDTH_CM, Height = x.HEIGHT_CM, Weight = x.WEIGHT_KG, Quantity = x.QUANTITY, Category = x.CATEGORY, Packaging = x.PACKAGING, Hazardous = x.HAZARDOUS == 1 }).ToList(),
+                Cargo = data.Cargo.Select(x => new CARGO_D01CargoViewModel { Name = x.NAME, Length = x.LENGTH_CM, Width = x.WIDTH_CM, Height = x.HEIGHT_CM, Weight = x.WEIGHT_KG, Quantity = x.QUANTITY, Category = x.CATEGORY, Packaging = x.PACKAGING }).ToList(),
             };
         }
         public static CARGO_D01RowViewModel Row(CARGO_D01ListItemDto r)

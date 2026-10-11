@@ -18,15 +18,29 @@ namespace CARGO.Service {
             return Read(state => {
                 var rows = state.Records.Select(x => x.Application.Request).Where(r => CARGO_DWorkflowRules.InScope(r, state, actor, module));
                 if (!String.IsNullOrWhiteSpace(q.Applicant)) rows = rows.Where(r => (r.APPLICANT ?? "").IndexOf(q.Applicant.Trim(), StringComparison.OrdinalIgnoreCase) >= 0);
+                if (module == 4 && !String.IsNullOrWhiteSpace(q.Keyword)) rows = rows.Where(r =>
+                    new[] { r.REQUEST_NO, r.DISPATCH_NO, r.APPLICANT }.Any(value => (value ?? "").IndexOf(q.Keyword.Trim(), StringComparison.OrdinalIgnoreCase) >= 0));
                 if (q.UseDate.HasValue) rows = rows.Where(r => r.START_AT < q.UseDate.Value.Date.AddDays(1) && r.END_AT > q.UseDate.Value.Date);
                 if (!String.IsNullOrEmpty(q.Status)) rows = rows.Where(r => module == 4 ? Latest(state, r.REQUEST_ID).STATUS == q.Status : module == 2 ?
                     (q.Status == "passed" ? r.STATUS != "submitted" && r.STATUS != "rejected" : r.STATUS == q.Status) : q.Status == "work" ?
                     r.STATUS == "approved" || r.PENDING_RETURN_AT.HasValue : CARGO_D01Rules.DisplayStatus(r, DateTime.Now) == q.Status);
                 var ordered = rows.OrderByDescending(r => module == 3 && r.CATEGORY == "routine").ThenByDescending(r => r.CREATED_AT).ThenByDescending(r => r.REQUEST_ID).ToList();
                 var size = Math.Max(1, Math.Min(100, q.PageSize)); var page = Math.Max(1, Math.Min(1000000, q.Page));
-                return new CARGO_DWorkPageDto { Total = ordered.Count, Items = ordered.Skip((page - 1) * size).Take(size).ToList() };
+                var items = ordered.Skip((page - 1) * size).Take(size).ToList();
+                var info = new Dictionary<long, CARGO_D02ListInfoDto>();
+                if (module == 2) foreach (var r in items) {
+                    var cargo = state.Records.Single(x => x.Application.Request.REQUEST_ID == r.REQUEST_ID).Application.Cargo;
+                    info.Add(r.REQUEST_ID, new CARGO_D02ListInfoDto { REQUEST_ID = r.REQUEST_ID,
+                        Approver = ReviewApprover(r, state.Approvers), CargoCount = cargo.Count, CargoQuantity = cargo.Sum(x => (long)x.QUANTITY) });
+                }
+                return new CARGO_DWorkPageDto { Total = ordered.Count, Items = items, ReviewInfo = info };
             });
 #endif
+        }
+        private static string ReviewApprover(CARGO_D_REQUEST r, IEnumerable<CARGO_D_APPROVER> approvers) {
+            if (r.STATUS != "submitted" && !String.IsNullOrWhiteSpace(r.APPROVER_NAME)) return r.APPROVER_NAME;
+            return String.Join("、", approvers.Where(x => x.OWNER_ID == r.OWNER_ID && x.ACTIVE == 1)
+                .Select(x => x.APPROVER_ID).Distinct().OrderBy(x => x));
         }
         private static CARGO_D_SIGN Latest(CARGO_DWorkState state, long id) { return state.Signs.Where(x => x.REQUEST_ID == id).OrderByDescending(x => x.ROUND_NO).First(); }
         internal CARGO_DWorkDetailDto Detail(long id, CARGO_DStaffDto actor, int module) {
@@ -85,6 +99,7 @@ namespace CARGO.Service {
             var where = module == 2 ? "r.STATUS <> 'draft' AND EXISTS (SELECT 1 FROM CARGO_D_APPROVER a WHERE a.OWNER_ID=r.OWNER_ID AND a.APPROVER_ID=:Actor AND a.ACTIVE=1)" :
                 module == 3 ? "r.STATUS IN ('approved','dispatched','noVehicle')" : "EXISTS (SELECT 1 FROM CARGO_D_SIGN s WHERE s.REQUEST_ID=r.REQUEST_ID)";
             if (!String.IsNullOrWhiteSpace(q.Applicant)) where += " AND INSTR(UPPER(r.APPLICANT),UPPER(:Applicant)) > 0";
+            if (module == 4 && !String.IsNullOrWhiteSpace(q.Keyword)) where += " AND (INSTR(UPPER(r.REQUEST_NO),UPPER(:Keyword)) > 0 OR INSTR(UPPER(r.DISPATCH_NO),UPPER(:Keyword)) > 0 OR INSTR(UPPER(r.APPLICANT),UPPER(:Keyword)) > 0)";
             if (q.UseDate.HasValue) where += " AND r.START_AT < :NextDay AND r.END_AT > :UseDay";
             if (!String.IsNullOrEmpty(q.Status)) {
                 if (module == 2) where += q.Status == "passed" ? " AND r.STATUS NOT IN ('submitted','rejected')" : " AND r.STATUS=:Status";
@@ -95,13 +110,28 @@ namespace CARGO.Service {
                     WHEN r.START_AT <= :NowAt THEN 'departed' ELSE 'ready' END)=:Status";
             }
             var size = Math.Max(1,Math.Min(100,q.PageSize)); var page = Math.Max(1,Math.Min(1000000,q.Page));
-            var parameters = CARGO_DDatabase.Params(new { Actor=actor.UserId, Applicant=(q.Applicant ?? "").Trim(), Status=q.Status,
+            var parameters = CARGO_DDatabase.Params(new { Actor=actor.UserId, Applicant=(q.Applicant ?? "").Trim(), Keyword=(q.Keyword ?? "").Trim(), Status=q.Status,
                 UseDay=q.UseDate.HasValue ? q.UseDate.Value.Date : DateTime.Today, NextDay=q.UseDate.HasValue ? q.UseDate.Value.Date.AddDays(1) : DateTime.Today.AddDays(1), NowAt=DateTime.Now, Offset=(page-1)*size, PageSize=size });
             var order = module == 3 ? "CASE WHEN r.CATEGORY='routine' THEN 0 ELSE 1 END, " : "";
             using (var db=CARGO_DDatabase.Open()) using (var tx=db.BeginTransaction()) {
                 var total=db.Query<int>("SELECT COUNT(*) FROM CARGO_D_REQUEST r WHERE "+where, parameters,tx).Single();
                 var items=db.Query<CARGO_D_REQUEST>("SELECT r.* FROM CARGO_D_REQUEST r WHERE "+where+" ORDER BY "+order+"r.CREATED_AT DESC, r.REQUEST_ID DESC OFFSET :Offset ROWS FETCH NEXT :PageSize ROWS ONLY",parameters,tx).ToList();
-                tx.Commit(); return new CARGO_DWorkPageDto {Total=total,Items=items};
+                var info = new Dictionary<long, CARGO_D02ListInfoDto>();
+                if (module == 2 && items.Count > 0) {
+                    // Only aggregate the authorized page; bind IDs rather than loading every detail.
+                    var keys = new DynamicParameters();
+                    var names = items.Select((r, i) => { var key = "Request" + i; keys.Add(key, r.REQUEST_ID); return ":" + key; }).ToArray();
+                    var selected = "(" + String.Join(",", names) + ")";
+                    var pageKeys = CARGO_DDatabase.Params(keys);
+                    info = db.Query<CARGO_D02ListInfoDto>(@"SELECT r.REQUEST_ID,
+                        (SELECT COUNT(*) FROM CARGO_D_CARGO c WHERE c.REQUEST_ID=r.REQUEST_ID) CargoCount,
+                        (SELECT NVL(SUM(c.QUANTITY),0) FROM CARGO_D_CARGO c WHERE c.REQUEST_ID=r.REQUEST_ID) CargoQuantity
+                        FROM CARGO_D_REQUEST r WHERE r.REQUEST_ID IN " + selected, pageKeys, tx).ToDictionary(x => x.REQUEST_ID);
+                    var approvers = db.Query<CARGO_D_APPROVER>(@"SELECT a.* FROM CARGO_D_APPROVER a WHERE a.ACTIVE=1 AND EXISTS
+                        (SELECT 1 FROM CARGO_D_REQUEST r WHERE r.OWNER_ID=a.OWNER_ID AND r.REQUEST_ID IN " + selected + ")", pageKeys, tx).ToList();
+                    foreach (var r in items) info[r.REQUEST_ID].Approver = ReviewApprover(r, approvers);
+                }
+                tx.Commit(); return new CARGO_DWorkPageDto {Total=total,Items=items,ReviewInfo=info};
             }
         }
         private static T Read<T>(Func<CARGO_DWorkState, T> run) { using (var db = CARGO_DDatabase.Open()) using (var tx = db.BeginTransaction()) {

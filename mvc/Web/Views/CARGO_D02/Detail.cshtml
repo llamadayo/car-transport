@@ -4,14 +4,19 @@
 <h1 class="section-h">@ViewBag.Title</h1>
 <div class="back-bar"><a class="btn btn-ghost" href="@Url.Action("Index",controller)">← 回清單</a></div>
 @if (Model.CanApprove) {
-<section class="card"><h2 class="card-title">主管審核</h2>
+<section class="card supervisor-review"><h2 class="card-title"><span>單位主管審核 <small class="badge">G74</small></span></h2>
 @using (Html.BeginForm("Change",controller,FormMethod.Post,new { @class="workflow-action", data_confirm="確認送出審核結果？" })) {
 @Html.AntiForgeryToken()<input type="hidden" name="RequestId" value="@app.Form.RequestId" /><input type="hidden" name="Version" value="@app.Form.Version" />
-<label><span class="field-label">審核意見（退回時必填）</span><textarea name="Note" maxlength="1000" rows="3"></textarea></label>
-<div class="actions"><button name="Command" value="approve" type="submit" class="btn btn-primary">✓ 核准</button><button name="Command" value="reject" type="submit" class="btn btn-danger">退回修編</button></div>
+<div class="review-decision"><span class="field-label" id="review-decision-label">是否同意</span>
+<div class="radio-group" role="radiogroup" aria-labelledby="review-decision-label">
+<label class="radio-pill"><input type="radio" name="Command" value="approve" checked="checked" /> 同意</label>
+<label class="radio-pill"><input type="radio" name="Command" value="reject" /> 退回修編</label>
+</div></div>
+<div class="review-note"><label class="field-label" for="ReviewNote">審核備註</label><input id="ReviewNote" name="Note" type="text" maxlength="1000" placeholder="請輸入審核意見（退回修編時必填）" /></div>
+<div class="actions"><button type="submit" class="btn btn-primary">▶ 送出</button><a class="btn btn-ghost" href="@Url.Action("Index",controller)">取消</a></div>
 }
 </section>
 }
 @Html.Partial("_DSignHistory", Model.Signs)
 @Html.Partial("_DApplication",app)
-@section scripts { <script src="@Url.Content("~/Scripts/cargo-workflow.js")?v=20261011-validation"></script> }
+@section scripts { <script src="@Url.Content("~/Scripts/cargo-workflow.js")?v=20261011-review"></script> }

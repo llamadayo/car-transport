@@ -8,7 +8,7 @@ function field(name,value='',type='text',required=false){
 function setup(controls,attrs={}){
  let confirms=0,posts=0,callback;const messages=[],handlers={};
  const form={querySelectorAll:s=>s==='button[type=submit]'?[]:controls,
- querySelector:s=>{const name=/name=([^\]]+)/.exec(s)?.[1];return controls.find(c=>c.name===name)||null;},
+ querySelector:s=>{const name=/name=([^\]]+)/.exec(s)?.[1];return controls.find(c=>c.name===name && (!s.includes('[type=hidden]') || c.type==='hidden') && (!s.includes('[type=radio]') || c.type==='radio') && (!s.includes(':checked') || c.checked))||null;},
  getAttribute:n=>attrs[n]||'',addEventListener:(n,fn)=>handlers[n]=fn,appendChild(){}};
  const context={window:{cargoToast:m=>messages.push(m),cargoConfirm:(m,fn)=>{confirms++;callback=fn;}},
  HTMLFormElement:{prototype:{submit(){posts++;}}},jQuery(){},document:{querySelectorAll:s=>s==='.workflow-action'?[form]:[],createElement:()=>field(''),
@@ -57,4 +57,13 @@ test('D05 reversed mileage shows toast and correction permits confirmation',()=>
  const {ui,controls}=usage();const end=controls.find(c=>c.name==='Form.EndKm'),start=controls.find(c=>c.name==='Form.StartKm');
  start.value='100';end.value='99';ui.submit();assert.equal(ui.confirms,0);assert.match(ui.messages[0],/結束里程不可小於/);
  end.value='101';ui.submit();assert.equal(ui.confirms,1);
+});
+
+test('D02 selected decision drives validation and posting without a submit-button command',()=>{
+ const approve=field('Command','approve','radio'),reject=field('Command','reject','radio'),note=field('Note',' ');
+ approve.checked=false;reject.checked=true;
+ const ui=setup([approve,reject,note]);ui.run('cargo-workflow.js');
+ ui.submit();assert.equal(ui.confirms,0);assert.equal(ui.posts,0);
+ note.value='請補充行程';ui.submit();assert.equal(ui.confirms,1);ui.accept();assert.equal(ui.posts,1);
+ reject.checked=false;approve.checked=true;note.value='';ui.submit();assert.equal(ui.confirms,2);
 });

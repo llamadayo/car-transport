@@ -65,10 +65,10 @@ namespace CARGO.Service
                 if (row == null) { errors.Add("隨行貨物資料不完整"); continue; }
                 if (String.IsNullOrWhiteSpace(row.NAME)) errors.Add("請填寫隨行貨物名稱");
                 CheckLength(errors, row.NAME, 200, "貨物名稱"); CheckLength(errors, row.PACKAGING, 200, "外包裝");
-                if (row.LENGTH_CM <= 0 || row.WIDTH_CM <= 0 || row.HEIGHT_CM <= 0 || row.QUANTITY <= 0) errors.Add("貨物尺寸需為正數，件數需為正整數");
-                if (row.WEIGHT_KG < 0 || row.WEIGHT_KG >= 1000000000m || row.LENGTH_CM >= 1000000000m || row.WIDTH_CM >= 1000000000m || row.HEIGHT_CM >= 1000000000m || row.QUANTITY > 999999999) errors.Add("貨物數值超出可儲存範圍");
+                if (row.LENGTH_CM <= 0 || row.WIDTH_CM <= 0 || row.HEIGHT_CM <= 0) errors.Add("貨物尺寸需為正數");
+                if (row.QUANTITY < 1 || row.QUANTITY > 5000) errors.Add("每筆貨物件數需為 1 至 5000 的整數");
+                if (row.WEIGHT_KG < 0 || row.WEIGHT_KG >= 1000000000m || row.LENGTH_CM >= 1000000000m || row.WIDTH_CM >= 1000000000m || row.HEIGHT_CM >= 1000000000m) errors.Add("貨物數值超出可儲存範圍");
                 if (!HasOption(options, "CARGO_CATEGORY", row.CATEGORY)) errors.Add("貨物品類不在清單內");
-                if (row.HAZARDOUS != 0 && row.HAZARDOUS != 1) errors.Add("危險品標記不正確");
             }
             CheckLength(errors, r.CATEGORY, 20, "用車類別");
             CheckLength(errors, r.TRANSPORT_TYPE, 20, "運輸類別");

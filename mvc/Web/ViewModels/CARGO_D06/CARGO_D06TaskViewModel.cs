@@ -22,6 +22,7 @@ namespace CARGO.Web.ViewModels.CARGO_D06 {
         public string Contact { get; set; }
         public string Status { get; set; }
         public bool Waiting { get; set; }
+        public bool HazardousCargo { get; set; }
         public List<string> Locations { get; set; }
         public List<CARGO_D01CargoViewModel> Cargo { get; set; }
     }

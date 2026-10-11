@@ -1,6 +1,10 @@
-﻿# CARGO 模組 D MVC 版（D01～D06）
+# CARGO 模組 D MVC 版（D01～D06）
 
 本目錄為 ASP.NET MVC 5／.NET Framework 4.8 的模組 D 移植功能，採 Web、DTO、Service 三個 Project。原有根目錄 HTML／JavaScript 原型仍可獨立使用。分層與命名依 [轉換原則](../docs/MVC-MIGRATION-PRINCIPLES.md)。
+
+## 危險品判定（D01～D06）
+
+整張申請單僅以表頭「危險品」選項（`CARGO_D_REQUEST.HAZARDOUS_CARGO`）判定；選「是」即為整單危險品，即使沒有隨行貨物也適用。D01 貨物編輯與 D01～D05 明細不再提供逐項危險品，D06 在申請單號旁顯示整單警示。此標記仍為提示，不新增自動派車限制。既有貨物表 `HAZARDOUS` 欄位僅保留資料庫相容性，不再參與輸入、顯示或判定；舊逐項值不會覆蓋表頭選項。
 
 ## 本次功能
 
@@ -98,6 +102,9 @@ Schema 中 `CARGO_D_REQUEST` 保存申請主檔、狀態及後續流程結果；
 
 # Schema 與 DTO 欄位對照、專案分層
 python .\mvc\tests\check-structure.py
+
+# D02/D04/D06 查詢端點、日期繫結及三頁 Razor 編譯；僅使用既有本機 DLL，不讀授權金鑰
+.\mvc\tools\Test-Queries.ps1
 
 # 既有原型回歸
 node .\tests\guardrails.test.js
