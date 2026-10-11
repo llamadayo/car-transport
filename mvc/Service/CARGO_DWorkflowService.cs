@@ -20,7 +20,8 @@ namespace CARGO.Service {
                 if (!String.IsNullOrWhiteSpace(q.Applicant)) rows = rows.Where(r => (r.APPLICANT ?? "").IndexOf(q.Applicant.Trim(), StringComparison.OrdinalIgnoreCase) >= 0);
                 if (q.UseDate.HasValue) rows = rows.Where(r => r.START_AT < q.UseDate.Value.Date.AddDays(1) && r.END_AT > q.UseDate.Value.Date);
                 if (!String.IsNullOrEmpty(q.Status)) rows = rows.Where(r => module == 4 ? Latest(state, r.REQUEST_ID).STATUS == q.Status : module == 2 ?
-                    (q.Status == "passed" ? r.STATUS != "submitted" && r.STATUS != "rejected" : r.STATUS == q.Status) : CARGO_D01Rules.DisplayStatus(r, DateTime.Now) == q.Status);
+                    (q.Status == "passed" ? r.STATUS != "submitted" && r.STATUS != "rejected" : r.STATUS == q.Status) : q.Status == "work" ?
+                    r.STATUS == "approved" || r.PENDING_RETURN_AT.HasValue : CARGO_D01Rules.DisplayStatus(r, DateTime.Now) == q.Status);
                 var ordered = rows.OrderByDescending(r => module == 3 && r.CATEGORY == "routine").ThenByDescending(r => r.CREATED_AT).ThenByDescending(r => r.REQUEST_ID).ToList();
                 var size = Math.Max(1, Math.Min(100, q.PageSize)); var page = Math.Max(1, Math.Min(1000000, q.Page));
                 return new CARGO_DWorkPageDto { Total = ordered.Count, Items = ordered.Skip((page - 1) * size).Take(size).ToList() };
@@ -36,6 +37,7 @@ namespace CARGO.Service {
                 var r = d.Application.Request;
                 return new CARGO_DWorkDetailDto { Detail = d, Signs = state.Signs.Where(x => x.REQUEST_ID == id).OrderBy(x => x.ROUND_NO).ToList(),
                     Candidates = module == 3 ? CARGO_DWorkflowRules.Candidates(state, r, r.START_AT.Value, r.END_AT.Value) : new List<CARGO_DCandidateDto>(),
+                    EffectiveAt = module == 3 ? CARGO_DWorkflowRules.DefaultEffectiveAt(d, DateTime.Now) : (DateTime?)null,
                     PriorityRequests = state.Records.Select(x => x.Application.Request).Where(x => x.REQUEST_ID != id && x.CATEGORY == "routine" && x.STATUS == "approved" &&
                         CARGO_DWorkflowRules.Overlap(r.START_AT.Value, r.END_AT.Value, x.START_AT.Value, x.END_AT.Value)).Select(x => x.REQUEST_NO).ToList() };
             });
@@ -87,6 +89,7 @@ namespace CARGO.Service {
             if (!String.IsNullOrEmpty(q.Status)) {
                 if (module == 2) where += q.Status == "passed" ? " AND r.STATUS NOT IN ('submitted','rejected')" : " AND r.STATUS=:Status";
                 else if (module == 4) where += " AND EXISTS (SELECT 1 FROM CARGO_D_SIGN s WHERE s.REQUEST_ID=r.REQUEST_ID AND s.STATUS=:Status AND s.ROUND_NO=(SELECT MAX(t.ROUND_NO) FROM CARGO_D_SIGN t WHERE t.REQUEST_ID=r.REQUEST_ID))";
+                else if (q.Status == "work") where += " AND (r.STATUS='approved' OR r.PENDING_RETURN_AT IS NOT NULL)";
                 else where += @" AND (CASE WHEN r.STATUS='approved' THEN 'todo' WHEN r.STATUS='noVehicle' THEN 'noCar'
                     WHEN r.SIGN_STATUS='pending' THEN 'signing' WHEN r.USAGE_AT IS NOT NULL THEN 'logged'
                     WHEN r.START_AT <= :NowAt THEN 'departed' ELSE 'ready' END)=:Status";

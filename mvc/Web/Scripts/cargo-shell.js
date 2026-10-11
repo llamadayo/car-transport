@@ -15,26 +15,49 @@
         document.getElementById("clock").textContent = new Date().toLocaleString("zh-TW", { hour12: false });
     }
     clock(); setInterval(clock, 1000);
-    var mask = document.getElementById("confirm-mask"), pending, previousFocus;
-    window.cargoConfirm = function (message, onConfirm) {
-        pending = onConfirm; previousFocus = document.activeElement;
-        document.getElementById("confirm-text").textContent = message;
-        mask.hidden = false; mask.classList.add("show");
-        document.getElementById("confirm-ok").focus();
-    };
-    function close(accepted) {
-        mask.hidden = true; mask.classList.remove("show");
-        var callback = pending; pending = null;
-        if (previousFocus) previousFocus.focus();
-        if (accepted && callback) callback();
-    }
-    document.getElementById("confirm-ok").onclick = function () { close(true); };
-    document.getElementById("confirm-cancel").onclick = function () { close(false); };
-    mask.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") { event.preventDefault(); close(false); }
-        if (event.key === "Tab") {
-            event.preventDefault();
-            document.getElementById(document.activeElement.id === "confirm-ok" ? "confirm-cancel" : "confirm-ok").focus();
+    var toastTimer;
+    window.cargoToast = function (message) {
+        var wrap = document.getElementById("toast-wrap");
+        if (!wrap) {
+            wrap = document.createElement("div");
+            wrap.id = "toast-wrap";
+            wrap.setAttribute("role", "alert");
+            wrap.setAttribute("aria-atomic", "true");
+            document.body.appendChild(wrap);
         }
-    });
+        clearTimeout(toastTimer);
+        wrap.textContent = "";
+        var toast = document.createElement("div");
+        toast.className = "toast err";
+        toast.textContent = message;
+        wrap.appendChild(toast);
+        toastTimer = setTimeout(function () { wrap.textContent = ""; }, 4000);
+    };
+    window.cargoConfirm = function (message, onConfirm) {
+        return window.Swal.fire({
+            title: "確認操作",
+            text: message,
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "確定",
+            cancelButtonText: "取消",
+            reverseButtons: false,
+            buttonsStyling: false,
+            allowOutsideClick: false,
+            allowEscapeKey: true,
+            focusConfirm: true,
+            returnFocus: true,
+            heightAuto: false,
+            customClass: {
+                popup: "cargo-confirm",
+                confirmButton: "btn btn-primary",
+                cancelButton: "btn btn-ghost"
+            }
+        }).then(function (result) {
+            if (result.isConfirmed && typeof onConfirm === "function") {
+                onConfirm();
+            }
+            return result;
+        });
+    };
 }());

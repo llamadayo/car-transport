@@ -2,6 +2,8 @@
     "use strict";
     var form = document.getElementById("application-form");
     if (!form) return;
+    // Run validation in the submit handler so all errors use the shared toast.
+    form.noValidate = true;
     function reindex(kind) {
         var rows = document.getElementById("rows-" + kind).rows;
         for (var i = 0; i < rows.length; i++) {
@@ -10,6 +12,12 @@
                 controls[j].name = controls[j].name.replace(/\[(?:\d+|__index__)\]/, "[" + i + "]");
                 controls[j].removeAttribute("id");
             }
+            var sequence = rows[i].querySelector("[data-sequence]");
+            if (sequence) sequence.textContent = i + 1;
+            var up = rows[i].querySelector('[data-move="-1"]');
+            var down = rows[i].querySelector('[data-move="1"]');
+            if (up) up.disabled = i === 0;
+            if (down) down.disabled = i === rows.length - 1;
         }
     }
     form.addEventListener("click", function (event) {
@@ -20,6 +28,16 @@
             if (kind === "SelfDrivers" && tbody.rows.length >= 8) { window.alert("自駕人最多 8 筆"); return; }
             tbody.appendChild(document.getElementById("template-" + kind).content.cloneNode(true));
             reindex(kind);
+        }
+        var move = event.target.closest("[data-move]");
+        if (move && !move.disabled) {
+            var movingRow = move.closest("tr"), container = movingRow.parentNode;
+            var before = move.getAttribute("data-move") === "-1";
+            var adjacent = before ? movingRow.previousElementSibling : movingRow.nextElementSibling;
+            if (adjacent) {
+                container.insertBefore(before ? movingRow : adjacent, before ? adjacent : movingRow);
+                reindex(container.id.substring(5));
+            }
         }
         var remove = event.target.closest("[data-remove]");
         if (remove) {
@@ -54,6 +72,7 @@
         var command = event.submitter ? event.submitter.value : lastCommand;
         if (command !== "draft" && command !== "submit") { event.preventDefault(); return; }
         event.preventDefault();
+        if (!window.cargoValidateApplication(form)) return;
         window.cargoConfirm(command === "draft" ? "確認暫存申請？" : "確認送出申請並進入待二級審？", function () {
             var input = document.createElement("input");
             input.type = "hidden"; input.name = "command"; input.value = command;

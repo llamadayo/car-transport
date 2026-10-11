@@ -1,0 +1,7 @@
+Font Awesome Free 7.0.1 — Classic Solid newspaper
+Copyright 2025 Fonticons, Inc.
+Icon license: CC BY 4.0 (see LICENSE.txt).
+Icon page: https://fontawesome.com/icons/classic/solid/newspaper
+Source: https://github.com/FortAwesome/Font-Awesome/blob/7.0.1/svgs/solid/newspaper.svg
+Modification: path fill changed from currentColor to #1F3864 to match the CARGO navy theme when used as an external image.
+This SVG is served locally; no Font Awesome CDN, kit, JavaScript or web font is required.

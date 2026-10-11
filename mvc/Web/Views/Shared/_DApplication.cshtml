@@ -64,17 +64,17 @@ else { <div class="table-scroll"><table class="detail-table"><thead><tr><th>姓�
 <section class="card"><h2 class="card-title">隨行貨物</h2>
 @if (Model.Form.Cargo.Count == 0) { <p class="muted">無資料</p> }
 else { <div class="table-scroll"><table class="detail-table"><thead><tr><th>品名</th><th>長 cm</th><th>寬 cm</th><th>高 cm</th><th>重量 kg</th><th>件數</th><th>品類</th><th>外包裝</th><th>危險品</th></tr></thead><tbody>
-@foreach (var row in Model.Form.Cargo) { <tr><td>@row.Name</td><td>@row.Length</td><td>@row.Width</td><td>@row.Height</td><td>@row.Weight</td><td>@row.Quantity</td><td>@row.Category</td><td>@row.Packaging</td><td>@(row.Hazardous ? "是" : "否")</td></tr> }
+@foreach (var row in Model.Form.Cargo) { <tr><td>@row.Name</td><td>@row.Length</td><td>@row.Width</td><td>@row.Height</td><td>@row.Weight</td><td>@row.Quantity</td><td>@optionLabel("CARGO_CATEGORY", row.Category)</td><td>@row.Packaging</td><td>@(row.Hazardous ? "是" : "否")</td></tr> }
 </tbody></table></div> }</section>
 <section class="card"><h2 class="card-title">簽核與派車結果</h2><div class="fields">
 <dl><dt>簽核主管</dt><dd>@Model.Approver</dd></dl><dl><dt>審核備註</dt><dd>@Model.Form.ReviewNote</dd></dl>
 <dl><dt>派車結果</dt><dd>@Model.Outcome</dd></dl><dl><dt>派車單號</dt><dd>@Model.DispatchNo</dd></dl>
-<dl><dt>目前車輛</dt><dd>@Model.Vehicle</dd></dl><dl><dt>駕駛人 1</dt><dd>@Model.Driver1</dd></dl><dl><dt>駕駛人 2</dt><dd>@Model.Driver2</dd></dl>
+<dl><dt>目前車輛</dt><dd>@Model.VehicleLabel</dd></dl><dl><dt>駕駛人 1</dt><dd>@Model.Driver1Label</dd></dl><dl><dt>駕駛人 2</dt><dd>@Model.Driver2Label</dd></dl>
 <dl><dt>調度完成確認</dt><dd>@Model.DispatchedAt @Model.DispatchedBy</dd></dl><dl><dt>調度備註</dt><dd>@Model.DispatchNote</dd></dl>
 </div></section>
 @if (Model.Assignments.Count > 0) {
 <section class="card"><h2 class="card-title">指派區間歷史</h2><div class="table-scroll"><table class="detail-table"><thead><tr><th>起訖</th><th>車輛</th><th>駕駛</th><th>類型</th><th>原因</th></tr></thead><tbody>
-@foreach (var row in Model.Assignments) { <tr><td>@row.From.ToString("yyyy-MM-dd HH:mm") ～ @row.To.ToString("yyyy-MM-dd HH:mm")</td><td>@row.Vehicle</td><td>@row.Driver1 @row.Driver2</td><td>@row.Kind</td><td>@row.Reason</td></tr> }
+@foreach (var row in Model.Assignments) { <tr><td>@row.From.ToString("yyyy-MM-dd HH:mm") ～ @row.To.ToString("yyyy-MM-dd HH:mm")</td><td>@row.VehicleLabel</td><td>@row.Driver1Label @row.Driver2Label</td><td>@row.Kind</td><td>@row.Reason</td></tr> }
 </tbody></table></div></section>
 }
 @foreach (var section in new[] { new { Title = "異動紀錄", Rows = Model.History }, new { Title = "通知紀錄", Rows = Model.Notices } }) {

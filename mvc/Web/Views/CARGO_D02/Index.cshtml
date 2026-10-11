@@ -38,4 +38,4 @@ function workBadge(value) { var cls = /退回/.test(value) ? 'b-red' : /審/.tes
 .DataSource(ds => ds.Ajax().PageSize(20).ServerOperation(true).Read(r => r.Action("Read",controller).Type(HttpVerbs.Post).Data("workQuery")).Events(e => e.Error("workError"))))
 </section>
 @using (Html.BeginForm("Batch",controller,FormMethod.Post,new { id="batch-form" })) { @Html.AntiForgeryToken()<div id="batch-items"></div> }
-@section scripts { <script src="@Url.Content("~/Scripts/cargo-workflow.js")"></script> }
+@section scripts { <script src="@Url.Content("~/Scripts/cargo-workflow.js")?v=20261011-validation"></script> }

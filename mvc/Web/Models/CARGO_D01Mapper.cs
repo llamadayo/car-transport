@@ -126,18 +126,32 @@ namespace CARGO.Web.Models
                 Cargo = r.CARGO_COUNT + " 項／" + r.CARGO_QUANTITY + " 件", Status = Status(r.DISPLAY_STATUS),
                 Outcome = Outcome(r.OUTCOME), CreatedAt = r.CREATED_AT };
         }
-        public static CARGO_D01DetailViewModel Detail(CARGO_D01DetailDto d)
+        public static IEnumerable<string> ResourceIds(CARGO_D01DetailDto d)
+        {
+            var r = d.Application.Request;
+            return new[] { r.VEHICLE, r.DRIVER1, r.DRIVER2 }.Concat(d.Assignments.SelectMany(x => new[] { x.VEHICLE, x.DRIVER1, x.DRIVER2 }));
+        }
+        public static string ResourceLabel(IEnumerable<CARGO_D_RESOURCE> resources, string kind, string id)
+        {
+            if (kind == "DRIVER" && id == "SELF") return "使用者自駕";
+            var resource = resources == null ? null : resources.FirstOrDefault(x => x.KIND == kind && x.RESOURCE_ID == id);
+            if (resource == null || String.IsNullOrEmpty(resource.NAME)) return id;
+            return kind == "VEHICLE" && resource.NAME != id ? id + "（" + resource.NAME + "）" : resource.NAME;
+        }
+        public static CARGO_D01DetailViewModel Detail(CARGO_D01DetailDto d, IEnumerable<CARGO_D_RESOURCE> resources = null)
         {
             var r = d.Application.Request;
             return new CARGO_D01DetailViewModel {
                 Form = Form(d.Application), StatusLabel = Status(CARGO_D01Rules.DisplayStatus(r, DateTime.Now)), Outcome = Outcome(r.OUTCOME),
                 Approver = r.APPROVER_NAME, Vehicle = r.VEHICLE, Driver1 = r.DRIVER1, Driver2 = r.DRIVER2,
+                VehicleLabel = ResourceLabel(resources, "VEHICLE", r.VEHICLE), Driver1Label = ResourceLabel(resources, "DRIVER", r.DRIVER1), Driver2Label = ResourceLabel(resources, "DRIVER", r.DRIVER2),
                 DispatchNo = r.DISPATCH_NO, DispatchNote = r.DISPATCH_NOTE, DispatchedBy = r.DISPATCHED_BY,
                 DispatchedAt = r.DISPATCHED_AT, CreatedAt = r.CREATED_AT, PendingReturnAt = r.PENDING_RETURN_AT, ReturnReason = r.RETURN_REASON,
                 CanEdit = CARGO_D01Rules.CanEdit(r), CanWithdraw = CARGO_D01Rules.CanWithdraw(r), CanReturn = CARGO_D01Rules.CanReturn(r),
                 History = d.History.Select(x => new CARGO_D01EventViewModel { At = x.CREATED_AT, Kind = x.ACTION, Actor = x.ACTOR, Text = x.NOTE }).ToList(),
                 Notices = d.Notices.Select(x => new CARGO_D01EventViewModel { At = x.SENT_AT, Kind = x.KIND, Actor = x.RECIPIENT, Text = x.MESSAGE }).ToList(),
-                Assignments = d.Assignments.Select(x => new CARGO_D01AssignmentViewModel { From = x.FROM_AT, To = x.TO_AT, Vehicle = x.VEHICLE, Driver1 = x.DRIVER1, Driver2 = x.DRIVER2, Kind = x.KIND, Reason = x.REASON }).ToList()
+                Assignments = d.Assignments.Select(x => new CARGO_D01AssignmentViewModel { From = x.FROM_AT, To = x.TO_AT, Vehicle = x.VEHICLE, Driver1 = x.DRIVER1, Driver2 = x.DRIVER2,
+                    VehicleLabel = ResourceLabel(resources, "VEHICLE", x.VEHICLE), Driver1Label = ResourceLabel(resources, "DRIVER", x.DRIVER1), Driver2Label = ResourceLabel(resources, "DRIVER", x.DRIVER2), Kind = x.KIND, Reason = x.REASON }).ToList()
             };
         }
         public static List<CARGO_DOptionViewModel> Options(List<CARGO_D_OPTION> items)

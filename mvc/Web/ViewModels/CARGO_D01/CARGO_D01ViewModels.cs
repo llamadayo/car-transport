@@ -215,6 +215,9 @@ namespace CARGO.Web.ViewModels.CARGO_D01
         public string Vehicle { get; set; }
         public string Driver1 { get; set; }
         public string Driver2 { get; set; }
+        public string VehicleLabel { get; set; }
+        public string Driver1Label { get; set; }
+        public string Driver2Label { get; set; }
         public string Kind { get; set; }
         public string Reason { get; set; }
     }
@@ -227,6 +230,9 @@ namespace CARGO.Web.ViewModels.CARGO_D01
         public string Vehicle { get; set; }
         public string Driver1 { get; set; }
         public string Driver2 { get; set; }
+        public string VehicleLabel { get; set; }
+        public string Driver1Label { get; set; }
+        public string Driver2Label { get; set; }
         public string DispatchNo { get; set; }
         public string DispatchNote { get; set; }
         public string DispatchedBy { get; set; }

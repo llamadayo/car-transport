@@ -1,7 +1,13 @@
 packages/
 lib/
 Web/Scripts/vendor/
-Web/Content/vendor/
+# Keep only the locally served Font Awesome icon and its legal notices in Git.
+Web/Content/vendor/*
+!Web/Content/vendor/fontawesome/
+Web/Content/vendor/fontawesome/*
+!Web/Content/vendor/fontawesome/newspaper.svg
+!Web/Content/vendor/fontawesome/LICENSE.txt
+!Web/Content/vendor/fontawesome/NOTICE.txt
 **/bin/
 **/obj/
 .vs/
@@ -13,3 +19,6 @@ TestResults/
 artifacts/
 telerik-license.txt
 TelerikLicense.cs
+
+# Offline SweetAlert2 runtime and license.
+!Web/Content/vendor/sweetalert2/

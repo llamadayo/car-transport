@@ -2,7 +2,6 @@
 @using CARGO.Web.ViewModels.CARGO_D01
 @model CARGO_D01FormViewModel
 @{
-    ViewBag.Title = Model.RequestId == 0 ? "新增一般用車申請" : "修改一般用車申請";
     var categories = new List<SelectListItem> { new SelectListItem { Value = "general", Text = "一般用車" } };
     if (Model.CanChooseRoutine) { categories.Add(new SelectListItem { Value = "routine", Text = "例行用車" }); }
 }
@@ -14,7 +13,6 @@
 </div></div>
 }
 
-<h1 class="section-h">@ViewBag.Title</h1>
 @if (!String.IsNullOrEmpty(Model.ReviewNote)) { <div class="notice">退回修編意見：@Model.ReviewNote</div> }
 @using (Html.BeginForm("Save", "CARGO_D01", FormMethod.Post, new { id = "application-form" })) {
 @Html.AntiForgeryToken()
@@ -86,4 +84,3 @@
 <a class="btn btn-ghost" href="@(Model.RequestId == 0 ? Url.Action("Index") : Url.Action("Detail", new { id = Model.RequestId }))">取消</a></div>
 }
 <div class="back-bar"><a class="btn btn-ghost" href="@(Model.RequestId == 0 ? Url.Action("Index") : Url.Action("Detail", new { id = Model.RequestId }))">← 回上一頁</a></div>
-@section scripts { <script src="@Url.Content("~/Scripts/cargo-d01.js")"></script> }

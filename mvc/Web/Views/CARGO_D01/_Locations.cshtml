@@ -1,12 +1,12 @@
 @using System.Linq
 @using CARGO.Web.ViewModels.CARGO_D01
 @model CARGO_D01FormViewModel
-<div class="table-scroll"><table class="editor-table"><thead><tr><th>地點</th><th>操作</th></tr></thead>
+<div class="table-scroll"><table class="editor-table"><thead><tr><th>地點</th><th>排序</th><th>操作</th></tr></thead>
 <tbody id="rows-Locations">
 @for (var i = 0; i < Model.Locations.Count; i++)
 {
-    <tr><td>@Html.TextBox("Locations[" + i + "].Name", Model.Locations[i].Name, new { type = "text", maxlength = "300", aria_label = "地點" })</td><td><button type="button" data-remove>刪除</button></td></tr>
+    <tr><td>@Html.TextBox("Locations[" + i + "].Name", Model.Locations[i].Name, new { type = "text", maxlength = "300", aria_label = "地點" })</td><td data-sequence>@(i + 1)</td><td><button type="button" data-move="-1" disabled="@(i == 0 ? "disabled" : null)">↑ 上移</button> <button type="button" data-move="1" disabled="@(i == Model.Locations.Count - 1 ? "disabled" : null)">↓ 下移</button> <button type="button" data-remove>刪除</button></td></tr>
 }
 </tbody></table></div>
-<template id="template-Locations"><tr><td><input name="Locations[__index__].Name" type="text" maxlength="300" aria-label="地點" /></td><td><button type="button" data-remove>刪除</button></td></tr></template>
+<template id="template-Locations"><tr><td><input name="Locations[__index__].Name" type="text" maxlength="300" aria-label="地點" /></td><td data-sequence></td><td><button type="button" data-move="-1">↑ 上移</button> <button type="button" data-move="1">↓ 下移</button> <button type="button" data-remove>刪除</button></td></tr></template>
 

@@ -38,6 +38,7 @@ namespace CARGO.DTO {
         public CARGO_D01DetailDto Detail { get; set; }
         public List<CARGO_D_SIGN> Signs { get; set; }
         public List<CARGO_DCandidateDto> Candidates { get; set; }
+        public DateTime? EffectiveAt { get; set; }
         public List<string> PriorityRequests { get; set; }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CARGO.DTO;
+using CARGO.DTO.Tables;
 using CARGO.Service;
 using CARGO.Web.ViewModels.CARGO_D01;
 using CARGO.Web.ViewModels.Shared;
@@ -11,9 +12,10 @@ namespace CARGO.Web.Models {
         internal static CARGO_D01DetailViewModel Application(CARGO_DWorkDetailDto d) {
             return Application(d.Detail);
         }
-        internal static CARGO_D01DetailViewModel Application(CARGO_D01DetailDto d) {
-            var application = CARGO_D01Mapper.Detail(d);
-            application.Form.Options = CARGO_D01Mapper.Options(new CARGO_DService().GetOptions());
+        internal static CARGO_D01DetailViewModel Application(CARGO_D01DetailDto d, IEnumerable<CARGO_D_RESOURCE> resources = null) {
+            var service = new CARGO_DService();
+            var application = CARGO_D01Mapper.Detail(d, resources ?? service.GetResourceLabels(CARGO_D01Mapper.ResourceIds(d)));
+            application.Form.Options = CARGO_D01Mapper.Options(service.GetOptions());
             return application;
         }
         internal static List<CARGO_DSignViewModel> Signs(CARGO_DWorkDetailDto d) {

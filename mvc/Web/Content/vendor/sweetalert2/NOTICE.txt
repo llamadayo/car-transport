@@ -1,0 +1,7 @@
+SweetAlert2 11.26.25
+Official project: https://github.com/sweetalert2/sweetalert2
+JS/CSS source: https://github.com/sweetalert2/sweetalert2/releases/tag/v11.26.25
+License source: https://github.com/sweetalert2/sweetalert2/blob/v11.26.25/LICENSE
+License: MIT; see LICENSE.txt.
+Unmodified official distribution files served locally; no CDN required.
+CARGO theme overrides are in Content/cargo.css.

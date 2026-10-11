@@ -45,7 +45,7 @@ namespace CARGO.Web.Controllers
         {
             var model = new CARGO_D01FormViewModel { Applicant = User.Identity.Name,
                 StartAt = DateTime.Today.AddDays(1).AddHours(9), EndAt = DateTime.Today.AddDays(1).AddHours(12) };
-            Populate(model); return View("Form", model);
+            Populate(model); return View(model);
         }
         [HttpGet]
         public ActionResult Edit(long id)
@@ -53,7 +53,7 @@ namespace CARGO.Web.Controllers
             var detail = service.Detail(id, Actor());
             if (detail == null) return HttpNotFound();
             if (!CARGO_D01Rules.CanEdit(detail.Application.Request)) return new HttpStatusCodeResult(409, "Application is not editable");
-            var model = CARGO_D01Mapper.Form(detail.Application); Populate(model); return View("Form", model);
+            var model = CARGO_D01Mapper.Form(detail.Application); Populate(model); return View(model);
         }
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult Save(CARGO_D01FormViewModel model, string command)
@@ -78,14 +78,15 @@ namespace CARGO.Web.Controllers
                 model.RequestNo = existing.Application.Request.REQUEST_NO;
                 model.ReviewNote = existing.Application.Request.REVIEW_NOTE;
             }
-            Populate(model); return View("Form", model);
+            Populate(model); return View(model.RequestId == 0 ? "Create" : "Edit", model);
         }
         [HttpGet]
         public ActionResult Detail(long id)
         {
             var detail = service.Detail(id, Actor());
             if (detail == null) return HttpNotFound();
-            var model = CARGO_D01Mapper.Detail(detail);
+            var resources = new CARGO_DService().GetResourceLabels(CARGO_D01Mapper.ResourceIds(detail));
+            var model = CARGO_D01Mapper.Detail(detail, resources);
             Populate(model.Form);
             return View(model);
         }

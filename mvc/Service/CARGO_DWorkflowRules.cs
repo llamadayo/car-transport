@@ -22,7 +22,35 @@ namespace CARGO.Service {
             if (module == 3) return new[] { "approved", "dispatched", "noVehicle" }.Contains(r.STATUS);
             return state.Signs.Any(x => x.REQUEST_ID == r.REQUEST_ID);
         }
-        internal static bool Overlap(DateTime a, DateTime b, DateTime c, DateTime d) { return a < d && c < b; }
+        internal static bool Overlap(DateTime a, DateTime b, DateTime c, DateTime d) { return a < b && c < d && a < d && c < b; }
+        private static DateTime FloorTime(DateTime at, long precision) { return at.AddTicks(-(at.Ticks % precision)); }
+        private static DateTime CeilingTime(DateTime at, long precision) {
+            var remainder = at.Ticks % precision;
+            return remainder == 0 ? at : at.AddTicks(precision - remainder);
+        }
+        internal static DateTime? DefaultEffectiveAt(CARGO_D01DetailDto d, DateTime now) {
+            var r = d.Application.Request;
+            var last = d.Assignments.OrderBy(x => x.LINE_NO).LastOrDefault();
+            var from = last == null ? r.START_AT.Value : last.FROM_AT;
+            var end = r.END_AT.Value;
+            var effective = now > from ? now : from;
+            var latest = end.AddMinutes(-1);
+            if (effective > latest) effective = latest;
+            if (effective < from) effective = from;
+            // Prefer a valid minute, preserving the usual one-minute margin when possible.
+            var firstMinute = CeilingTime(from, TimeSpan.TicksPerMinute);
+            if (firstMinute < end) {
+                var minute = CeilingTime(effective, TimeSpan.TicksPerMinute);
+                var latestMinute = FloorTime(latest, TimeSpan.TicksPerMinute);
+                if (minute > latestMinute) minute = latestMinute;
+                return minute < firstMinute ? firstMinute : minute;
+            }
+            // A short final segment may have no valid minute; HTML can retain milliseconds.
+            var precise = CeilingTime(effective, TimeSpan.TicksPerMillisecond);
+            var lastMillisecond = FloorTime(end.AddTicks(-1), TimeSpan.TicksPerMillisecond);
+            if (precise > lastMillisecond) precise = lastMillisecond;
+            return precise >= from ? precise : (DateTime?)null;
+        }
         internal static string Busy(CARGO_DWorkState state, string id, DateTime from, DateTime to, long except) {
             var block = state.Blocks.FirstOrDefault(x => x.RESOURCE_ID == id && Overlap(from, to, x.FROM_AT, x.TO_AT));
             if (block != null) return block.SOURCE + "：" + block.REASON;

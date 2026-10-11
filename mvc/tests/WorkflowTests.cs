@@ -12,8 +12,100 @@ internal static class WorkflowTests {
  static CARGO_DWorkActionDto ActionFor(CARGO_D01DetailDto d,string cmd) { return new CARGO_DWorkActionDto { RequestId=d.Application.Request.REQUEST_ID, Version=d.Application.Request.VERSION_NO, Command=cmd }; }
  static void Apply(CARGO_DWorkState s,CARGO_D01DetailDto d,string cmd,int module,string note="test") { var a=ActionFor(d,cmd); a.Note=note; CARGO_DWorkflowRules.Apply(s,d,a,Actor,module); }
  static CARGO_D01DetailDto Record(CARGO_DWorkState s,long id) { return s.Records.Single(x => x.Application.Request.REQUEST_ID==id); }
+ static CARGO_D01DetailDto Dispatchable(long id,DateTime start,DateTime end) {
+  return CARGO_D01DemoData.NewDetail(new CARGO_D01SaveDto { Request=new CARGO_D_REQUEST {
+   REQUEST_ID=id, REQUEST_NO="REG"+id, VERSION_NO=1, STATUS="approved", START_AT=start, END_AT=end, PAX=2
+  } });
+ }
+ static void QueryWork(CARGO_D03Service service) {
+  var q=new CARGO_DWorkQueryDto {Status="work",Page=1,PageSize=100};
+  Check(service.Query(q,Actor).Items.Select(x=>x.REQUEST_ID).SequenceEqual(new long[] {4}),"work filter starts with approved requests only");
+  var original=CARGO_D01DemoData.Records[5]; var pending=CARGO_D01DemoData.Copy(original);
+  pending.Application.Request.PENDING_RETURN_AT=pending.Application.Request.START_AT.Value.AddHours(1);
+  pending.Application.Request.CATEGORY="routine";pending.Application.Request.CREATED_AT=DateTime.Now.AddYears(-1);
+  CARGO_D01DemoData.Records[5]=pending;
+  try {
+   Check(service.Query(q,Actor).Items.Select(x=>x.REQUEST_ID).SequenceEqual(new long[] {5,4}),"work filter includes pending returns and preserves routine priority");
+   q.Status="";Check(service.Query(q,Actor).Total==4,"all statuses still includes sign pending and no vehicle records");
+   q.Status="todo";Check(service.Query(q,Actor).Items.Select(x=>x.REQUEST_ID).SequenceEqual(new long[] {4}),"todo filter excludes pending return on dispatched request");
+   q.Status="ready";Check(service.Query(q,Actor).Items.Select(x=>x.REQUEST_ID).SequenceEqual(new long[] {5}),"flow status still includes matching pending return");
+   q.Status="work";q.UseDate=DateTime.Today;Check(service.Query(q,Actor).Total==0,"work filter keeps use date criteria");
+   q.UseDate=null;q.Applicant="unknown";Check(service.Query(q,Actor).Total==0,"work filter keeps applicant criteria");
+  } finally { CARGO_D01DemoData.Records[5]=original; }
+ }
+ static void DefaultEffectiveTime(CARGO_D03Service service) {
+  var d=Record(CARGO_DWorkflowDemoData.Load(),5);var r=d.Application.Request;
+  var now=new DateTime(2030,1,2,12,0,0);r.START_AT=now.AddHours(-4);r.END_AT=now.AddHours(4);
+  d.Assignments.Clear();
+  d.Assignments.Add(new CARGO_D_ASSIGNMENT {LINE_NO=1,FROM_AT=r.START_AT.Value,TO_AT=now.AddHours(-1)});
+  d.Assignments.Add(new CARGO_D_ASSIGNMENT {LINE_NO=2,FROM_AT=now.AddHours(-1),TO_AT=r.END_AT.Value});
+  Check(CARGO_DWorkflowRules.DefaultEffectiveAt(d,now.AddHours(-3))==now.AddHours(-1),"reassignment default respects latest segment start");
+  Check(CARGO_DWorkflowRules.DefaultEffectiveAt(d,now)==now,"reassignment default advances to current time");
+  Check(CARGO_DWorkflowRules.DefaultEffectiveAt(d,r.END_AT.Value)==r.END_AT.Value.AddMinutes(-1),"reassignment default caps at end minus one minute");
+  Check(service.Detail(5,Actor).EffectiveAt==CARGO_D01DemoData.Records[5].Application.Request.START_AT,"future detail defaults to current segment start");
+ }
+ static void EmptyAssignmentOccupancy() {
+  var s=CARGO_DWorkflowDemoData.Load();s.Records.Clear();s.Signs.Clear();
+  var start=new DateTime(2030,1,2,10,0,0);var end=start.AddHours(6);
+  var d=Dispatchable(101,start,end);s.Records.Add(d);
+  var a=ActionFor(d,"dispatch");a.Vehicle="測試車 C";a.Driver1="示範駕駛 C";CARGO_DWorkflowRules.Apply(s,d,a,Actor,3);Apply(s,d,"approve",4);
+  a=ActionFor(d,"reassign");a.Vehicle="測試車 D";a.Driver1="示範駕駛 B";a.EffectiveAt=start;CARGO_DWorkflowRules.Apply(s,d,a,Actor,3);
+  Check(d.Assignments[0].FROM_AT==d.Assignments[0].TO_AT,"reassignment at original start retains empty history segment");
+  var other=Dispatchable(102,start.AddHours(-1),start.AddHours(1));s.Records.Add(other);
+  a=ActionFor(other,"dispatch");a.Vehicle="測試車 C";a.Driver1="示範駕駛 C";CARGO_DWorkflowRules.Apply(s,other,a,Actor,3);
+  Check(other.Application.Request.STATUS=="dispatched","empty history releases original vehicle and driver for a crossing request");
+  Check(CARGO_DWorkflowRules.Busy(s,"測試車 D",start.AddHours(-1),start.AddHours(1),102)!=null &&
+   CARGO_DWorkflowRules.Busy(s,"示範駕駛 B",start.AddHours(-1),start.AddHours(1),102)!=null,"replacement vehicle and driver remain occupied");
+  a=ActionFor(d,"reassign");a.Vehicle="測試車 A";a.Driver1="示範駕駛";a.EffectiveAt=start.AddHours(2);CARGO_DWorkflowRules.Apply(s,d,a,Actor,3);
+  a=ActionFor(d,"reassign");a.Vehicle="測試車 B";a.Driver1="示範駕駛 B";a.EffectiveAt=start.AddHours(2);CARGO_DWorkflowRules.Apply(s,d,a,Actor,3);
+  var later=Dispatchable(103,start.AddHours(1),start.AddHours(3));s.Records.Add(later);
+  a=ActionFor(later,"dispatch");a.Vehicle="測試車 A";a.Driver1="示範駕駛";CARGO_DWorkflowRules.Apply(s,later,a,Actor,3);
+  Check(later.Application.Request.STATUS=="dispatched","empty segment at a later reassignment releases vehicle and driver");
+  Check(CARGO_DWorkflowRules.Busy(s,"測試車 D",start.AddHours(1),start.AddHours(3),103)!=null,"nonempty earlier segment continues to block overlap");
+  Check(CARGO_DWorkflowRules.Busy(s,"測試車 D",start.AddHours(3),start.AddHours(3),103)==null,"empty queried interval reserves no resource");
+ }
+ static void EffectiveTimeRoundTrip() {
+  var s=CARGO_DWorkflowDemoData.Load();s.Records.Clear();s.Signs.Clear();
+  var start=new DateTime(2030,1,2,10,0,0);var end=start.AddHours(6);
+  var d=Dispatchable(104,start,end);s.Records.Add(d);
+  var a=ActionFor(d,"dispatch");a.Vehicle="測試車 C";a.Driver1="示範駕駛 C";CARGO_DWorkflowRules.Apply(s,d,a,Actor,3);Apply(s,d,"approve",4);
+  var segmentStart=start.AddHours(1).AddSeconds(42).AddTicks(1234567);
+  a=ActionFor(d,"reassign");a.Vehicle="測試車 D";a.Driver1="示範駕駛 C";a.EffectiveAt=segmentStart;CARGO_DWorkflowRules.Apply(s,d,a,Actor,3);
+  var effective=CARGO_DWorkflowRules.DefaultEffectiveAt(d,segmentStart);
+  var posted=DateTime.ParseExact(effective.Value.ToString("yyyy-MM-ddTHH:mm"),"yyyy-MM-ddTHH:mm",System.Globalization.CultureInfo.InvariantCulture);
+  Check(posted>=segmentStart,"default time field round trip cannot move before fractional segment start");
+  a=ActionFor(d,"reassign");a.Vehicle="測試車 A";a.Driver1="示範駕駛 C";a.EffectiveAt=posted;CARGO_DWorkflowRules.Apply(s,d,a,Actor,3);
+  Check(d.Application.Request.VEHICLE=="測試車 A","default field permits reassignment immediately after backfill");
+ }
+ static void ShortEffectiveTimeRoundTrip() {
+  var s=CARGO_DWorkflowDemoData.Load();s.Records.Clear();s.Signs.Clear();
+  var start=new DateTime(2030,1,2,10,0,0);var end=start.AddHours(6);
+  var d=Dispatchable(105,start,end);s.Records.Add(d);
+  var a=ActionFor(d,"dispatch");a.Vehicle="測試車 C";a.Driver1="示範駕駛 C";CARGO_DWorkflowRules.Apply(s,d,a,Actor,3);Apply(s,d,"approve",4);
+  var segmentStart=end.AddSeconds(-18).AddTicks(1234567);
+  a=ActionFor(d,"reassign");a.Vehicle="測試車 D";a.Driver1="示範駕駛 C";a.EffectiveAt=segmentStart;CARGO_DWorkflowRules.Apply(s,d,a,Actor,3);
+  var effective=CARGO_DWorkflowRules.DefaultEffectiveAt(d,end);
+  Check(effective.HasValue && effective.Value.Ticks%TimeSpan.TicksPerMillisecond==0 && effective>=segmentStart && effective<end,"short final segment defaults to a valid HTML millisecond");
+  var posted=DateTime.ParseExact(effective.Value.ToString("yyyy-MM-ddTHH:mm:ss.fff"),"yyyy-MM-ddTHH:mm:ss.fff",System.Globalization.CultureInfo.InvariantCulture);
+  a=ActionFor(d,"reassign");a.Vehicle="測試車 A";a.Driver1="示範駕駛 C";a.EffectiveAt=posted;CARGO_DWorkflowRules.Apply(s,d,a,Actor,3);
+  Check(d.Application.Request.VEHICLE=="測試車 A" && d.Assignments.Last().FROM_AT==posted,"short final segment precision round trip permits actual reassignment");
+  d.Application.Request.END_AT=end.AddMinutes(1).AddSeconds(40);d.Assignments.Last().FROM_AT=end.AddSeconds(42);d.Assignments.Last().TO_AT=d.Application.Request.END_AT.Value;
+  effective=CARGO_DWorkflowRules.DefaultEffectiveAt(d,d.Application.Request.END_AT.Value);
+  Check(effective==end.AddMinutes(1),"default stays in minutes when a valid minute remains after margin clamp");
+  a=ActionFor(d,"reassign");a.Vehicle="測試車 D";a.Driver1="示範駕駛 C";a.EffectiveAt=effective;CARGO_DWorkflowRules.Apply(s,d,a,Actor,3);
+  Check(d.Assignments.Last().FROM_AT==effective,"minute default remains valid when end contains seconds");
+  d.Application.Request.END_AT=end.AddSeconds(40);segmentStart=end.AddSeconds(35).AddTicks(1234567);
+  d.Assignments.Last().FROM_AT=segmentStart;d.Assignments.Last().TO_AT=d.Application.Request.END_AT.Value;
+  effective=CARGO_DWorkflowRules.DefaultEffectiveAt(d,d.Application.Request.END_AT.Value);
+  posted=DateTime.ParseExact(effective.Value.ToString("yyyy-MM-ddTHH:mm:ss.fff"),"yyyy-MM-ddTHH:mm:ss.fff",System.Globalization.CultureInfo.InvariantCulture);
+  a=ActionFor(d,"reassign");a.Vehicle="測試車 A";a.Driver1="示範駕駛 C";a.EffectiveAt=posted;CARGO_DWorkflowRules.Apply(s,d,a,Actor,3);
+  Check(posted>=segmentStart && posted<d.Application.Request.END_AT && d.Assignments.Last().FROM_AT==posted,"millisecond fallback posts a valid default when end contains seconds");
+  d.Application.Request.END_AT=end;d.Assignments.Last().FROM_AT=end.AddTicks(-1);d.Assignments.Last().TO_AT=end;
+  Check(!CARGO_DWorkflowRules.DefaultEffectiveAt(d,end).HasValue,"submillisecond interval without an HTML value has no default");
+ }
  static void Main() {
   var d02=new CARGO_D02Service(); var d03=new CARGO_D03Service(); var d04=new CARGO_D04Service();
+  QueryWork(d03);DefaultEffectiveTime(d03);EmptyAssignmentOccupancy();EffectiveTimeRoundTrip();ShortEffectiveTimeRoundTrip();
   var q=new CARGO_DWorkQueryDto { Page=1,PageSize=100 };
   Check(d02.Query(q,Actor).Total==6,"supervisor scope excludes drafts");
   Check(d02.Query(q,new CARGO_DStaffDto {UserId="unmapped",CanApprove=true}).Total==0,"unmapped supervisor sees nothing");

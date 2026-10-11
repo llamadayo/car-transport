@@ -1,0 +1,6 @@
+@using CARGO.Web.ViewModels.CARGO_D01
+@model CARGO_D01FormViewModel
+@{ ViewBag.Title = "新增一般用車申請"; }
+<h1 class="section-h">@ViewBag.Title</h1>
+@Html.Partial("_Form", Model)
+@section scripts { <script src="@Url.Content("~/Scripts/cargo-d01-validation.js")?v=20261011"></script><script src="@Url.Content("~/Scripts/cargo-d01.js")?v=20261011-validation"></script> }

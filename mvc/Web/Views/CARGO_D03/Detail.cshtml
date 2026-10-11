@@ -8,7 +8,7 @@
 @if (Model.PriorityRequests.Count > 0) { <div class="notice">同期間尚有例行用車待調度：@String.Join("、",Model.PriorityRequests)。請優先安排。</div> }
 @if (app.Form.EnterTaipei) { <div class="notice">需進入台北市：請留意 6.5 噸以上車輛通行規定，依實際通行許可人工確認。</div> }
 <p class="intro">車種順位為申請偏好，請按座位與 K／P 證需求選車。資源清單顯示原申請期間的占用情形；異動會依生效時間重新檢核。加班時數尚未接入公司資料，請人工確認。</p>
-@using (Html.BeginForm("Change",controller,FormMethod.Post,new { @class="workflow-action", data_confirm=Model.CanDispatch ? "確認送出派車結果並交由運輸主管簽審？" : "確認變更車輛／司機與指派區間？" })) {
+@using (Html.BeginForm("Change",controller,FormMethod.Post,new { @class="workflow-action", data_self_drive=app.Form.SelfDrive == true ? "true" : "false", data_confirm=Model.CanDispatch ? "確認送出派車結果並交由運輸主管簽審？" : "確認變更車輛／司機與指派區間？" })) {
 @Html.AntiForgeryToken()<input type="hidden" name="RequestId" value="@app.Form.RequestId" /><input type="hidden" name="Version" value="@app.Form.Version" />
 <div class="fields">
 @foreach (var field in new[] { new { Name="Vehicle",Title="車輛",Kind="VEHICLE",Selected=app.Vehicle }, new {Name="Driver1",Title="司機 1",Kind="DRIVER",Selected=app.Driver1},new {Name="Driver2",Title="司機 2（選填）",Kind="DRIVER",Selected=app.Driver2} }) {
@@ -16,7 +16,7 @@
 @foreach (var resource in Model.Resources.Where(x => x.Kind == field.Kind)) { <option value="@resource.Id" selected="@(resource.Id == field.Selected)">@resource.Label@(resource.Reason == null ? "" : " · ⚠ " + resource.Reason)</option> }
 </select></label>
 }
-@if (Model.CanChange) { <label><span class="field-label">生效時間</span><input type="datetime-local" name="EffectiveAt" required value="@(app.Form.StartAt.Value.ToString("yyyy-MM-ddTHH:mm"))" /></label> }
+@if (Model.CanChange) { <label><span class="field-label">生效時間</span><input type="datetime-local" name="EffectiveAt" required value="@Model.EffectiveAtInputValue" step="@Model.EffectiveAtStep" /></label> }
 <label class="wide"><span class="field-label">調度備註</span><textarea name="Note" rows="2" maxlength="1000"></textarea></label>
 </div><div class="actions">
 @if (Model.CanDispatch) { <button type="submit" name="Command" value="dispatch" class="btn btn-primary">完成派車，送簽審</button><button type="submit" name="Command" value="noVehicle" class="btn btn-danger">無車退回</button> }
@@ -42,4 +42,4 @@ if (app.PendingReturnAt.HasValue) {
 }
 @Html.Partial("_DSignHistory", Model.Signs)
 @Html.Partial("_DApplication",app)
-@section scripts { <script src="@Url.Content("~/Scripts/cargo-workflow.js")"></script> }
+@section scripts { <script src="@Url.Content("~/Scripts/cargo-workflow.js")?v=20261011-validation"></script> }

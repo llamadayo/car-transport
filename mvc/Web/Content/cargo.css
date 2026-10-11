@@ -71,3 +71,12 @@ input[type=datetime-local]{font:inherit;border:0;border-bottom:1px solid var(--l
 #requestsGrid .grid-detail-link, #workGrid .grid-detail-link, #usageGrid .grid-detail-link{display:inline-flex;align-items:center;justify-content:center;min-width:36px;min-height:34px;padding:5px 8px;box-sizing:border-box}
 #requestsGrid .grid-detail-link img, #workGrid .grid-detail-link img, #usageGrid .grid-detail-link img{display:block;width:18px;height:18px}
 #requestsGrid .grid-detail-link:focus-visible, #workGrid .grid-detail-link:focus-visible, #usageGrid .grid-detail-link:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+
+/* Shared SweetAlert2 confirmation: local assets, existing CARGO colors. */
+.swal2-popup.cargo-confirm{font-family:inherit;border-radius:16px;padding:0 28px 24px;width:484px}
+.cargo-confirm .swal2-title{font-size:20px;color:var(--navy)}
+.cargo-confirm .swal2-html-container{font-size:14.5px;line-height:1.7;color:var(--ink-soft)}
+.cargo-confirm .swal2-icon.swal2-question{color:var(--accent);border-color:var(--accent)}
+.cargo-confirm .swal2-actions{gap:12px;flex-direction:row}
+.cargo-confirm .swal2-actions .btn{min-width:96px;margin:0}
+.cargo-confirm .swal2-actions .btn:focus-visible{outline:2px solid var(--navy);outline-offset:3px}

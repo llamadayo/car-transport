@@ -137,6 +137,7 @@
   <ItemGroup>
     <Content Include="**\*.cshtml;**\*.config;**\*.css;**\*.js;Global.asax" Exclude="bin\**;obj\**" />
     <Content Include="Content\vendor\fontawesome\*.svg;Content\vendor\fontawesome\*.txt" />
+    <Content Include="Content\vendor\sweetalert2\*.txt" />
   </ItemGroup>
   <Target Name="CheckKendo" BeforeTargets="ResolveAssemblyReferences">
     <Error Condition="'$(LocalDemo)' == 'true' And '$(UseLocalTelerik)' != 'true'" Text="LocalDemo requires UseLocalTelerik=true. Company builds cannot enable demo mode." />

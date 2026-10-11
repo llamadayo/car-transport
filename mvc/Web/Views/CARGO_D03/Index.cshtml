@@ -3,7 +3,8 @@
 @using Kendo.Mvc.UI
 @model CARGO_D03IndexViewModel
 @{ string controller = "CARGO_D03";
-   var statuses = CARGO_D01Mapper.Statuses.Where(x => new[] { "todo", "noCar", "signing", "ready", "departed", "logged" }.Contains(x.Key)).ToDictionary(x => x.Key, x => x.Value);
+   var statuses = new[] { new SelectListItem { Value="work", Text="待處理（待調度／提前歸還待確認）" }, new SelectListItem { Value="", Text="全部狀態" } }
+       .Concat(CARGO_D01Mapper.Statuses.Where(x => new[] { "todo", "noCar", "signing", "ready", "departed", "logged" }.Contains(x.Key)).Select(x => new SelectListItem { Value=x.Key, Text=x.Value }));
 }
 
 <h1 class="section-h">@ViewBag.Title</h1>
@@ -12,7 +13,7 @@
 <form id="query-form">@Html.AntiForgeryToken()<div class="fields">
 <label class="query-field"><span>申請人（模糊）</span>@Html.TextBoxFor(x => x.Applicant, new { placeholder="輸入姓名關鍵字" })</label>
 <label class="query-field"><span>用車日期</span> @Html.TextBoxFor(x => x.UseDate, "{0:yyyy-MM-dd}", new { type="date" })</label>
-<label class="query-field"><span>狀態</span> @Html.DropDownListFor(x => x.Status, new SelectList(statuses,"Key","Value"), "全部狀態")</label>
+<label class="query-field"><span>狀態</span> @Html.DropDownListFor(x => x.Status, statuses)</label>
 </div></form></section>
 <section class="card"><div class="card-title"><span>一般用車調度清單 <span id="result-count" class="result-count"></span></span>
 
@@ -26,16 +27,16 @@ function workError(e) { jQuery('#grid-error').text(e.errors || '查詢失敗，�
 function workBadge(value) { var cls = /退回/.test(value) ? 'b-red' : /審/.test(value) ? 'b-amber' : /同意|出車/.test(value) ? 'b-green' : 'b-navy'; return '<span class="badge ' + cls + '">' + kendo.htmlEncode(value) + '</span>'; }
 </script>
 @(Html.Kendo().Grid<CARGO_D03RowViewModel>().Name("workGrid").Columns(c => {
- c.Bound(x => x.RequestId).Title("操作").ClientTemplate("<a class='btn btn-ghost btn-sm grid-detail-link' href='" + Url.Action("Detail",controller) + "/#= RequestId #' title='查看明細' aria-label='查看明細：#: RequestNo #'><img src='" + Url.Content("~/Content/vendor/fontawesome/newspaper.svg") + "' width='18' height='18' alt='' aria-hidden='true' /></a>").Width(85);
+ c.Bound(x => x.RequestId).Title("操作").ClientTemplate("<a class='btn btn-ghost btn-sm grid-detail-link' href='" + Url.Action("Detail",controller) + "/#= RequestId #' title='#: ActionLabel #' aria-label='#: ActionLabel #：#: RequestNo #'><img src='" + Url.Content("~/Content/vendor/fontawesome/newspaper.svg") + "' width='18' height='18' alt='' aria-hidden='true' /> #: ActionLabel #</a>").Width(100);
  c.Bound(x => x.RequestNo).Title("申請單號").ClientTemplate("<strong class='request-no'>#: RequestNo #</strong>").Width(125);
  c.Bound(x => x.Category).Title("類別").ClientTemplate("<span class='badge b-navy'>#: Category #</span>").Width(110);
  c.Bound(x => x.Applicant).Title("申請人").Width(120);
  c.Bound(x => x.StartAt).Title("用車時段").ClientTemplate("#: kendo.toString(StartAt, 'yyyy-MM-dd HH:mm') #<br>～ #: kendo.toString(EndAt, 'yyyy-MM-dd HH:mm') #").Width(195);
  c.Bound(x => x.Passengers).Title("人數").Width(75);
- c.Bound(x => x.Status).Title("狀態").ClientTemplate("#= workBadge(Status) #").Width(115);
+ c.Bound(x => x.Status).Title("狀態").ClientTemplate("#= workBadge(Status) ## if (HasPendingReturn) { #<br><span class='badge b-amber'>提前歸還待確認</span># } #").Width(175);
  c.Bound(x => x.Outcome).Title("派車結果").Width(150); c.Bound(x => x.Vehicle).Title("車輛").Width(120); c.Bound(x => x.Driver).Title("司機").Width(155); c.Bound(x => x.SignStatus).Title("簽審").ClientTemplate("#= workBadge(SignStatus) #").Width(100);
 }).Pageable(p => p.PageSizes(new[] {20,50,100})).Scrollable(s => s.Height("auto")).Events(e => e.DataBound("workBound"))
 .DataSource(ds => ds.Ajax().PageSize(20).ServerOperation(true).Read(r => r.Action("Read",controller).Type(HttpVerbs.Post).Data("workQuery")).Events(e => e.Error("workError"))))
 </section>
 
-@section scripts { <script src="@Url.Content("~/Scripts/cargo-workflow.js")"></script> }
+@section scripts { <script src="@Url.Content("~/Scripts/cargo-workflow.js")?v=20261011-validation"></script> }
